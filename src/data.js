@@ -2,7 +2,7 @@ const data = [
   {
     book_id: 1,
     title: 'The Adventures of Sherlock Holmes',
-    price: 15.99,
+    price: 15000,
     stock_quantity: 20,
     available_until: '2025-12-31',
     book_image: 'https://placehold.co/200',
@@ -15,7 +15,7 @@ const data = [
   {
     book_id: 2,
     title: 'The Great Gatsby',
-    price: 12.45,
+    price: 12000,
     stock_quantity: 15,
     available_until: '2025-06-15',
     book_image: 'https://placehold.co/200',
@@ -28,7 +28,7 @@ const data = [
   {
     book_id: 3,
     title: '1984',
-    price: 18.5,
+    price: 18000,
     stock_quantity: 10,
     available_until: '2025-04-20',
     book_image: 'https://placehold.co/200',
@@ -41,7 +41,7 @@ const data = [
   {
     book_id: 4,
     title: 'To Kill a Mockingbird',
-    price: 14.8,
+    price: 14000,
     stock_quantity: 8,
     available_until: '2025-07-01',
     book_image: 'https://placehold.co/200',
@@ -54,7 +54,7 @@ const data = [
   {
     book_id: 5,
     title: 'The Catcher in the Rye',
-    price: 11.99,
+    price: 11000,
     stock_quantity: 25,
     available_until: '2025-11-15',
     book_image: 'https://placehold.co/200',
@@ -67,7 +67,7 @@ const data = [
   {
     book_id: 6,
     title: 'Pride and Prejudice',
-    price: 13.25,
+    price: 13000,
     stock_quantity: 35,
     available_until: '2025-05-12',
     book_image: 'https://placehold.co/200',
@@ -80,7 +80,7 @@ const data = [
   {
     book_id: 7,
     title: 'Moby-Dick',
-    price: 17.5,
+    price: 17000,
     stock_quantity: 5,
     available_until: '2025-09-10',
     book_image: 'https://placehold.co/200',
@@ -93,7 +93,7 @@ const data = [
   {
     book_id: 8,
     title: 'War and Peace',
-    price: 25.0,
+    price: 25000,
     stock_quantity: 18,
     available_until: '2025-10-22',
     book_image: 'https://placehold.co/200',
@@ -106,7 +106,7 @@ const data = [
   {
     book_id: 9,
     title: 'The Brothers Karamazov',
-    price: 20.99,
+    price: 20000,
     stock_quantity: 12,
     available_until: '2025-12-01',
     book_image: 'https://placehold.co/200',
@@ -119,7 +119,7 @@ const data = [
   {
     book_id: 10,
     title: 'Crime and Punishment',
-    price: 16.8,
+    price: 16000,
     stock_quantity: 50,
     available_until: '2025-06-30',
     book_image: 'https://placehold.co/200',
@@ -132,7 +132,7 @@ const data = [
   {
     book_id: 11,
     title: 'The Hobbit',
-    price: 13.99,
+    price: 13000,
     stock_quantity: 40,
     available_until: '2025-07-20',
     book_image: 'https://placehold.co/200',
@@ -145,7 +145,7 @@ const data = [
   {
     book_id: 12,
     title: 'The Lord of the Rings: The Fellowship of the Ring',
-    price: 29.99,
+    price: 29000,
     stock_quantity: 18,
     available_until: '2025-08-30',
     book_image: 'https://placehold.co/200',
@@ -158,7 +158,7 @@ const data = [
   {
     book_id: 13,
     title: 'The Fellowship of the Ring',
-    price: 24.5,
+    price: 24000,
     stock_quantity: 30,
     available_until: '2025-04-10',
     book_image: 'https://placehold.co/200',
@@ -171,7 +171,7 @@ const data = [
   {
     book_id: 14,
     title: 'The Wind in the Willows',
-    price: 9.99,
+    price: 30000,
     stock_quantity: 10,
     available_until: '2025-03-22',
     book_image: 'https://placehold.co/200',
@@ -184,7 +184,7 @@ const data = [
   {
     book_id: 15,
     title: "Alice's Adventures in Wonderland",
-    price: 11.5,
+    price: 21000,
     stock_quantity: 20,
     available_until: '2025-06-18',
     book_image: 'https://placehold.co/200',
@@ -197,7 +197,7 @@ const data = [
   {
     book_id: 16,
     title: 'The Tale of Two Cities',
-    price: 16.0,
+    price: 16000,
     stock_quantity: 10,
     available_until: '2025-12-05',
     book_image: 'https://placehold.co/200',
@@ -210,7 +210,7 @@ const data = [
   {
     book_id: 17,
     title: 'Brave New World',
-    price: 19.99,
+    price: 19000,
     stock_quantity: 30,
     available_until: '2025-09-12',
     book_image: 'https://placehold.co/200',
@@ -223,7 +223,7 @@ const data = [
   {
     book_id: 18,
     title: 'The Picture of Dorian Gray',
-    price: 18.1,
+    price: 18000,
     stock_quantity: 25,
     available_until: '2025-11-10',
     book_image: 'https://placehold.co/200',
@@ -236,7 +236,7 @@ const data = [
   {
     book_id: 19,
     title: 'Dracula',
-    price: 20.0,
+    price: 20000,
     stock_quantity: 12,
     available_until: '2025-03-22',
     book_image: 'https://placehold.co/200',
