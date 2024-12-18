@@ -1,11 +1,18 @@
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <Nav>
       <LocationList>
-        <LocationButton>로그인</LocationButton>
-        <LocationButton>회원가입</LocationButton>
+        <LocationItem>
+          <LocationButton onClick={() => navigate('/login')}>로그인</LocationButton>
+        </LocationItem>
+        <LocationItem>
+          <LocationButton onClick={() => navigate('/signup')}>회원가입</LocationButton>
+        </LocationItem>
       </LocationList>
     </Nav>
   );
@@ -21,7 +28,7 @@ const Nav = styled.nav`
 `;
 
 const LocationList = styled.ul`
-  width: 130px;
+  width: 150px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -29,8 +36,18 @@ const LocationList = styled.ul`
   margin-left: auto;
 `;
 
-const LocationButton = styled.li`
+const LocationItem = styled.li`
   cursor: pointer;
+`;
+
+const LocationButton = styled.button`
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+    color: #00000080;
+  }
 `;
 
 export default Navbar;
