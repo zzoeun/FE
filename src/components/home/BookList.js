@@ -17,7 +17,7 @@ const BookList = () => {
 
   return (
     <section>
-      <BookListTitle>오늘의 책</BookListTitle>
+      <BookListTitle>오늘의 책 [Today's Book]</BookListTitle>
       <Pagination booksPerPage={booksPerPage} setCurrentPage={setCurrentPage} />
       <CardList>
         {currentBooks.map((book) => (
@@ -32,6 +32,7 @@ const BookListTitle = styled.h2`
   color: #656e7f;
   font-size: 32px;
   text-align: center;
+  letter-spacing: 2px;
   margin: 300px auto 50px;
 `;
 
