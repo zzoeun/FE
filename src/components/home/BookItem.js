@@ -77,6 +77,7 @@ const CardInfo = styled.div`
   height: 350px;
   text-align: center;
   padding: 20px;
+  color: #999999;
 `;
 
 const CardImageBox = styled.div`
