@@ -20,7 +20,7 @@ const Pagination = ({ booksPerPage, setCurrentPage }) => {
           setCurrentPage(i + 1);
           window.scrollTo(0, 0);
         }}
-        style={{ background: `${currentActive === i ? 'black' : '#e0e0e0'}` }}
+        style={{ background: `${currentActive === i ? '#656e7f' : '#e0e0e0'}` }}
       ></Button>
     );
   }
