@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 function BookItem({ book }) {
+  const navigate = useNavigate();
+
   return (
     <Card key={book.book_id}>
       <Wrapper>
@@ -13,7 +16,7 @@ function BookItem({ book }) {
           <DiscountPrice>{book.price * 0.9}</DiscountPrice>
         </CardInfo>
         <CardButtons>
-          <Button>
+          <Button onClick={() => navigate(`/detail/${book.book_id}`)}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -29,7 +32,7 @@ function BookItem({ book }) {
               />
             </svg>
           </Button>
-          <Button>
+          <Button onClick={() => navigate('/cart')}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
