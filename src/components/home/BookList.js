@@ -29,6 +29,7 @@ const BookList = () => {
 };
 
 const BookListTitle = styled.h2`
+  color: #656e7f;
   font-size: 32px;
   text-align: center;
   margin: 300px auto 50px;
