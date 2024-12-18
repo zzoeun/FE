@@ -44,9 +44,10 @@ const LocationButton = styled.button`
   border: none;
   background: transparent;
   font-size: 16px;
+  color: #999999;
   cursor: pointer;
   &:hover {
-    color: #00000080;
+    color: #99999980;
   }
 `;
 
