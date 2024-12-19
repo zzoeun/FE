@@ -1,8 +1,11 @@
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
+import { closeModal } from '../../features/book/modalSlice';
 
 const CartModal = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <ModalBackground>
@@ -10,8 +13,15 @@ const CartModal = () => {
         <ModalContent>장바구니에 상품을 담았습니다.</ModalContent>
         <ModalContent>장바구니로 바로 이동하시겠습니까?</ModalContent>
         <ModalButtons>
-          <Button onClick={() => navigate('/cart')}>확인</Button>
-          <Button>취소</Button>
+          <Button
+            onClick={() => {
+              navigate('/cart');
+              dispatch(closeModal());
+            }}
+          >
+            확인
+          </Button>
+          <Button onClick={() => dispatch(closeModal())}>취소</Button>
         </ModalButtons>
       </Modal>
     </ModalBackground>
@@ -28,6 +38,7 @@ const ModalBackground = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 `;
 
 const Modal = styled.div`

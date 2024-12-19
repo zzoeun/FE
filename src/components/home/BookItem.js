@@ -1,8 +1,13 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
+import { openModal } from '../../features/book/modalSlice';
 
 function BookItem({ book }) {
   const navigate = useNavigate();
+  const modal = useSelector((state) => state.modal);
+  const dispatch = useDispatch();
+  console.log(modal);
 
   return (
     <Card key={book.book_id}>
@@ -32,7 +37,7 @@ function BookItem({ book }) {
               />
             </svg>
           </Button>
-          <Button>
+          <Button onClick={() => dispatch(openModal())}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
