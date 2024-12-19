@@ -3,6 +3,81 @@ import React from "react";
 // import styles from "./OrderItems.module.css";
 import styled from "styled-components";
 
+// items 금액 계산
+const itemsAmountCalc = (items) => {
+  var deliveryFee = 3000;
+  var total = 0;
+
+  items.map((item) => {
+    total += item.price;
+  });
+
+  if (total >= 30000) deliveryFee = 0;
+
+  return { total, deliveryFee };
+};
+
+// 금액 ,(콤마) 추가하기
+const addComma = (price) => {
+  const commaPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  return commaPrice;
+};
+
+const OrderItems = () => {
+  const items = [
+    {
+      imageUrl: "abcdefg",
+      name: "Mike",
+      amount: 1,
+      price: 2500,
+    },
+    {
+      imageUrl: "hey",
+      name: "Jake",
+      amount: 2,
+      price: 10000,
+    },
+  ];
+
+  const { deliveryFee, total } = itemsAmountCalc(items);
+
+  return (
+    <OrderItemsComponent>
+      <OrderItemHead>
+        <h3>주문상품</h3>
+        <p>옵션 및 수량 변경은 장바구니에서만 가능합니다.</p>
+      </OrderItemHead>
+      <OrderItemInfo>
+        <ItemSort>
+          <p>FRENCHBOOK</p> {/*종류 생기면 반복하기*/}
+        </ItemSort>
+        <ItemContents>
+          <Items>
+            {items.map((item, index) => (
+              <Item key={index}>
+                <img src={item.imageUrl} alt={item.name} width="50" />
+                <ItemAmount>
+                  <p>{item.name}</p>
+                  <p>{item.amount}개</p>
+                </ItemAmount>
+                <ItemPrice>
+                  <p>{addComma(item.price * item.amount)}원</p>
+                  <button>쿠폰적용</button>
+                </ItemPrice>
+              </Item>
+            ))}
+          </Items>
+          <ItemDelivery>
+            <p>{addComma(deliveryFee)}원</p>
+            <p2>택배 배송안내</p2>
+          </ItemDelivery>
+        </ItemContents>
+      </OrderItemInfo>
+    </OrderItemsComponent>
+  );
+};
+
 const OrderItemsComponent = styled.div`
   margin: 20px;
   padding: 15px;
@@ -77,7 +152,7 @@ const ItemAmount = styled.div`
 const ItemPrice = styled.div`
   height: 150px;
   width: 155px;
-  padding-top: 20px;
+  padding-top: 40px;
   border-right: 2px solid #f4f4f4;
 
   text-align: center;
@@ -87,12 +162,21 @@ const ItemPrice = styled.div`
   p {
     font-weight: bold;
   }
+
+  button {
+    margin: 40px;
+    padding: 2px 7px 2px 7px;
+
+    background-color: #ffff;
+    border: 2px solid #495a70;
+    color: #495a70;
+  }
 `;
 
 const ItemDelivery = styled.div`
   height: 150px;
   width: 155px;
-  padding-top: 20px;
+  padding-top: 40px;
 
   text-align: center;
   // background-color: pink;
@@ -106,79 +190,5 @@ const ItemDelivery = styled.div`
     color: #9b9b9b;
   }
 `;
-
-// items 금액 계산
-const itemsAmountCalc = (items) => {
-  var deliveryFee = 3000;
-  var total = 0;
-
-  items.map((item) => {
-    total += item.price;
-  });
-
-  if (total >= 30000) deliveryFee = 0;
-
-  return { total, deliveryFee };
-};
-
-// 금액 ,(콤마) 추가하기
-const addComma = (price) => {
-  const commaPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  return commaPrice;
-};
-
-const OrderItems = () => {
-  const items = [
-    {
-      imageUrl: "abcdefg",
-      name: "Mike",
-      amount: 1,
-      price: 2500,
-    },
-    {
-      imageUrl: "hey",
-      name: "Jake",
-      amount: 2,
-      price: 10000,
-    },
-  ];
-
-  const { deliveryFee, total } = itemsAmountCalc(items);
-
-  return (
-    <OrderItemsComponent>
-      <OrderItemHead>
-        <h3>주문상품</h3>
-        <p>옵션 및 수량 변경은 장바구니에서만 가능합니다.</p>
-      </OrderItemHead>
-      <OrderItemInfo>
-        <ItemSort>
-          <p>FRENCHBOOK</p> {/*종류 생기면 반복하기*/}
-        </ItemSort>
-        <ItemContents>
-          <Items>
-            {items.map((item, index) => (
-              <Item key={index}>
-                <img src={item.imageUrl} alt={item.name} width="50" />
-                <ItemAmount>
-                  <p>{item.name}</p>
-                  <p>{item.amount}개</p>
-                </ItemAmount>
-                <ItemPrice>
-                  <p>{addComma(item.price * item.amount)}원</p>
-                </ItemPrice>
-              </Item>
-            ))}
-          </Items>
-          <ItemDelivery>
-            <p>{addComma(deliveryFee)}원</p>
-            <p2>택배 배송안내</p2>
-          </ItemDelivery>
-        </ItemContents>
-      </OrderItemInfo>
-    </OrderItemsComponent>
-  );
-};
 
 export default OrderItems;
