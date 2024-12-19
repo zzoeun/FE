@@ -6,21 +6,21 @@ import styled from "styled-components";
 const ShippingInfoComponent = styled.div`
   margin: 20px;
   padding: 15px;
-  font-size: 14px;
+  font-size: 15px;
 
   h3 {
     padding-bottom: 20px;
     font-size: 20px;
     font-weight: bold;
 
-    border-bottom: 1.5px solid #e0e0e0;
+    border-bottom: 2px solid #e0e0e0;
   }
 `;
 
 const RadioGroup = styled.div`
   display: flex;
   padding: 20px 0 20px 5px;
-  border-bottom: 1.5px solid #e0e0e0;
+  border-bottom: 2px solid #f4f4f4;
 
   p {
     margin: 0 10px 0 13px;
@@ -31,7 +31,7 @@ const RadioGroup = styled.div`
 const InputGroup = styled.div`
   label {
     display: inline-block;
-    width: 80px;
+    width: 85px;
   }
 
   input {
@@ -41,7 +41,7 @@ const InputGroup = styled.div`
     width: 200px;
     height: 45px;
 
-    border: 1.8px solid #cccccc;
+    border: 2px solid #cccccc;
     color: #898989;
   }
 
@@ -65,7 +65,7 @@ const InputContents = styled.div`
   align-items: center;
   padding: 8px 0 8px 0;
 
-  border-bottom: 1.5px solid #e0e0e0;
+  border-bottom: 2px solid #f4f4f4;
 
   p {
     color: red;
@@ -80,7 +80,7 @@ const InputContents = styled.div`
 
     color: #898989;
 
-    border: 1.8px solid #cccccc;
+    border: 2px solid #cccccc;
   }
 
   div {
