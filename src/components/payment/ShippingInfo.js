@@ -115,20 +115,6 @@ const InputGroup = styled.div`
     border: 2px solid #cccccc;
     color: #898989;
   }
-
-  button {
-    margin-top: 8px;
-    padding: 5px 10px;
-    height: 45px;
-
-    background: #8c8d92;
-    color: #fff;
-
-    border: none;
-    border-radius: 4px;
-
-    cursor: pointer;
-  }
 `;
 
 const InputContents = styled.div`
@@ -164,11 +150,26 @@ const InputPost = styled.div`
   input {
     margin-bottom: 0;
   }
+
+  button {
+    margin-top: 8px;
+    padding: 5px 10px;
+    height: 45px;
+    width: 85px;
+
+    background: #8c8d92;
+    color: #fff;
+
+    border: none;
+    border-radius: 4px;
+
+    cursor: pointer;
+  }
 `;
 
 const InputAddress = styled.div`
   input {
-    width: 400px;
+    width: 450px;
   }
 `;
 
