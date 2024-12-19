@@ -85,6 +85,8 @@ const MethodButton = styled.div`
 
     background-color: #fff;
     border: 2px solid #f4f4f4;
+
+    cursor: pointer;
   }
 `;
 
