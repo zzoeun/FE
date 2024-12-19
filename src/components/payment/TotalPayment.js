@@ -2,31 +2,6 @@
 import React from "react";
 import styled from "styled-components";
 
-const TotalPayment = styled.div`
-  width: 300px;
-  margin: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  background: #fff;
-  text-align: center;
-`;
-
-const TotalDetails = styled.div`
-  p {
-    margin: 5px 0;
-  }
-`;
-
-const PayButton = styled.button`
-  margin-top: 10px;
-  background: #4350f0;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-`;
-
 const PaymentAmount = () => {
   const pay = {
     itemAmount: 25000,
@@ -58,5 +33,30 @@ const PaymentAmount = () => {
     </TotalPayment>
   );
 };
+
+const TotalPayment = styled.div`
+  width: 300px;
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background: #fff;
+  text-align: center;
+`;
+
+const TotalDetails = styled.div`
+  p {
+    margin: 5px 0;
+  }
+`;
+
+const PayButton = styled.button`
+  margin-top: 10px;
+  background: #4350f0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+`;
 
 export default PaymentAmount;
