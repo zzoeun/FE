@@ -14,24 +14,28 @@ const ShippingInfo = () => {
     <ShippingInfoComponent>
       <h3>배송정보</h3>
       <RadioGroup>
-        <input
-          type="radio"
-          id="defaultAddress"
-          value={0}
-          name="addressRadio"
-          onChange={onChangeAddressRadio}
-          defaultChecked
-        />
-        <label>기본 배송지</label>
+        <label>
+          <input
+            type="radio"
+            id="defaultAddress"
+            value={0}
+            name="addressRadio"
+            onChange={onChangeAddressRadio}
+            defaultChecked
+          />{" "}
+          기본 배송지
+        </label>
         <p>|</p>
-        <input
-          type="radio"
-          id="enterDirectlyAddress"
-          value={1}
-          name="addressRadio"
-          onChange={onChangeAddressRadio}
-        />
-        <label>직접 입력</label>
+        <label>
+          <input
+            type="radio"
+            id="enterDirectlyAddress"
+            value={1}
+            name="addressRadio"
+            onChange={onChangeAddressRadio}
+          />{" "}
+          직접 입력
+        </label>
       </RadioGroup>
       <InputGroup>
         <InputContents>
