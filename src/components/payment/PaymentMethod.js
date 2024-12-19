@@ -3,19 +3,6 @@ import React, { useState } from "react";
 // import styles from "./PaymentMethod.module.css";
 import styled from "styled-components";
 
-const PaymentMethodComponent = styled.div`
-  margin: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  background: white;
-`;
-
-const MethodRadio = styled.div`
-  margin-bottom: 10px;
-`;
-
-const MethodButton = styled.div``;
-
 const PaymentMethod = () => {
   const [paymentMethod, setPaymentMethod] = useState(0);
 
@@ -58,5 +45,18 @@ const PaymentMethod = () => {
     </PaymentMethodComponent>
   );
 };
+
+const PaymentMethodComponent = styled.div`
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background: white;
+`;
+
+const MethodRadio = styled.div`
+  margin-bottom: 10px;
+`;
+
+const MethodButton = styled.div``;
 
 export default PaymentMethod;

@@ -3,6 +3,73 @@ import React, { useState } from "react";
 // import styles from "./ShippingInfo.module.css";
 import styled from "styled-components";
 
+const ShippingInfo = () => {
+  const [chagneRadio, setChangeRadio] = useState(0);
+
+  const onChangeAddressRadio = (e) => {
+    setChangeRadio(e.target.value);
+  };
+
+  return (
+    <ShippingInfoComponent>
+      <h3>배송정보</h3>
+      <RadioGroup>
+        <input
+          type="radio"
+          id="defaultAddress"
+          value={0}
+          name="addressRadio"
+          onChange={onChangeAddressRadio}
+          defaultChecked
+        />
+        <label>기본 배송지</label>
+        <p>|</p>
+        <input
+          type="radio"
+          id="enterDirectlyAddress"
+          value={1}
+          name="addressRadio"
+          onChange={onChangeAddressRadio}
+        />
+        <label>직접 입력</label>
+      </RadioGroup>
+      <InputGroup>
+        <InputContents>
+          <label>받으시는 분</label>
+          <p>*</p>
+          <input type="text" />
+        </InputContents>
+        <InputContents>
+          <label>휴대폰 번호</label>
+          <p>*</p>
+          <input type="text" />
+        </InputContents>
+        <InputContents>
+          <label>배송지</label>
+          <p>*</p>
+          <div>
+            <InputPost>
+              <input type="text" placeholder="우편번호" />
+              <button className="address-btn">주소찾기</button>
+            </InputPost>
+            <InputAddress>
+              <input type="text" placeholder="기본주소" />
+              <input type="text" placeholder="상세주소" />
+            </InputAddress>
+          </div>
+        </InputContents>
+        <InputContents>
+          <select>
+            <option>배송메세지를 입력해주세요.</option>
+            <option>문 앞에 놓아주세요.</option>
+            <option>부재 시 연락 부탁드립니다.</option>
+          </select>
+        </InputContents>
+      </InputGroup>
+    </ShippingInfoComponent>
+  );
+};
+
 const ShippingInfoComponent = styled.div`
   margin: 20px;
   padding: 15px;
@@ -100,72 +167,5 @@ const InputAddress = styled.div`
     width: 400px;
   }
 `;
-
-const ShippingInfo = () => {
-  const [chagneRadio, setChangeRadio] = useState(0);
-
-  const onChangeAddressRadio = (e) => {
-    setChangeRadio(e.target.value);
-  };
-
-  return (
-    <ShippingInfoComponent>
-      <h3>배송정보</h3>
-      <RadioGroup>
-        <input
-          type="radio"
-          id="defaultAddress"
-          value={0}
-          name="addressRadio"
-          onChange={onChangeAddressRadio}
-          defaultChecked
-        />
-        <label>기본 배송지</label>
-        <p>|</p>
-        <input
-          type="radio"
-          id="enterDirectlyAddress"
-          value={1}
-          name="addressRadio"
-          onChange={onChangeAddressRadio}
-        />
-        <label>직접 입력</label>
-      </RadioGroup>
-      <InputGroup>
-        <InputContents>
-          <label>받으시는 분</label>
-          <p>*</p>
-          <input type="text" />
-        </InputContents>
-        <InputContents>
-          <label>휴대폰 번호</label>
-          <p>*</p>
-          <input type="text" />
-        </InputContents>
-        <InputContents>
-          <label>배송지</label>
-          <p>*</p>
-          <div>
-            <InputPost>
-              <input type="text" placeholder="우편번호" />
-              <button className="address-btn">주소찾기</button>
-            </InputPost>
-            <InputAddress>
-              <input type="text" placeholder="기본주소" />
-              <input type="text" placeholder="상세주소" />
-            </InputAddress>
-          </div>
-        </InputContents>
-        <InputContents>
-          <select>
-            <option>배송메세지를 입력해주세요.</option>
-            <option>문 앞에 놓아주세요.</option>
-            <option>부재 시 연락 부탁드립니다.</option>
-          </select>
-        </InputContents>
-      </InputGroup>
-    </ShippingInfoComponent>
-  );
-};
 
 export default ShippingInfo;
