@@ -3,19 +3,6 @@ import React, { useState } from "react";
 // import styles from "./PaymentMethod.module.css";
 import styled from "styled-components";
 
-const PaymentMethodComponent = styled.div`
-  margin: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  background: white;
-`;
-
-const MethodRadio = styled.div`
-  margin-bottom: 10px;
-`;
-
-const MethodButton = styled.div``;
-
 const PaymentMethod = () => {
   const [paymentMethod, setPaymentMethod] = useState(0);
 
@@ -40,6 +27,7 @@ const PaymentMethod = () => {
           />{" "}
           간편결제
         </label>
+        <p>|</p>
         <label>
           <input
             type="radio"
@@ -52,11 +40,54 @@ const PaymentMethod = () => {
           일반결제
         </label>
       </MethodRadio>
+      {}
       <MethodButton>
-        <button>결제 방법 선택 버튼...</button>
+        <button>SmilePay</button>
+        <button>Npay</button>
+        <button>🗨️페이</button>
+        <button>PAYCO</button>
       </MethodButton>
     </PaymentMethodComponent>
   );
 };
+
+const PaymentMethodComponent = styled.div`
+  margin: 20px;
+  padding: 15px;
+  font-size: 15px;
+
+  h3 {
+    padding-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+
+    border-bottom: 2px solid #e0e0e0;
+  }
+`;
+
+const MethodRadio = styled.div`
+  display: flex;
+  padding: 20px 0 20px 5px;
+  border-bottom: 2px solid #f4f4f4;
+
+  p {
+    margin: 0 10px 0 13px;
+    color: lightgray;
+  }
+`;
+
+const MethodButton = styled.div`
+  padding: 20px 0 20px 5px;
+
+  button {
+    height: 45px;
+    width: 192px;
+
+    background-color: #fff;
+    border: 2px solid #f4f4f4;
+
+    cursor: pointer;
+  }
+`;
 
 export default PaymentMethod;
