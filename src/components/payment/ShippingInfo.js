@@ -22,7 +22,7 @@ const ShippingInfo = () => {
             name="addressRadio"
             onChange={onChangeAddressRadio}
             defaultChecked
-          />{" "}
+          />
           기본 배송지
         </label>
         <p>|</p>
@@ -33,7 +33,7 @@ const ShippingInfo = () => {
             value={1}
             name="addressRadio"
             onChange={onChangeAddressRadio}
-          />{" "}
+          />
           직접 입력
         </label>
       </RadioContainer>
@@ -92,6 +92,28 @@ const RadioContainer = styled.div`
   display: flex;
   padding: 20px 0 20px 5px;
   border-bottom: 2px solid #f4f4f4;
+
+  label {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  input {
+    appearance: none; // 기본 모양 제거
+    border-radius: 50%;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    border: 5px solid #cccccc;
+    cursor: pointer;
+
+    margin-right: 8px;
+  }
+
+  input: checked {
+    border-color: #495a70;
+  }
 
   p {
     margin: 0 10px 0 13px;
