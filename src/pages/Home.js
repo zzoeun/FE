@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import BookList from '../components/home/BookList';
-import Modal from '../components/home/Modal';
+import Modal from '../components/modal/Modal';
 import { useSelector } from 'react-redux';
 
 const Home = () => {
