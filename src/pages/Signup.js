@@ -23,6 +23,7 @@ const Signup = () => {
     emailMessage: "",
     passwordMessage: "",
     passwordConfirmMessage: "",
+    phoneMessage: "",
   });
 
   const [isValid, setIsValid] = useState({
@@ -30,6 +31,23 @@ const Signup = () => {
     isPassword: false,
     isPasswordConfirm: false,
   });
+
+  // 우편번호 상태
+  const [isPostCodeOpen, setIsPostCodeOpen] = useState(false);
+
+  // 우편번호 api
+  const handleAddressComplete = (data) => {
+    setForm({
+      ...form,
+      zip_code: data.zonecode,
+      main_address: data.address,
+    });
+    setIsPostCodeOpen(false); // 입력 후 창 닫기
+  };
+
+  const togglePostCode = () => {
+    setIsPostCodeOpen((prev) => !prev);
+  };
 
   // 입력 핸들러
   const handleChange = (e) => {
@@ -41,11 +59,8 @@ const Signup = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setForm({ ...form, profile_image: reader.result });
-      };
-      reader.readAsDataURL(file);
+      const previewUrl = URL.createObjectURL(file);
+      setForm({ ...form, profile_image: previewUrl });
     }
   };
 
@@ -62,12 +77,40 @@ const Signup = () => {
       });
       setIsValid({ ...isValid, isEmail: false });
     } else {
-      setMessages({ ...messages, emailMessage: "사용 가능한 이메일입니다." });
+      setMessages({ ...messages, emailMessage: "" });
       setIsValid({ ...isValid, isEmail: true });
     }
   };
 
   //이메일 중복 확인
+  const onChangeEmailConfirm = async () => {
+    if (!form.email) {
+      alert("이메일을 입력해주세요.");
+      return;
+    }
+    try {
+      const response = await axios.post("/api/emailcheck", {
+        email: form.email,
+      });
+
+      if (response.data.isDuplicate) {
+        setMessages({
+          ...messages,
+          emailMessage: "이미 사용 중인 이메일입니다.",
+        });
+        setIsValid({ ...isValid, isEmail: false });
+      } else {
+        setMessages({
+          ...messages,
+          emailMessage: "사용 가능한 이메일입니다.",
+        });
+        setIsValid({ ...isValid, isEmail: true });
+      }
+    } catch (error) {
+      console.error("이메일 확인 실패:", error);
+      alert("이메일 중복 확인 중 오류가 발생했습니다.");
+    }
+  };
 
   // 비밀번호 유효성 검사
   const onChangePassword = (e) => {
@@ -79,11 +122,14 @@ const Signup = () => {
       setMessages({
         ...messages,
         passwordMessage:
-          "비밀번호는 숫자+영문자+특수문자 조합으로 8자리 이상이어야 합니다.",
+          "비밀번호는 숫자+영문자+특수문자 조합으로 8자리 이상이여야 합니다.",
       });
       setIsValid({ ...isValid, isPassword: false });
     } else {
-      setMessages({ ...messages, passwordMessage: "안전한 비밀번호입니다." });
+      setMessages({
+        ...messages,
+        passwordMessage: "사용 가능한 비밀번호입니다.",
+      });
       setIsValid({ ...isValid, isPassword: true });
     }
   };
@@ -126,11 +172,11 @@ const Signup = () => {
     }
   };
 
-  //폼 제출 핸들러
-  const handleSubmit = (e) => {
+  // DB 전송 로직
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 모든 항목 입력 필요
+    // 모든 입력 필드 확인
     const requiredFields = [
       "name",
       "email",
@@ -141,7 +187,6 @@ const Signup = () => {
       "main_address",
       "details_address",
     ];
-
     for (const field of requiredFields) {
       if (!form[field]) {
         setMessages({
@@ -152,50 +197,42 @@ const Signup = () => {
       }
     }
 
-    //이메일과 비밀번호 유효성 검사
+    // 유효성 검사 확인
     if (!isValid.isEmail || !isValid.isPassword || !isValid.isPasswordConfirm) {
       setMessages({
         ...messages,
-        formErrorMessage: "이메일 혹은 비밀번호를 확인해주세요",
+        formErrorMessage: "이메일 혹은 비밀번호를 확인해주세요.",
       });
       return;
     }
 
-    // 성공 메시지
-    alert("회원가입이 완료되었습니다!");
-    console.log("회원가입 데이터:", form);
+    // FormData 객체 생성
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("email", form.email);
+    formData.append("password", form.password);
+    formData.append("phone", form.phone);
+    formData.append("zip_code", form.zip_code);
+    formData.append("main_address", form.main_address);
+    formData.append("details_address", form.details_address);
+
+    // 이미지 파일이 있는 경우
+    if (form.profile_image) {
+      formData.append("profile_image", form.profile_image);
+    }
+
+    try {
+      const response = await axios.post("/api/signup", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("회원가입이 완료되었습니다!");
+      console.log("서버 응답:", response.data);
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      alert("회원가입 중 오류가 발생했습니다.");
+    }
   };
-
-  //DB 전송 로직. 구현되면 확인해보고 위에 폼 제출 핸들러 삭제하고 구현할 것
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (
-  //     isValid.isEmail &&
-  //     form.password &&
-  //     form.password === form.passwordConfirm
-  //   ) {
-  //     try {
-  //       const response = await axios.post("/api/signup", {
-  //         name: form.name,
-  //         email: form.email,
-  //         password: form.password,
-  //         phone: form.phone,
-  //         zipcode: form.zip_code,
-  //         main_address: form.main_address,
-  //         details_address: form.details_address,
-  //       });
-
-  //       console.log("회원가입 성공 데이터:", response.data);
-  //       alert("회원가입이 완료되었습니다!");
-  //       // navigate("/login"); // 로그인 페이지로 이동
-  //     } catch (error) {
-  //       console.error("회원가입 실패:", error);
-  //       alert("회원가입 실패했습니다.");
-  //     }
-  //   } else {
-  //     alert("서버 오류: 다시 확인해주세요");
-  //   }
-  // };
 
   return (
     <SignupForm onSubmit={handleSubmit} className="signup-form">
@@ -211,12 +248,17 @@ const Signup = () => {
       />
 
       <SignupFormLabel>이메일</SignupFormLabel>
-      <SignupFormInput
-        type="email"
-        name="email"
-        onChange={onChangeEmail}
-        value={form.email}
-      />
+      <SignupFlexContainer>
+        <SignupFormInput
+          type="email"
+          name="email"
+          onChange={onChangeEmail}
+          value={form.email}
+        />
+        <SignupConfirmButton type="button" onClick={onChangeEmailConfirm}>
+          중복 확인
+        </SignupConfirmButton>
+      </SignupFlexContainer>
       <SignupFormErrorMessage>{messages.emailMessage}</SignupFormErrorMessage>
 
       <SignupFormLabel>비밀번호</SignupFormLabel>
@@ -251,12 +293,21 @@ const Signup = () => {
       <SignupFormErrorMessage>{messages.phoneMessage}</SignupFormErrorMessage>
 
       <SignupFormLabel>우편번호</SignupFormLabel>
-      <SignupFormInput
-        type="text"
-        name="zip_code"
-        onChange={handleChange}
-        value={form.zip_code}
-      />
+      <SignupFlexContainer>
+        <SignupFormInput
+          type="text"
+          name="zip_code"
+          onChange={handleChange}
+          value={form.zip_code}
+          readOnly
+        />
+        <SignupConfirmButton type="button" onClick={togglePostCode}>
+          우편번호 찾기
+        </SignupConfirmButton>
+      </SignupFlexContainer>
+      {isPostCodeOpen && (
+        <DaumPostCode onComplete={handleAddressComplete} autoClose={false} />
+      )}
 
       <SignupFormLabel>기본 주소</SignupFormLabel>
       <SignupFormInput
@@ -264,6 +315,7 @@ const Signup = () => {
         name="main_address"
         onChange={handleChange}
         value={form.main_address}
+        readOnly
       />
 
       <SignupFormLabel>상세 주소</SignupFormLabel>
@@ -300,12 +352,11 @@ const Signup = () => {
 export default Signup;
 
 const SignupForm = styled.form`
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 20px 30px;
+  max-width: 700px;
+  margin: 1px auto;
+  padding: 100px 30px;
   border: none;
   background-color: #fff;
-  font-family: "Noto Sans KR", sans-serif;
   color: #333;
 `;
 
@@ -337,7 +388,9 @@ const SignupFormLine = styled.hr`
 `;
 
 const SignupFormInput = styled.input`
+  flex: 1;
   width: 100%;
+  height: 42px;
   padding: 12px 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -367,4 +420,26 @@ const SignupFormButton = styled.button`
   &:hover {
     background-color: rgb(0, 121, 70);
   }
+`;
+
+const SignupConfirmButton = styled.button`
+  padding: 10px 20px;
+  height: 42px;
+  background-color: #505c6d;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background-color: rgb(0, 121, 70);
+  }
+`;
+
+const SignupFlexContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
 `;
