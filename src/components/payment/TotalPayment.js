@@ -120,10 +120,6 @@ const AgreeButton = styled.button`
 
   p {
   }
-
-  p2 {
-    color: gray;
-  }
 `;
 
 export default PaymentAmount;
