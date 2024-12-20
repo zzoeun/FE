@@ -31,11 +31,11 @@ const Pagination = ({ books, dropdownOption, longNovel, middleNovel, shortNovel,
     );
   }
 
-  return <ButtonBox>{buttons}</ButtonBox>;
+  return <ButtonBox>{buttons.length !== 1 && buttons}</ButtonBox>;
 };
 
 const ButtonBox = styled.div`
-  margin: 0px auto 30px;
+  min-height: 45px;
   display: flex;
   justify-content: center;
   gap: 10px;
