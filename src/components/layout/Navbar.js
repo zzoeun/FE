@@ -1,22 +1,25 @@
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import Dropdown from '../home/Dropdown';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <Nav>
       <Wrapper>
-        <Dropdown />
+        {location.pathname === '/' && <Dropdown />}
 
         <LocationList>
           <LocationItem>
             <LocationButton onClick={() => navigate('/login')}>로그인</LocationButton>
           </LocationItem>
-          <LocationItem>
-            <LocationButton onClick={() => navigate('/signup')}>회원가입</LocationButton>
-          </LocationItem>
+          {location.pathname !== '/signup' && (
+            <LocationItem>
+              <LocationButton onClick={() => navigate('/signup')}>회원가입</LocationButton>
+            </LocationItem>
+          )}
         </LocationList>
       </Wrapper>
     </Nav>
@@ -42,11 +45,11 @@ const Wrapper = styled.div`
 `;
 
 const LocationList = styled.ul`
-  width: 150px;
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 30px;
+  margin-left: auto;
 `;
 
 const LocationItem = styled.li`
