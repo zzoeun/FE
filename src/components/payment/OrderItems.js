@@ -43,12 +43,12 @@ const OrderItems = () => {
   const { deliveryFee, total } = itemsAmountCalc(items);
 
   return (
-    <OrderItemsComponent>
+    <OrderItemsWrapper>
       <OrderItemHead>
         <h3>주문상품</h3>
         <p>옵션 및 수량 변경은 장바구니에서만 가능합니다.</p>
       </OrderItemHead>
-      <OrderItemInfo>
+      <OrderItemContainer>
         <ItemSort>
           <p>FRENCHBOOK</p> {/*종류 생기면 반복하기*/}
         </ItemSort>
@@ -73,12 +73,12 @@ const OrderItems = () => {
             <p2>택배 배송안내</p2>
           </ItemDelivery>
         </ItemContents>
-      </OrderItemInfo>
-    </OrderItemsComponent>
+      </OrderItemContainer>
+    </OrderItemsWrapper>
   );
 };
 
-const OrderItemsComponent = styled.div`
+const OrderItemsWrapper = styled.div`
   margin: 20px;
   padding: 15px;
   font-size: 15px;
@@ -102,7 +102,7 @@ const OrderItemHead = styled.div`
   }
 `;
 
-const OrderItemInfo = styled.div``;
+const OrderItemContainer = styled.div``;
 
 const ItemSort = styled.div`
   padding: 10px 0 25px 10px;

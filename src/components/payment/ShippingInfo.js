@@ -11,9 +11,9 @@ const ShippingInfo = () => {
   };
 
   return (
-    <ShippingInfoComponent>
+    <ShippingInfoWrapper>
       <h3>배송정보</h3>
-      <RadioGroup>
+      <RadioContainer>
         <label>
           <input
             type="radio"
@@ -36,8 +36,8 @@ const ShippingInfo = () => {
           />{" "}
           직접 입력
         </label>
-      </RadioGroup>
-      <InputGroup>
+      </RadioContainer>
+      <InputContainer>
         <InputContents>
           <label>받으시는 분</label>
           <p>*</p>
@@ -69,12 +69,12 @@ const ShippingInfo = () => {
             <option>부재 시 연락 부탁드립니다.</option>
           </select>
         </InputContents>
-      </InputGroup>
-    </ShippingInfoComponent>
+      </InputContainer>
+    </ShippingInfoWrapper>
   );
 };
 
-const ShippingInfoComponent = styled.div`
+const ShippingInfoWrapper = styled.div`
   margin: 20px;
   padding: 15px;
   font-size: 15px;
@@ -88,7 +88,7 @@ const ShippingInfoComponent = styled.div`
   }
 `;
 
-const RadioGroup = styled.div`
+const RadioContainer = styled.div`
   display: flex;
   padding: 20px 0 20px 5px;
   border-bottom: 2px solid #f4f4f4;
@@ -99,7 +99,7 @@ const RadioGroup = styled.div`
   }
 `;
 
-const InputGroup = styled.div`
+const InputContainer = styled.div`
   label {
     display: inline-block;
     width: 85px;

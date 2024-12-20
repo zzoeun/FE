@@ -14,7 +14,7 @@ const PaymentMethod = () => {
   return (
     <PaymentMethodComponent>
       <h3>결제 방식</h3>
-      <MethodRadio>
+      <RadioContainer>
         <label>
           <input
             type="radio"
@@ -39,14 +39,14 @@ const PaymentMethod = () => {
           />{" "}
           일반결제
         </label>
-      </MethodRadio>
+      </RadioContainer>
       {}
-      <MethodButton>
+      <ButtonContainer>
         <button>SmilePay</button>
         <button>Npay</button>
         <button>🗨️페이</button>
         <button>PAYCO</button>
-      </MethodButton>
+      </ButtonContainer>
     </PaymentMethodComponent>
   );
 };
@@ -65,7 +65,7 @@ const PaymentMethodComponent = styled.div`
   }
 `;
 
-const MethodRadio = styled.div`
+const RadioContainer = styled.div`
   display: flex;
   padding: 20px 0 20px 5px;
   border-bottom: 2px solid #f4f4f4;
@@ -76,7 +76,7 @@ const MethodRadio = styled.div`
   }
 `;
 
-const MethodButton = styled.div`
+const ButtonContainer = styled.div`
   padding: 20px 0 20px 5px;
 
   button {
