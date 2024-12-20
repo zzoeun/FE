@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { closeModal } from '../../features/book/modalSlice';
+import { closeModal } from '../../features/modalSlice';
 import ModalContent from './ModalContent';
 import Button from './Button';
 

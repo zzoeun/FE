@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { changeOption } from '../../features/book/dropdownSlice';
+import { changeOption } from '../../features/dropdownSlice';
 
 const Dropdown = () => {
   const [showDropdown, setShowDropdown] = useState(false);
