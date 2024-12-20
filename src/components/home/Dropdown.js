@@ -35,9 +35,10 @@ const Dropdown = () => {
       {showDropdown && (
         <OptionList>
           {options.map((option, i) => (
-            <Option key={i} onClick={() => dispatch(changeOption(option))}>
-              {option}
-            </Option>
+            <OptionItem key={i} onClick={() => dispatch(changeOption(option))}>
+              <p>{option}</p>
+              <span></span>
+            </OptionItem>
           ))}
         </OptionList>
       )}
@@ -77,8 +78,22 @@ const OptionList = styled.ul`
   gap: 16px;
 `;
 
-const Option = styled.li`
+const OptionItem = styled.li`
   cursor: pointer;
+
+  & span {
+    width: 0%;
+    height: 1px;
+    display: block;
+    background: #5b6373;
+    visibility: hidden;
+    transition: all 0.5s;
+  }
+
+  &:hover span {
+    width: 100%;
+    visibility: visible;
+  }
 `;
 
 export default Dropdown;
