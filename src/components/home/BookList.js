@@ -56,7 +56,7 @@ const BookListTitle = styled.h2`
   font-size: 32px;
   text-align: center;
   letter-spacing: 2px;
-  margin: 300px auto 50px;
+  margin: 340px auto 50px;
 `;
 
 const CardList = styled.ul`
