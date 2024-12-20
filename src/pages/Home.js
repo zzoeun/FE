@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import BookList from '../components/home/BookList';
-import CartModal from '../components/home/CartModal';
+import Modal from '../components/home/Modal';
 import { useSelector } from 'react-redux';
 
 const Home = () => {
@@ -8,7 +8,7 @@ const Home = () => {
 
   return (
     <Main>
-      {modal && <CartModal />}
+      {modal && <Modal />}
       <BookList />
     </Main>
   );
