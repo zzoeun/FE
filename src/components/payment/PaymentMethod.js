@@ -1,6 +1,7 @@
 // 결제 방법
 import React, { useState } from "react";
 import styled from "styled-components";
+import PaymentInfo from "./PaymentMethodInfo";
 
 const PaymentMethod = () => {
   // 결제 방법 Radio 상태 (간단, 일반)
@@ -63,6 +64,7 @@ const PaymentMethod = () => {
           </button>
         ))}
       </ButtonContainer>
+      <PaymentInfo info={PayButtonsText[payRadioMethod][payButtonMethod]} />
     </PaymentMethodComponent>
   );
 };
@@ -131,9 +133,5 @@ const ButtonContainer = styled.div`
     background-color: #f4f4f4;
   }
 `;
-
-const CardPayment = styled.div``;
-
-const InputTextContainer = styled.div``;
 
 export default PaymentMethod;
