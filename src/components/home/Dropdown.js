@@ -35,7 +35,13 @@ const Dropdown = () => {
       {showDropdown && (
         <OptionList>
           {options.map((option, i) => (
-            <OptionItem key={i} onClick={() => dispatch(changeOption(option))}>
+            <OptionItem
+              key={i}
+              onClick={() => {
+                dispatch(changeOption(option));
+                window.scrollTo(0, 0);
+              }}
+            >
               <p>{option}</p>
               <span></span>
             </OptionItem>
