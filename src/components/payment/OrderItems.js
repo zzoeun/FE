@@ -70,7 +70,7 @@ const OrderItems = () => {
           </Items>
           <ItemDelivery>
             <p>{addComma(deliveryFee)}원</p>
-            <p2>택배 배송안내</p2>
+            <P2>택배 배송안내</P2>
           </ItemDelivery>
         </ItemContents>
       </OrderItemContainer>
@@ -185,10 +185,10 @@ const ItemDelivery = styled.div`
     font-weight: bold;
     margin-bottom: 10px;
   }
+`;
 
-  p2 {
-    color: #9b9b9b;
-  }
+const P2 = styled.p`
+  color: #9b9b9b;
 `;
 
 export default OrderItems;
