@@ -65,6 +65,11 @@ const Cart = () => {
     setSelectedItems([]);
   };
 
+  const handleItemDelete = (itemId) => {
+    setCartItems(cartItems.filter(item => item.id !== itemId));
+    setSelectedItems(selectedItems.filter(id => id !== itemId));
+  };
+
   return (
     <Wrapper>
     <CartContainer>
@@ -93,6 +98,7 @@ const Cart = () => {
             selectedItems={selectedItems}
             setSelectedItems={setSelectedItems}
             updateItemQuantity={updateItemQuantity}
+            onItemDelete={handleItemDelete}
           />
           <CartItemAmount 
             totalPrice={calculateTotalPrice()}

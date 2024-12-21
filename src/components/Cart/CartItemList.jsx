@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const CartItemList = ({ items, selectedItems, setSelectedItems, updateItemQuantity }) => {
+const CartItemList = ({ items, selectedItems, setSelectedItems, updateItemQuantity, onItemDelete }) => {
   const handleItemSelect = (itemId) => {
     if (selectedItems.includes(itemId)) {
       setSelectedItems(selectedItems.filter(id => id !== itemId));
@@ -58,6 +58,7 @@ const CartItemList = ({ items, selectedItems, setSelectedItems, updateItemQuanti
               </DeliveryPriceNumber>
               <DeliveryPriceText>배송비</DeliveryPriceText>
             </DeliveryPrice>
+            <DeleteButton onClick={() => onItemDelete(item.id)}> x </DeleteButton>
           </ItemList>
         ))}
       </Items>
@@ -154,12 +155,6 @@ const DeliveryPriceText = styled.div`
   margin-top: 5px;
 `;
 
-const DeleteButton = styled.div`
-  cursor: pointer;
-  margin-left: 20px;
-  font-size: 1.5rem;
-`;
-
 const QuantityList = styled.ul`
   list-style: none;
   padding: 0;
@@ -180,5 +175,11 @@ const Quantity = styled.div`
 
 const MinusBotton = styled.div`
   cursor: pointer;
+  font-size: 1.5rem;
+`;
+
+const DeleteButton = styled.div`
+  cursor: pointer;
+  margin-left: 20px;
   font-size: 1.5rem;
 `;
