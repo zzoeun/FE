@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ setSelectedMenu }) => {
   const [activeMenu, setActiveMenu] = useState("myinfo"); // 현재 선택된 메뉴 상태, 선택 메뉴 계속 색상 유지
+  const navigate = useNavigate();
 
   const handleMenuClick = (menu) => {
     setActiveMenu(menu); // 선택된 메뉴 업데이트
     setSelectedMenu(menu); // 부모 컴포넌트에 선택된 메뉴 전달
+
+    if (menu === "cart") {
+      navigate("/cart");
+    }
   };
 
   return (
@@ -23,6 +29,12 @@ const Sidebar = ({ setSelectedMenu }) => {
           onClick={() => handleMenuClick("myinfomodify")}
         >
           내 정보 수정
+        </MenuItem>
+        <MenuItem
+          isActive={activeMenu === "cart"}
+          onClick={() => handleMenuClick("cart")}
+        >
+          장바구니
         </MenuItem>
         <MenuItem
           isActive={activeMenu === "deleteaccount"}
