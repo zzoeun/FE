@@ -25,12 +25,6 @@ const Sidebar = ({ setSelectedMenu }) => {
           내 정보
         </MenuItem>
         <MenuItem
-          isActive={activeMenu === "myinfomodify"}
-          onClick={() => handleMenuClick("myinfomodify")}
-        >
-          내 정보 수정
-        </MenuItem>
-        <MenuItem
           isActive={activeMenu === "cart"}
           onClick={() => handleMenuClick("cart")}
         >
