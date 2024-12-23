@@ -59,12 +59,14 @@ const MenuItem = styled.div`
   margin-bottom: 30px;
   cursor: pointer;
   color: ${(props) =>
-    props.isActive ? "#f06569" : "#4f4f4f"}; /* 선택된 메뉴 색상 변경 */
+    props.isActive
+      ? "rgb(0, 0, 0)"
+      : "rgb(0, 0, 0)"}; /* 선택된 메뉴 색상 변경 */
   font-weight: ${(props) =>
     props.isActive ? "bold" : "normal"}; /* 선택된 메뉴 굵게 */
 
   &:hover {
-    color: #f06569;
+    color: rgb(0, 0, 0);
     font-weight: bold;
   }
 `;

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import ValidMyInfo from "./ValidMyInfo";
 
 const MyInfo = ({ userData, setUserData }) => {
-  // 초기값을 MtPage에서 받은 `userData`로 설정
+  // 초기값을 MyPage에서 받은 `userData`로 설정
   const [form, setForm] = useState(userData || {});
+  const [token, setToken] = useState(null);
 
   // 입력 값 변경 핸들러
   const handleChange = (e) => {
@@ -25,12 +27,13 @@ const MyInfo = ({ userData, setUserData }) => {
   const handleSave = async () => {
     try {
       // 수정된 데이터를 백엔드에 전송,
-      const response = await axios.put(`/api/mypage/putUserInfo/{id}`, form, {
-        headers: {
-          Authorization: `JWT_TOKEN`,
-        },
-      });
-
+      const response = await axios.put(
+        `/api/mypage/putUserInfo/${form.id}`,
+        form,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       console.log("수정 성공:", response.data);
 
       // 부모 컴포넌트에 업데이트된 데이터 전달
@@ -59,37 +62,15 @@ const MyInfo = ({ userData, setUserData }) => {
           onChange={handleImageChange}
         />
       </ProfileImageWrapper>
-      <FormWrapper>
-        <FormGroup>
-          <label>이름</label>
-          <Input name="name" value={form.name || ""} onChange={handleChange} />
-        </FormGroup>
-        <FormGroup>
-          <label>이메일</label>
-          <Input
-            name="email"
-            value={form.email || ""}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <label>성별</label>
-          <Input
-            name="gender"
-            value={form.gender || ""}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <label>휴대폰번호</label>
-          <Input
-            name="phone"
-            value={form.phone || ""}
-            onChange={handleChange}
-          />
-        </FormGroup>
-      </FormWrapper>
-      <SaveButton onClick={handleSave}>수정하기</SaveButton>
+      {/* 변경된 입력값 전달 */}
+      <ValidMyInfo form={form} handleChange={handleChange} />
+      <SaveButton
+        onClick={() => {
+          handleSave();
+        }}
+      >
+        수정하기
+      </SaveButton>
     </FormContainer>
   );
 };
@@ -100,43 +81,12 @@ const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  justify-content: space-between; /* 버튼을 포함해 내용 간격 조정 */
   background: #fff;
   padding: 20px;
-  border: 1px solid #ddd;
   width: 100%;
-  height: 100vh;
-  box-sizing: border-box;
-`;
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 500px;
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 15px;
-  width: 100%;
-
-  label {
-    display: block;
-    font-weight: bold;
-    text-align: center;
-
-    margin-bottom: 5px;
-  }
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  text-align: center;
-  box-sizing: border-box;
+  max-width: 600px; /* 중앙 정렬 및 크기 제한 */
+  margin: 0 auto;
 `;
 
 /* 프로필 이미지 스타일 */
@@ -171,14 +121,15 @@ const ProfileImagePlaceholder = styled.div`
 const UploadButton = styled.label`
   margin-top: 10px;
   padding: 10px 20px;
-  background-color: #a8a2b0;
+  background-color: #cccccc;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
 
   &:hover {
-    background-color: #f3b1b3;
+    background-color: #999999;
   }
 `;
 
@@ -188,14 +139,17 @@ const FileInput = styled.input`
 `;
 
 const SaveButton = styled.button`
+  margin-top: 20px;
   padding: 10px 20px;
-  background-color: #a8a2b0;
+  background-color: #555555;
   color: white;
   border: none;
   border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+  font-weight: bold;
 
   &:hover {
-    background-color: #f3b1b3;
+    background-color: #000;
   }
 `;
