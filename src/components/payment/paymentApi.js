@@ -9,11 +9,11 @@ export const fetchUserInfo = async (email) => {
 export const fetchOrderItems = async (items) => {
   // 상품 정보를 가져오는 API 함수
   const response = await axios.post("/api/order/items", { items });
-  return response.data; // 서버에서 가져온 데이터를 반환
+  return response.data;
 };
 
 export const sendPayment = async (payload) => {
   // 결제를 처리하는 API 함수
   const response = await axios.post("/api/payment", payload);
-  return response.data; // 서버에서 처리된 결과를 반환
+  return response.data;
 };
