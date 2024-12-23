@@ -355,7 +355,7 @@ export default Signup;
 
 const SignupForm = styled.form`
   max-width: 700px;
-  margin: 1px auto;
+  margin: 302px auto;
   padding: 100px 30px;
   border: none;
   background-color: #fff;

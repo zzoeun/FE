@@ -28,19 +28,20 @@ const Sidebar = ({ setSelectedMenu }) => {
           isActive={activeMenu === "cart"}
           onClick={() => handleMenuClick("cart")}
         >
-          회원 정보 수정
+          장바구니
+        </MenuItem>
+
+        <MenuItem
+          isActive={activeMenu === "paymentslist"}
+          onClick={() => handleMenuClick("paymentslist")}
+        >
+          결제목록
         </MenuItem>
         <MenuItem
           isActive={activeMenu === "deleteaccount"}
           onClick={() => handleMenuClick("deleteaccount")}
         >
           회원 탈퇴
-        </MenuItem>
-        <MenuItem
-          isActive={activeMenu === "paymentslist"}
-          onClick={() => handleMenuClick("paymentslist")}
-        >
-          결제목록
         </MenuItem>
       </MenuGroup>
     </SidebarContainer>
