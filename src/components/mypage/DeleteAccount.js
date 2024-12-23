@@ -41,6 +41,8 @@ export default DeleteAccount;
 
 // 스타일 정의
 const Container = styled.div`
+  margin: 302px auto;
+
   text-align: center;
   padding: 30px;
 `;
