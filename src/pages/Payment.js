@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ShippingInfo from "../components/payment/ShippingInfo";
 import OrderItems from "../components/payment/OrderItems";
 import PaymentMethod from "../components/payment/PaymentMethod";
@@ -8,13 +8,26 @@ import TotalPayment from "../components/payment/TotalPayment";
 import styled from "styled-components";
 
 const Payment = () => {
+  const [userInfo, setUserInfo] = useState(null); // 회원 정보
+  const [orderItems, setOrderItems] = useState([]); // 상품 정보보
+  const [cardNumbers, setCardNumbers] = useState(""); // 카드 번호
+  const [totalAmount, setTotalAmount] = useState(0); // 총 금액
+  const [shippingFee, setShippingFee] = useState(0); // 배송비비
+
+  // 카드 번호 업데이트 함수
+  const handleCardNumbersChange = (numbers) => {
+    setCardNumbers(numbers);
+  };
+
+  console.log(cardNumbers);
+
   return (
     <PaymentPage>
       <PaymentContents>
         <h2>주문 및 결제</h2>
         <ShippingInfo />
         <OrderItems />
-        <PaymentMethod />
+        <PaymentMethod onCardNumbersChange={handleCardNumbersChange} />
       </PaymentContents>
       <PaymentAmount>
         <TotalPayment />

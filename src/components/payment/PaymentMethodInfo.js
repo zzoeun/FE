@@ -3,23 +3,14 @@ import styled from "styled-components";
 import CardPaymentInfo from "./paymentMethodInfo/CardPaymentInfo";
 import PhoneNumPaymentInfo from "./paymentMethodInfo/PhoneNumPaymentInfo";
 
-const PaymentMethodInfo = ({ info }) => {
-  const [cardNumbers, setCardNumbers] = useState(""); // 카드 번호
-
-  // 카드 번호 업데이트 함수
-  const handleCardNumbersChange = (numbers) => {
-    setCardNumbers(numbers);
-  };
-
-  console.log(cardNumbers);
-
+const PaymentMethodInfo = ({ info, onCardNumbersChange }) => {
   const paymentInfo = () => {
     switch (info) {
       case "카드결제":
         console.log("카드결제");
         return (
           <CardPayment>
-            <CardPaymentInfo onCardNumbersChange={handleCardNumbersChange} />
+            <CardPaymentInfo onCardNumbersChange={onCardNumbersChange} />
           </CardPayment>
         );
       case "전화번호":

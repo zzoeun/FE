@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import PaymentInfo from "./PaymentMethodInfo";
 
-const PaymentMethod = () => {
+const PaymentMethod = ({ onCardNumbersChange }) => {
   // 결제 방법 Radio 상태 (간단, 일반)
   // 결제 방법 Button 상태 (SmilePay, NPay, 카드결제, 전화번호 등등등)
   const [payRadioMethod, setPayRadioMethod] = useState(0);
@@ -64,7 +64,10 @@ const PaymentMethod = () => {
           </button>
         ))}
       </ButtonContainer>
-      <PaymentInfo info={PayButtonsText[payRadioMethod][payButtonMethod]} />
+      <PaymentInfo
+        info={PayButtonsText[payRadioMethod][payButtonMethod]}
+        onCardNumbersChange={onCardNumbersChange}
+      />
     </PaymentMethodComponent>
   );
 };
