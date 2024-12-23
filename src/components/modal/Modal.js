@@ -48,17 +48,23 @@ const ModalBackground = styled.div`
 `;
 
 const ModalMain = styled.div`
+  width: ${({ modalWidth }) => (modalWidth !== null ? `${modalWidth}px` : 'none')};
+  height: ${({ modalHeight }) => (modalHeight !== null ? `${modalHeight}px` : 'none')};
   text-align: center;
   background: #fff;
   border-radius: 5px;
   padding: 30px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 `;
 
 const ModalButtons = styled.div`
   display: flex;
   justify-content: center;
   gap: 5px;
-  margin-top: 20px;
 `;
 
 export default Modal;
