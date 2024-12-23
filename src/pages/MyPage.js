@@ -4,7 +4,7 @@ import axios from "axios";
 import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
-import MyInfoModify from "../components/mypage/MyInfoModify";
+//import MyInfoModify from "../components/mypage/MyInfoModify";
 import PaymentsList from "../components/mypage/PaymentsList";
 
 const MyPage = () => {
