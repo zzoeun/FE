@@ -7,6 +7,22 @@ import TotalPayment from "../components/payment/TotalPayment";
 // import styles from "./Payment.module.css";
 import styled from "styled-components";
 
+const Payment = () => {
+  return (
+    <PaymentPage>
+      <PaymentContents>
+        <h2>주문 및 결제</h2>
+        <ShippingInfo />
+        <OrderItems />
+        <PaymentMethod />
+      </PaymentContents>
+      <PaymentAmount>
+        <TotalPayment />
+      </PaymentAmount>
+    </PaymentPage>
+  );
+};
+
 const PaymentPage = styled.div`
   display: flex;
   margin: 0 auto;
@@ -30,21 +46,5 @@ const PaymentContents = styled.div`
 const PaymentAmount = styled.div`
   float: right;
 `;
-
-const Payment = () => {
-  return (
-    <PaymentPage>
-      <PaymentContents>
-        <h2>주문 및 결제</h2>
-        <ShippingInfo />
-        <OrderItems />
-        <PaymentMethod />
-      </PaymentContents>
-      <PaymentAmount>
-        <TotalPayment />
-      </PaymentAmount>
-    </PaymentPage>
-  );
-};
 
 export default Payment;
