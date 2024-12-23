@@ -9,7 +9,7 @@ import PaymentsList from "../components/mypage/PaymentsList";
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("myinfo");
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState(null);
 
   // 백엔드에서 사용자 정보 불러오기, 필요없어도 되는지 확인 필요
   useEffect(() => {
@@ -21,10 +21,11 @@ const MyPage = () => {
         setUserData(response.data); // 받아온 데이터 저장
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
+        alert("로그인한 회원이 아닙니다.");
       }
     };
 
-    fetchUserData();
+    fetchUserData(); // 사용자 정보 가져오기
   }, []);
 
   // 현재 메뉴에 따라 다른 화면 렌더링
@@ -32,8 +33,6 @@ const MyPage = () => {
     switch (selectedMenu) {
       case "myinfo":
         return <MyInfo userData={userData} />;
-      case "myinfomodify":
-        return <MyInfoModify />;
       case "deleteaccount":
         return <DeleteAccount />;
       case "paymentslist":
