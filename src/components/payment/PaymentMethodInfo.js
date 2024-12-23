@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import CardPaymentInfo from "./paymentMethodInfo/CardPaymentInfo";
+import PhoneNumPaymentInfo from "./paymentMethodInfo/PhoneNumPaymentInfo";
 
-const PaymentInfo = ({ info }) => {
-  console.log(typeof "카드결제");
+const PaymentMethodInfo = ({ info }) => {
+  const [cardNumbers, setCardNumbers] = useState(""); // 카드 번호
+
+  // 카드 번호 업데이트 함수
+  const handleCardNumbersChange = (numbers) => {
+    setCardNumbers(numbers);
+  };
+
+  console.log(cardNumbers);
 
   const paymentInfo = () => {
     switch (info) {
@@ -10,32 +19,13 @@ const PaymentInfo = ({ info }) => {
         console.log("카드결제");
         return (
           <CardPayment>
-            <RadioContainer>
-              <label>
-                <input type="radio" defaultChecked />
-                개인
-              </label>
-              <label>
-                <input type="radio" />
-                법인
-              </label>
-            </RadioContainer>
-            <InputTextContainer>
-              <input type="text" />
-              <input type="text" />
-              <input type="text" />
-              <input type="text" />
-            </InputTextContainer>
+            <CardPaymentInfo onCardNumbersChange={handleCardNumbersChange} />
           </CardPayment>
         );
       case "전화번호":
         return (
           <PhoneNumPayment>
-            <input type="text" />
-            <p>-</p>
-            <input type="text" />
-            <p>-</p>
-            <input type="text" />
+            <PhoneNumPaymentInfo />
           </PhoneNumPayment>
         );
 
@@ -48,12 +38,10 @@ const PaymentInfo = ({ info }) => {
 
 const CardPayment = styled.div``;
 
-const RadioContainer = styled.div``;
-
-const InputTextContainer = styled.div``;
-
-const PhoneNumPayment = styled.div``;
+const PhoneNumPayment = styled.div`
+  display: flex;
+`;
 
 const AccountPayment = styled.div``;
 
-export default PaymentInfo;
+export default PaymentMethodInfo;
