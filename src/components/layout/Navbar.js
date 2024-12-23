@@ -48,6 +48,7 @@ const Nav = styled.nav`
   min-width: 1200px;
   border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
+  background: #fff;
 `;
 
 const Wrapper = styled.div`
@@ -56,7 +57,6 @@ const Wrapper = styled.div`
   justify-content: space-between;
   width: 1200px;
   height: 50px;
-  background: #fff;
   padding: 0 30px 0 20px;
   margin: 0 auto;
 `;
