@@ -1,28 +1,51 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-const Order = () => {
+const Order = ({ selectedItems, totalPrice = 0, deliveryFee = 0 }) => {
+  const navigate = useNavigate(); 
+  const finalTotal = totalPrice + deliveryFee;
+
+  const handleOrder = () => {
+    if (selectedItems.length === 0) return;
+    navigate('/payment', { 
+      state: { 
+        // selectedItems,
+        // totalPrice,
+        // deliveryFee,
+        // finalTotal
+      } 
+    });
+  };
+
+
   return (
     <div>
-      <OrderConatiner>
+      <OrderContainer>
         <OrderTitle>장바구니 합계</OrderTitle>
         <OrderPrice>
           <div>상품금액</div>
-          <div>0 원</div>
+          <div>{totalPrice.toLocaleString()} 원</div>
         </OrderPrice>
         <OrderDeliveryPrice>
           <div>배송비</div>
-          <div>0 원</div>
+          <div>{deliveryFee.toLocaleString()} 원</div>
         </OrderDeliveryPrice>
         <OrderTotal>
           <div>선택 합계</div>
           <TotalPrice>
-            <Price>0</Price>
+            <Price>{finalTotal.toLocaleString()}</Price>
             <Won>원</Won>
           </TotalPrice>
         </OrderTotal>
-        <OrderButton>주문하기</OrderButton>
-      </OrderConatiner>
+        <OrderButton 
+          disabled={selectedItems.length === 0}
+          isEmpty={selectedItems.length === 0}
+          onClick={handleOrder}
+        >
+          주문하기
+        </OrderButton>
+      </OrderContainer>
     </div>
   );
 };
@@ -30,14 +53,14 @@ const Order = () => {
 export default Order;
 
 
-const OrderConatiner = styled.div`
+const OrderContainer = styled.div`
   width: 300px;
   heigth: 660px;
-  border-left: 1px solid gray;
+  border-left: 1px solid #BCCCDC;
   margin-left: 30px;
-  position: sticky;  // 스크롤 시 고정
-  top: 20px;        // 상단에서 20px 떨어진 위치에서 고정
-  align-self: flex-start; // 부모 컨테이너 상단에 맞춤
+  position: sticky;
+  top: 20px; 
+  align-self: flex-start;
 `;
 
 const OrderTitle = styled.h2`
@@ -85,16 +108,20 @@ const Won = styled.span`
   margin-left: 4px;
 `;
 
-
 const OrderButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
-  cursor: pointer;
+  cursor: ${props => props.isEmpty ? 'not-allowed' : 'pointer'};
   margin-top: 75px;
   margin-left: 30px;
-  border: 1px solid black;
-  background-color: lightgray;
+  background-color: ${props => props.isEmpty ? 'lightgray' : '#F5F5F5'};
   padding: 20px;
+  opacity: ${props => props.isEmpty ? 0.7 : 1};
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: ${props => props.isEmpty ? 'lightgray' : '#EBEBEB'};
+  }
 `;

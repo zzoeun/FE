@@ -4,6 +4,8 @@ import axios from "axios";
 import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
+//import MyInfoModify from "../components/mypage/MyInfoModify";
+import PaymentsList from "../components/mypage/PaymentsList";
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("myinfo");
@@ -33,8 +35,19 @@ const MyPage = () => {
         return <MyInfo userData={userData} />;
       case "deleteaccount":
         return <DeleteAccount />;
+      case "paymentslist":
+        return <PaymentsList />;
       default:
         return <MyInfo userData={userData} />;
+    }
+  };
+
+  const getPageTitle = () => {
+    switch (selectedMenu) {
+      case "paymentslist":
+        return "주문결제조회";
+      default:
+        return "마이페이지";
     }
   };
 
@@ -42,7 +55,7 @@ const MyPage = () => {
     <Container>
       <Sidebar setSelectedMenu={setSelectedMenu} />
       <Content>
-        <PageTitle>마이페이지</PageTitle>
+        <PageTitle>{getPageTitle()}</PageTitle>
         {renderContent()}
       </Content>
     </Container>
