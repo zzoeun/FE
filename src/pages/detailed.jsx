@@ -1,76 +1,89 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-// Styled-components
 const PageContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 20px;
   padding: 20px;
-  margin-top: 302px; /* 헤더 높이 */
-  max-width: 1200px;
+  margin-top: 302px; /* 헤더 공간 확보 */
+  max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 8px;
 `;
 
 const ImageContainer = styled.div`
-  flex: 1;
-  background-color: #f2f2f2;
-  height: 600px;
+  width: 300px;
+  height: 300px;
+  background-color: #f4f4f4; /* 이미지를 넣기 전 회색 배경 */
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: sticky;
-  top: 20px; /* 스크롤 시 상단 고정 */
+  flex-shrink: 0;
 `;
 
 const ContentContainer = styled.div`
-  flex: 2;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
 `;
 
-// Book Information
-const BookTitle = styled.h1`
+const Title = styled.h1`
   font-size: 24px;
   margin-bottom: 10px;
 `;
 
-const BookAuthor = styled.p`
+const Author = styled.p`
   font-size: 16px;
+  margin-bottom: 5px;
   color: #555;
 `;
 
-const BookPublisher = styled.p`
+const Publisher = styled.p`
   font-size: 16px;
+  margin-bottom: 10px;
   color: #555;
 `;
 
-const BookPrice = styled.p`
+const Price = styled.p`
   font-size: 20px;
   font-weight: bold;
-  margin: 10px 0;
+  color: #333;
+  margin-bottom: 20px;
 `;
 
-const BookDescription = styled.p`
+const Description = styled.p`
   font-size: 14px;
   line-height: 1.6;
   color: #666;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+  margin-bottom: 20px;
+  max-height: 150px; /* 스크롤을 위한 고정 높이 */
+  overflow-y: auto;
+  padding-right: 10px;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #f9f9f9;
+  }
 `;
 
-// Purchase Section
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  margin-top: 20px;
 `;
 
 const Button = styled.button`
-  flex: 1;
   padding: 10px;
   font-size: 16px;
   font-weight: bold;
@@ -80,99 +93,76 @@ const Button = styled.button`
 
   ${({ variant }) =>
     variant === "buy"
-      ? `
-      background-color: #007bff;
-    `
-      : `
-      background-color: #6c757d;
-    `}
+      ? `background-color: #6c757d;`
+      : `background-color: #555555;`}
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
-const QuantityContainer = styled.div`
+const QuantityControl = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
-`;
 
-const QuantityButton = styled.button`
-  width: 30px;
-  height: 30px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  background-color: #fff;
-  cursor: pointer;
-`;
+  button {
+    background-color: #ddd;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 18px;
+    cursor: pointer;
 
-const QuantityValue = styled.span`
-  font-size: 16px;
+    &:hover {
+      background-color: #bbb;
+    }
+  }
+
+  span {
+    font-size: 18px;
+  }
 `;
 
 const BookDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
 
-  // 수량 증가
-  const increaseQuantity = () => {
-    setQuantity(quantity + 1);
-  };
-
-  // 수량 감소
-  const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-
-  // 즉시 구매
-  const handleBuyNow = () => {
-    alert(`즉시 구매: ${quantity}권`);
-  };
-
-  // 장바구니 추가
-  const handleAddToCart = () => {
-    alert(`장바구니 추가: ${quantity}권`);
-  };
+  const handleIncrease = () => setQuantity((prev) => prev + 1);
+  const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const handleBuyNow = () => alert("즉시 구매했습니다.");
+  const handleAddToCart = () =>
+    alert(`${quantity}개의 상품이 장바구니에 추가되었습니다.`);
 
   return (
     <PageContainer>
-      {/* Left: Image Container */}
-      <ImageContainer>
-        <p>이미지 영역</p>
-      </ImageContainer>
+      {/* 왼쪽 이미지 영역 */}
+      <ImageContainer>{/* 여기에 이미지 삽입 */}</ImageContainer>
 
-      {/* Right: Content */}
+      {/* 오른쪽 정보 및 기능 영역 */}
       <ContentContainer>
-        {/* Book Info */}
         <div>
-          <BookTitle>도서 제목: Le Grand Atlas des rois de France</BookTitle>
-          <BookAuthor>저자: Jean Dupont</BookAuthor>
-          <BookPublisher>출판사: Glénat</BookPublisher>
-          <BookPrice>가격: 64,000원</BookPrice>
-          <BookDescription>
-            줄거리: This book offers a comprehensive guide to the kings of
-            France, including their reigns, achievements, and the historical
-            context of their time.
-          </BookDescription>
+          <Title>Le Grand Atlas des rois de France</Title>
+          <Author>저자: Jean Dupont</Author>
+          <Publisher>출판사: Glénat</Publisher>
+          <Price>64,000원</Price>
+          <Description>
+            This book offers a comprehensive guide to the kings of France,
+            including their reigns, achievements, and the historical context of
+            their time. It's a must-have for history enthusiasts!
+          </Description>
         </div>
 
-        {/* Purchase Section */}
-        <div>
-          <QuantityContainer>
-            <QuantityButton onClick={decreaseQuantity}>-</QuantityButton>
-            <QuantityValue>{quantity}</QuantityValue>
-            <QuantityButton onClick={increaseQuantity}>+</QuantityButton>
-          </QuantityContainer>
-
-          <ButtonContainer>
-            <Button variant="buy" onClick={handleBuyNow}>
-              즉시 구매
-            </Button>
-            <Button onClick={handleAddToCart}>장바구니</Button>
-          </ButtonContainer>
-        </div>
+        <ButtonContainer>
+          <QuantityControl>
+            <button onClick={handleDecrease}>-</button>
+            <span>{quantity}</span>
+            <button onClick={handleIncrease}>+</button>
+          </QuantityControl>
+          <Button variant="buy" onClick={handleBuyNow}>
+            즉시 구매
+          </Button>
+          <Button onClick={handleAddToCart}>장바구니</Button>
+        </ButtonContainer>
       </ContentContainer>
     </PageContainer>
   );
