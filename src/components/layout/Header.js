@@ -10,7 +10,7 @@ function Header() {
     <HeaderArea>
       <Logo>
         <LogoImageBox onClick={() => navigate('/')}>
-          <img src={logoImg} alt='logo' />
+          <img src={logoImg} alt='logo' draggable='false' />
         </LogoImageBox>
       </Logo>
       <Navbar />
