@@ -1,4 +1,4 @@
-import axios from "axios"; // axios를 불러옵니다. (서버와 통신할 때 사용)
+import axios from "axios";
 
 export const fetchUserInfo = async (email) => {
   // 회원 정보를 가져오는 API 함수
