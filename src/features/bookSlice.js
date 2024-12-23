@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import data from '../data';
 
 export const bookSlice = createSlice({
   name: 'books',
   initialState: [],
   reducers: {
     addBooks: (state, action) => {
-      state.push(...action.payload);
+      const newBooks = action.payload.filter(
+        (newBook) => !state.some((existingBook) => existingBook.id === newBook.id)
+      );
+      state.push(...newBooks);
     },
   },
 });
