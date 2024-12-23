@@ -77,7 +77,7 @@ const OptionList = styled.ul`
   border-top: none;
   position: absolute;
   left: -1px;
-  top: 40px;
+  top: 41px;
   padding: 16px 20px;
   display: flex;
   flex-direction: column;
