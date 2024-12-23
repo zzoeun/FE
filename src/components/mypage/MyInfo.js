@@ -88,30 +88,6 @@ const MyInfo = ({ userData, setUserData }) => {
             onChange={handleChange}
           />
         </FormGroup>
-        <FormGroup>
-          <label>우편번호</label>
-          <Input
-            name="zip_code"
-            value={form.zip_code || ""}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <label>기본주소</label>
-          <Input
-            name="main_address"
-            value={form.main_address || ""}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <label>상세주소</label>
-          <Input
-            name="details_address"
-            value={form.details_address || ""}
-            onChange={handleChange}
-          />
-        </FormGroup>
       </FormWrapper>
       <SaveButton onClick={handleSave}>수정하기</SaveButton>
     </FormContainer>
