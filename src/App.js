@@ -21,7 +21,6 @@ const App = () => {
           <Route path="detailed" element={<Detailed />} />
           <Route path="login" element={<Login />} />
         </Route>
-        c4322c08b8a311beba69f0a57f4979a26ef014c6
       </Routes>
     </>
   );
