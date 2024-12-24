@@ -1,23 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 
-const Order = ({ selectedItems, totalPrice = 0, deliveryFee = 0 }) => {
-  const navigate = useNavigate(); 
+const Order = ({ selectedItems, totalPrice, deliveryFee, onPaymentClick  }) => {
   const finalTotal = totalPrice + deliveryFee;
-
-  const handleOrder = () => {
-    if (selectedItems.length === 0) return;
-    navigate('/payment', { 
-      state: { 
-        // selectedItems,
-        // totalPrice,
-        // deliveryFee,
-        // finalTotal
-      } 
-    });
-  };
-
 
   return (
     <div>
@@ -41,7 +26,7 @@ const Order = ({ selectedItems, totalPrice = 0, deliveryFee = 0 }) => {
         <OrderButton 
           disabled={selectedItems.length === 0}
           isEmpty={selectedItems.length === 0}
-          onClick={handleOrder}
+          onClick={onPaymentClick}
         >
           주문하기
         </OrderButton>

@@ -14,7 +14,7 @@ const PaymentAmount = () => {
   const handleAgreePayment = () => {};
 
   return (
-    <TotalPayment>
+    <TotalPaymentWrapper>
       <h3>최종 결제 금액</h3>
       <TotalDetails>
         <div>
@@ -43,11 +43,11 @@ const PaymentAmount = () => {
           <p>·개인정보 판매자 제공 동의</p>
         </div>
       </AgreeButton>
-    </TotalPayment>
+    </TotalPaymentWrapper>
   );
 };
 
-const TotalPayment = styled.div`
+const TotalPaymentWrapper = styled.div`
   width: 280px;
   margin: 20px;
   margin-top: 30px;
@@ -119,10 +119,6 @@ const AgreeButton = styled.button`
   }
 
   p {
-  }
-
-  p2 {
-    color: gray;
   }
 `;
 
