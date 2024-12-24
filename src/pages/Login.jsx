@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import "./Login.css";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [token, setToken] = useState(null);
+  const [email, setEmail] = useState("");  // 이메일 상태
+  const [password, setPassword] = useState("");  // 비밀번호 상태
+  const [error, setError] = useState("");  // 에러 메시지 상태
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,21 +29,24 @@ const Login = () => {
       }
 
       const data = await response.json();
-      setToken(data.token);
-
-      // 서버에서 반환된 토큰 처리
-      const token = data.token; // 서버가 반환하는 토큰
-      if (!token) {
-        throw new Error(
-          "로그인 중 문제가 발생했습니다. 토큰을 찾을 수 없습니다."
-        );
-      }
-
+      
+      // 로그인 성공 시 JWT 토큰을 로컬스토리지에 저장
+      localStorage.setItem("authToken", data.token); // 여기서 'data.token'은 서버에서 반환된 토큰
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
-      // 로그인 성공 시 로컬스토리지나 세션 저장 등 추가 처리 가능
+      
+      // 로그인 후 필요한 추가 작업 (예: 리디렉션 등)
+      // 예: history.push('/dashboard') 또는 window.location.href = '/dashboard'
     } catch (err) {
       setError(err.message || "로그인 중 오류가 발생했습니다.");
     }
+  };
+
+  const handleLogout = () => {
+    // 로그아웃 로직 (로컬스토리지에서 토큰 삭제)
+    localStorage.removeItem("authToken"); // 로컬스토리지에서 토큰 삭제
+    alert("로그아웃 되었습니다.");
+    setEmail("");  // 이메일 상태 초기화
+    setPassword("");  // 비밀번호 상태 초기화
   };
 
   return (
@@ -53,14 +55,14 @@ const Login = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         {error && <p className="error-message">{error}</p>}
         <div className="input-group">
-          <label htmlFor="username">이메일</label>
+          <label htmlFor="email">이메일</label>
           <input
             type="text"
             id="email"
             name="email"
             placeholder="이메일"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}  // setEmail을 사용
           />
         </div>
         <div className="input-group">
@@ -76,10 +78,13 @@ const Login = () => {
         </div>
         <div className="checkbox-group">
           <input type="checkbox" id="auto-login" name="auto-login" />
-          <label htmlFor="auto-login">자동로그인</label>
+          <label htmlFor="auto-login">자동 로그인</label>
         </div>
-        <button type="submit" className="login-button">
-          로그인
+        <button type="submit" className="submit-button">
+          제출하기
+        </button>
+        <button type="button" className="payment-button">
+          결제하기
         </button>
         <div className="help-links">
           <a href="/find-id">이메일찾기</a>
@@ -88,6 +93,12 @@ const Login = () => {
         </div>
         <button type="button" className="guest-order-button">
           비회원 주문조회
+        </button>
+        <button type="button" className="optional-button">
+          중복확인
+        </button>
+        <button type="button" className="logout-button" onClick={handleLogout}>
+          로그아웃
         </button>
       </form>
     </div>
