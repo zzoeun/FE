@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import CardPaymentInfo from "./paymentMethodInfo/CardPaymentInfo";
-import PhoneNumPaymentInfo from "./paymentMethodInfo/PhoneNumPaymentInfo";
+import CardPaymentInfo from "./CardPaymentInfo";
+import PhoneNumPaymentInfo from "./PhoneNumPaymentInfo";
 
 const PaymentMethodInfo = ({ info, onCardNumbersChange }) => {
   const paymentInfo = () => {
@@ -24,6 +24,7 @@ const PaymentMethodInfo = ({ info, onCardNumbersChange }) => {
         return <AccountPayment></AccountPayment>;
     }
   };
+
   return <>{paymentInfo()}</>;
 };
 

@@ -1,7 +1,7 @@
 // 결제 방법
 import React, { useState } from "react";
 import styled from "styled-components";
-import PaymentInfo from "./PaymentMethodInfo";
+import PaymentInfo from "./paymentMethodInfo/PaymentMethodInfo";
 
 const PaymentMethod = ({ onCardNumbersChange }) => {
   // 결제 방법 Radio 상태 (간단, 일반)

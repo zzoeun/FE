@@ -1,14 +1,15 @@
 // 배송 정보
 import React, { useState } from "react";
-// import styles from "./ShippingInfo.module.css";
 import styled from "styled-components";
+import ShippingMethodInfo from "./shippingMethodInfo/ShippingMethodInfo";
 
-const ShippingInfo = () => {
-  const [chagneRadio, setChangeRadio] = useState(0);
-
-  const onChangeAddressRadio = (e) => {
-    setChangeRadio(e.target.value);
-  };
+const ShippingInfo = ({
+  userInfo,
+  shippingMode,
+  onShippingModeChange,
+  onInfoChange,
+}) => {
+  console.log("Sipping Radio: ", shippingMode);
 
   return (
     <ShippingInfoWrapper>
@@ -17,10 +18,9 @@ const ShippingInfo = () => {
         <label>
           <input
             type="radio"
-            id="defaultAddress"
             value={0}
             name="addressRadio"
-            onChange={onChangeAddressRadio}
+            onChange={onShippingModeChange}
             defaultChecked
           />
           기본 배송지
@@ -29,39 +29,19 @@ const ShippingInfo = () => {
         <label>
           <input
             type="radio"
-            id="enterDirectlyAddress"
             value={1}
             name="addressRadio"
-            onChange={onChangeAddressRadio}
+            onChange={onShippingModeChange}
           />
           직접 입력
         </label>
       </RadioContainer>
       <InputContainer>
-        <InputContents>
-          <label>받으시는 분</label>
-          <p>*</p>
-          <input type="text" />
-        </InputContents>
-        <InputContents>
-          <label>휴대폰 번호</label>
-          <p>*</p>
-          <input type="text" />
-        </InputContents>
-        <InputContents>
-          <label>배송지</label>
-          <p>*</p>
-          <div>
-            <InputPost>
-              <input type="text" placeholder="우편번호" />
-              <button className="address-btn">주소찾기</button>
-            </InputPost>
-            <InputAddress>
-              <input type="text" placeholder="기본주소" />
-              <input type="text" placeholder="상세주소" />
-            </InputAddress>
-          </div>
-        </InputContents>
+        <ShippingMethodInfo
+          shippingMode={shippingMode}
+          userInfo={userInfo}
+          onInfoChange={onInfoChange}
+        />
         <InputContents>
           <select>
             <option>배송메세지를 입력해주세요.</option>
@@ -163,35 +143,6 @@ const InputContents = styled.div`
   }
 
   div {
-  }
-`;
-
-const InputPost = styled.div`
-  display: flex;
-
-  input {
-    margin-bottom: 0;
-  }
-
-  button {
-    margin-top: 8px;
-    padding: 5px 10px;
-    height: 45px;
-    width: 85px;
-
-    background: #8c8d92;
-    color: #fff;
-
-    border: none;
-    border-radius: 4px;
-
-    cursor: pointer;
-  }
-`;
-
-const InputAddress = styled.div`
-  input {
-    width: 450px;
   }
 `;
 
