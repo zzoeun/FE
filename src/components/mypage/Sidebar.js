@@ -28,19 +28,20 @@ const Sidebar = ({ setSelectedMenu }) => {
           isActive={activeMenu === "cart"}
           onClick={() => handleMenuClick("cart")}
         >
-          회원 정보 수정
+          장바구니
+        </MenuItem>
+
+        <MenuItem
+          isActive={activeMenu === "paymentslist"}
+          onClick={() => handleMenuClick("paymentslist")}
+        >
+          결제목록
         </MenuItem>
         <MenuItem
           isActive={activeMenu === "deleteaccount"}
           onClick={() => handleMenuClick("deleteaccount")}
         >
           회원 탈퇴
-        </MenuItem>
-        <MenuItem
-          isActive={activeMenu === "paymentslist"}
-          onClick={() => handleMenuClick("paymentslist")}
-        >
-          결제목록
         </MenuItem>
       </MenuGroup>
     </SidebarContainer>
@@ -65,12 +66,14 @@ const MenuItem = styled.div`
   margin-bottom: 70px;
   cursor: pointer;
   color: ${(props) =>
-    props.isActive ? "#f06569" : "#4f4f4f"}; /* 선택된 메뉴 색상 변경 */
+    props.isActive
+      ? "rgb(0, 0, 0)"
+      : "rgb(0, 0, 0)"}; /* 선택된 메뉴 색상 변경 */
   font-weight: ${(props) =>
     props.isActive ? "bold" : "normal"}; /* 선택된 메뉴 굵게 */
 
   &:hover {
-    color: #f06569;
+    color: rgb(0, 0, 0);
     font-weight: bold;
   }
 `;
