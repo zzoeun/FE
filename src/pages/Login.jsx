@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components"; // styled-components import
 
 const Login = () => {
-  const [email, setEmail] = useState("");  // 이메일 상태
-  const [password, setPassword] = useState("");  // 비밀번호 상태
-  const [error, setError] = useState("");  // 에러 메시지 상태
+  const [email, setEmail] = useState(""); // 이메일 상태
+  const [password, setPassword] = useState(""); // 비밀번호 상태
+  const [error, setError] = useState(""); // 에러 메시지 상태
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ const Login = () => {
     try {
       console.log("로그인 시도 중..."); // 콘솔 로그 추가
       // 예시 로그인 API 요청 (백엔드 URL 수정 필요)
-      const response = await fetch("/auth/login", {
+      const response = await fetch("http://13.209.143.163:8080/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -30,11 +30,11 @@ const Login = () => {
       }
 
       const data = await response.json();
-      
+
       // 로그인 성공 시 JWT 토큰을 로컬스토리지에 저장
       localStorage.setItem("authToken", data.token); // 여기서 'data.token'은 서버에서 반환된 토큰
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
-      
+
       // 로그인 후 필요한 추가 작업 (예: 리디렉션 등)
       // 예: history.push('/dashboard') 또는 window.location.href = '/dashboard'
     } catch (err) {
@@ -46,8 +46,8 @@ const Login = () => {
     // 로그아웃 로직 (로컬스토리지에서 토큰 삭제)
     localStorage.removeItem("authToken"); // 로컬스토리지에서 토큰 삭제
     alert("로그아웃 되었습니다.");
-    setEmail("");  // 이메일 상태 초기화
-    setPassword("");  // 비밀번호 상태 초기화
+    setEmail(""); // 이메일 상태 초기화
+    setPassword(""); // 비밀번호 상태 초기화
   };
 
   return (
@@ -55,7 +55,7 @@ const Login = () => {
       <LoginTitle>LOGIN</LoginTitle>
       <LoginForm onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        
+
         {/* 이메일 입력 공간 */}
         <InputGroup>
           <Label htmlFor="email">이메일</Label>
@@ -65,10 +65,10 @@ const Login = () => {
             name="email"
             placeholder="이메일을 입력하세요"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}  // setEmail을 사용
+            onChange={(e) => setEmail(e.target.value)} // setEmail을 사용
           />
         </InputGroup>
-        
+
         {/* 비밀번호 입력 공간 */}
         <InputGroup>
           <Label htmlFor="password">비밀번호</Label>
@@ -87,17 +87,17 @@ const Login = () => {
           <Checkbox type="checkbox" id="auto-login" name="auto-login" />
           <Label htmlFor="auto-login">자동 로그인</Label>
         </CheckboxGroup>
-        
+
         {/* 로그인 버튼 */}
         <SubmitButton type="submit">로그인</SubmitButton>
-        
+
         {/* 하단 링크들 */}
         <HelpLinks>
           <a href="/find-id">이메일찾기</a>
           <a href="/find-password">비밀번호찾기</a>
           <a href="/signup">회원가입</a>
         </HelpLinks>
-        
+
         {/* 비회원 주문조회, 중복확인, 로그아웃 버튼 */}
         <GuestOrderButton type="button">비회원 주문조회</GuestOrderButton>
         <OptionalButton type="button">중복확인</OptionalButton>
