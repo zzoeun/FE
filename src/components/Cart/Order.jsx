@@ -4,19 +4,6 @@ import styled from 'styled-components';
 const Order = ({ selectedItems, totalPrice, deliveryFee, onPaymentClick  }) => {
   const finalTotal = totalPrice + deliveryFee;
 
-  // const handleOrder = () => {
-  //   if (selectedItems.length === 0) return;
-  //   navigate('/payment', { 
-  //     state: { 
-  //       // selectedItems,
-  //       // totalPrice,
-  //       // deliveryFee,
-  //       // finalTotal
-  //     } 
-  //   });
-  // };
-
-
   return (
     <div>
       <OrderContainer>
