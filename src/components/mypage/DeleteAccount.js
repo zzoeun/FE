@@ -1,10 +1,11 @@
-import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import React, { useState } from "react";
 
 const DeleteAccount = () => {
   const navigate = useNavigate();
+  const [token, setToken] = useState(null);
 
   // 회원탈퇴 로직. 로그인 시 sotorage 활용 여부 확인 후 수정 필요
   const handleDeleteProfile = async () => {
@@ -12,7 +13,7 @@ const DeleteAccount = () => {
       try {
         const response = await axios.delete(`/auth/delete`, {
           headers: {
-            Authorization: `JWT_TOKEN`,
+            Authorization: `Bearer ${token}`,
           },
         });
         console.log("삭제 성공:", response.data);
@@ -40,26 +41,29 @@ export default DeleteAccount;
 
 // 스타일 정의
 const Container = styled.div`
+  margin: 302px auto;
+
   text-align: center;
   padding: 30px;
 `;
 
 const Title = styled.h1`
-  font-size: 24px;
-  color: #f06569;
+  font-size: 30px;
+  color: rgb(0, 0, 0);
   margin-bottom: 20px;
+  font-weignt: bold;
 `;
 
 const Description = styled.p`
-  font-size: 16px;
-  color: #555;
+  font-size: 20px;
+  color: #555555;
   margin-bottom: 30px;
 `;
 
 const DeleteButton = styled.button`
   padding: 10px 20px;
   height: 42px;
-  background-color: #505c6d;
+  background-color: #555555;
   border: none;
   border-radius: 5px;
   color: #fff;
@@ -68,6 +72,6 @@ const DeleteButton = styled.button`
   font-weight: bold;
 
   &:hover {
-    background-color: rgb(0, 121, 70);
+    background-color: rgb(0, 0, 0);
   }
 `;

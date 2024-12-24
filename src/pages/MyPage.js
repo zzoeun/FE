@@ -4,17 +4,20 @@ import axios from "axios";
 import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
+//import MyInfoModify from "../components/mypage/MyInfoModify";
+import PaymentsList from "../components/mypage/PaymentsList";
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("myinfo");
   const [userData, setUserData] = useState(null);
+  const [token, setToken] = useState(null);
 
-  // 백엔드에서 사용자 정보 불러오기, 필요없어도 되는지 확인 필요
+  // 백엔드에서 사용자 정보 불러오기
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("/api/userinfo", {
-          headers: { Authorization: `JWT_TOKEN` },
+        const response = await axios.get("/api/mypage/getUserInfo", {
+          headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(response.data); // 받아온 데이터 저장
       } catch (error) {
@@ -24,7 +27,7 @@ const MyPage = () => {
     };
 
     fetchUserData(); // 사용자 정보 가져오기
-  }, []);
+  }, [token]); // 토큰이 변경될 때마다 실행
 
   // 현재 메뉴에 따라 다른 화면 렌더링
   const renderContent = () => {
@@ -33,8 +36,19 @@ const MyPage = () => {
         return <MyInfo userData={userData} />;
       case "deleteaccount":
         return <DeleteAccount />;
+      case "paymentslist":
+        return <PaymentsList />;
       default:
         return <MyInfo userData={userData} />;
+    }
+  };
+
+  const getPageTitle = () => {
+    switch (selectedMenu) {
+      case "paymentslist":
+        return "주문결제조회";
+      default:
+        return "마이페이지";
     }
   };
 
@@ -42,7 +56,7 @@ const MyPage = () => {
     <Container>
       <Sidebar setSelectedMenu={setSelectedMenu} />
       <Content>
-        <PageTitle>마이페이지</PageTitle>
+        <PageTitle>{getPageTitle()}</PageTitle>
         {renderContent()}
       </Content>
     </Container>
@@ -55,6 +69,7 @@ const Container = styled.div`
   display: flex;
   background-color: #f8f9fa;
   min-height: 100vh;
+  margin: 302px auto;
 `;
 
 const Content = styled.div`

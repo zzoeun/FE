@@ -1,32 +1,31 @@
-// Login.js
 import React, { useState } from "react";
 import "./Login.css";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");  // 이메일 상태
+  const [password, setPassword] = useState("");  // 비밀번호 상태
+  const [error, setError] = useState("");  // 에러 메시지 상태
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); // 에러 초기화
 
     // 입력값 검증
-    if (!username || !password) {
-      setError("아이디와 비밀번호를 입력해주세요.");
+    if (!email || !password) {
+      setError("이메일과 비밀번호를 입력해주세요.");
       return;
     }
 
     try {
       // 예시 로그인 API 요청 (백엔드 URL 수정 필요)
-      const response = await fetch("https://example.com/api/login", {
+      const response = await fetch("/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        throw new Error("로그인 실패! 아이디 또는 비밀번호를 확인하세요.");
+        throw new Error("로그인 실패! 이메일 또는 비밀번호를 확인하세요.");
       }
 
       const data = await response.json();
@@ -46,8 +45,8 @@ const Login = () => {
     // 로그아웃 로직 (로컬스토리지에서 토큰 삭제)
     localStorage.removeItem("authToken"); // 로컬스토리지에서 토큰 삭제
     alert("로그아웃 되었습니다.");
-    setUsername("");
-    setPassword("");
+    setEmail("");  // 이메일 상태 초기화
+    setPassword("");  // 비밀번호 상태 초기화
   };
 
   return (
@@ -56,14 +55,14 @@ const Login = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         {error && <p className="error-message">{error}</p>}
         <div className="input-group">
-          <label htmlFor="username">아이디</label>
+          <label htmlFor="email">이메일</label>
           <input
             type="text"
-            id="username"
-            name="username"
-            placeholder="아이디"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="email"
+            name="email"
+            placeholder="이메일"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}  // setEmail을 사용
           />
         </div>
         <div className="input-group">
@@ -88,7 +87,7 @@ const Login = () => {
           결제하기
         </button>
         <div className="help-links">
-          <a href="/find-id">아이디찾기</a>
+          <a href="/find-id">이메일찾기</a>
           <a href="/find-password">비밀번호찾기</a>
           <a href="/signup">회원가입</a>
         </div>

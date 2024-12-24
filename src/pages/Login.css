@@ -5,7 +5,7 @@ body {
 
 .login-container {
   width: 400px;
-  margin: 50px auto;
+  margin: 400px auto;
   border: 1px solid #ccc;
   padding: 20px;
   border-radius: 8px;
@@ -108,6 +108,7 @@ body {
   background-color: #5a6268;
 }
 
+
 .optional-button {
   width: 100%;
   background-color: #cccccc;
@@ -139,3 +140,4 @@ body {
 .logout-button:hover {
   background-color: #cc0000;
 }
+
