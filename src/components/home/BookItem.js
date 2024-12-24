@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { openModal } from '../../features/book/modalSlice';
+import { openModal } from '../../features/modalSlice';
 
 function BookItem({ book }) {
   const navigate = useNavigate();

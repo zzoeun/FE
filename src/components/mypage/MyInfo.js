@@ -1,79 +1,76 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import ValidMyInfo from "./ValidMyInfo";
 
-const MyInfo = () => {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    gender: "",
-    phone: "",
-    zip_code: "",
-    main_address: "",
-    details_address: "",
-    profile_image: "",
-  });
+const MyInfo = ({ userData, setUserData }) => {
+  // 초기값을 MyPage에서 받은 `userData`로 설정
+  const [form, setForm] = useState(userData || {});
+  const [token, setToken] = useState(null);
 
-  const [error, setError] = useState("");
+  // 입력 값 변경 핸들러
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
 
-  // 데이터 받아오는 로직 mypage.js에서 구현안해도 되는 지 확인 필요
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const response = await axios.get("/api/mypage/getUserInfo", {
-          headers: {
-            Authorization: `TOKEN`, // email 형식인지 확인 필요.
-          },
-        });
-        setForm(response.data); // 서버에서 받은 데이터를 상태에 저장
-      } catch (error) {
-        console.error("사용자 정보를 가져오는 데 실패했습니다:", error);
-        alert("로그인한 회원이 아닙니다.");
-      }
-    };
+  // 프로필 이미지 변경 핸들러
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file); // 이미지 미리보기 URL 생성
+      setForm({ ...form, profile_image: previewUrl });
+    }
+  };
 
-    fetchUserInfo();
-  }, []);
+  // 수정 사항 저장 핸들러
+  const handleSave = async () => {
+    try {
+      // 수정된 데이터를 백엔드에 전송,
+      const response = await axios.put(
+        `/api/mypage/putUserInfo/${form.id}`,
+        form,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("수정 성공:", response.data);
+
+      // 부모 컴포넌트에 업데이트된 데이터 전달
+      setUserData(form);
+      alert("정보가 성공적으로 수정되었습니다.");
+    } catch (error) {
+      console.error("정보 수정 실패:", error.response || error.message);
+      alert("정보 수정 중 오류가 발생했습니다.");
+    }
+  };
 
   return (
     <FormContainer>
       {/* 프로필 이미지 렌더링 */}
-      {form.profile_image ? (
-        <ProfileImage src={form.profile_image} alt="프로필 사진" />
-      ) : (
-        <ProfileImagePlaceholder>프로필 사진</ProfileImagePlaceholder> // 프로필사진 없으면 placeholder로 대체
-      )}
-      {error && <ErrorMessage>{error}</ErrorMessage>} {/* 에러 메시지 표시 */}
-      <FormWrapper>
-        <FormGroup>
-          <label>이름</label>
-          <Input name="name" value={form.name} readOnly />
-        </FormGroup>
-        <FormGroup>
-          <label>이메일</label>
-          <Input name="email" value={form.email} readOnly />
-        </FormGroup>
-        <FormGroup>
-          <label>성별</label>
-          <Input name="gender" value={form.gender} readOnly />
-        </FormGroup>
-        <FormGroup>
-          <label>휴대폰번호</label>
-          <Input name="phone" value={form.phone} readOnly />
-        </FormGroup>
-        <FormGroup>
-          <label>우편번호</label>
-          <Input name="zip_code" value={form.zip_code} readOnly />
-        </FormGroup>
-        <FormGroup>
-          <label>기본주소</label>
-          <Input name="main_address" value={form.main_address} readOnly />
-        </FormGroup>
-        <FormGroup>
-          <label>상세주소</label>
-          <Input name="details_address" value={form.details_address} readOnly />
-        </FormGroup>
-      </FormWrapper>
+      <ProfileImageWrapper>
+        {form.profile_image ? (
+          <ProfileImage src={form.profile_image} alt="프로필 사진" />
+        ) : (
+          <ProfileImagePlaceholder>프로필 사진</ProfileImagePlaceholder> // 프로필사진 없으면 placeholder로 대체
+        )}
+        <UploadButton htmlFor="profile-image">이미지 변경</UploadButton>
+        <FileInput
+          type="file"
+          id="profile-image"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
+      </ProfileImageWrapper>
+      {/* 변경된 입력값 전달 */}
+      <ValidMyInfo form={form} handleChange={handleChange} />
+      <SaveButton
+        onClick={() => {
+          handleSave();
+        }}
+      >
+        수정하기
+      </SaveButton>
     </FormContainer>
   );
 };
@@ -83,56 +80,31 @@ export default MyInfo;
 const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center; /* 수직 가운데 정렬 */
-  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center;
+  justify-content: space-between; /* 버튼을 포함해 내용 간격 조정 */
   background: #fff;
   padding: 20px;
-  border: 1px solid #ddd;
   width: 100%;
-  height: 100vh;
-  box-sizing: border-box;
-`;
-
-const FormWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 500px;
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 15px;
-  width: 100%;
-
-  label {
-    display: block;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 5px;
-  }
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  text-align: center;
-  box-sizing: border-box;
+  max-width: 600px; /* 중앙 정렬 및 크기 제한 */
+  margin: 0 auto;
 `;
 
 /* 프로필 이미지 스타일 */
+const ProfileImageWrapper = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+`;
+
 const ProfileImage = styled.img`
   width: 150px;
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 30px;
 `;
 
-/* 프로필 이미지 플레이스홀더 스타일 */
 const ProfileImagePlaceholder = styled.div`
   width: 150px;
   height: 150px;
@@ -143,11 +115,41 @@ const ProfileImagePlaceholder = styled.div`
   justify-content: center;
   font-weight: bold;
   color: #555;
-  margin-bottom: 30px;
 `;
 
-const ErrorMessage = styled.div`
-  color: red;
+/* 파일 업로드 버튼 */
+const UploadButton = styled.label`
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #cccccc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   font-weight: bold;
-  margin-bottom: 20px;
+
+  &:hover {
+    background-color: #999999;
+  }
+`;
+
+/* 숨겨진 파일 입력 필드 */
+const FileInput = styled.input`
+  display: none;
+`;
+
+const SaveButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #555555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background-color: #000;
+  }
 `;

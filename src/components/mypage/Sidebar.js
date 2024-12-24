@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({ setSelectedMenu }) => {
   const [activeMenu, setActiveMenu] = useState("myinfo"); // 현재 선택된 메뉴 상태, 선택 메뉴 계속 색상 유지
+  const navigate = useNavigate();
 
   const handleMenuClick = (menu) => {
     setActiveMenu(menu); // 선택된 메뉴 업데이트
     setSelectedMenu(menu); // 부모 컴포넌트에 선택된 메뉴 전달
+
+    if (menu === "cart") {
+      navigate("/cart");
+    }
   };
 
   return (
@@ -19,10 +25,17 @@ const Sidebar = ({ setSelectedMenu }) => {
           내 정보
         </MenuItem>
         <MenuItem
-          isActive={activeMenu === "myinfomodify"}
-          onClick={() => handleMenuClick("myinfomodify")}
+          isActive={activeMenu === "cart"}
+          onClick={() => handleMenuClick("cart")}
         >
-          내 정보 수정
+          장바구니
+        </MenuItem>
+
+        <MenuItem
+          isActive={activeMenu === "paymentslist"}
+          onClick={() => handleMenuClick("paymentslist")}
+        >
+          결제목록
         </MenuItem>
         <MenuItem
           isActive={activeMenu === "deleteaccount"}
@@ -50,15 +63,17 @@ const MenuGroup = styled.div`
 
 const MenuItem = styled.div`
   font-size: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 70px;
   cursor: pointer;
   color: ${(props) =>
-    props.isActive ? "#f06569" : "#4f4f4f"}; /* 선택된 메뉴 색상 변경 */
+    props.isActive
+      ? "rgb(0, 0, 0)"
+      : "rgb(0, 0, 0)"}; /* 선택된 메뉴 색상 변경 */
   font-weight: ${(props) =>
     props.isActive ? "bold" : "normal"}; /* 선택된 메뉴 굵게 */
 
   &:hover {
-    color: #f06569;
+    color: rgb(0, 0, 0);
     font-weight: bold;
   }
 `;
