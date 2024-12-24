@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
+const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
   // ShippingInfo 쓰기 모드(1)
-  const [editedInfo, setEditedInfo] = useState(userInfo);
+  const [editedInfo, setEditedInfo] = useState(receiverInfo);
 
   const handleChange = (e) => {
     const key = e.target.id;
     const value = e.target.value;
-    const updatedInfo = { ...userInfo, [key]: value };
+    const updatedInfo = { ...receiverInfo, [key]: value };
     setEditedInfo(updatedInfo);
     onInfoChange(updatedInfo); // 부모로 변경된 정보 전달
   };
@@ -20,13 +20,23 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
       <InputContents>
         <label>받으시는 분</label>
         <p>*</p>
-        <input type="text" id="name" onChange={handleChange} />
+        <input
+          type="text"
+          id="name"
+          value={editedInfo.name}
+          onChange={handleChange}
+        />
       </InputContents>
 
       <InputContents>
         <label>휴대폰 번호</label>
         <p>*</p>
-        <input type="text" id="phone" onChange={handleChange} />
+        <input
+          type="text"
+          id="phone"
+          value={editedInfo.phone}
+          onChange={handleChange}
+        />
       </InputContents>
 
       <InputContents>
@@ -36,8 +46,9 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
           <InputPost>
             <input
               type="text"
-              id="zip_code"
+              id="zipCode"
               placeholder="우편번호"
+              value={editedInfo.zipCode}
               onChange={handleChange}
             />
             <button className="address-btn">주소찾기</button>
@@ -46,14 +57,16 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
           <InputAddress>
             <input
               type="text"
-              id="main_address"
+              id="mainAddress"
               placeholder="기본주소"
+              value={editedInfo.mainAddress}
               onChange={handleChange}
             />
             <input
               type="text"
-              id="detail_address"
+              id="detailAddress"
               placeholder="상세주소"
+              value={editedInfo.detailsAddress}
               onChange={handleChange}
             />
           </InputAddress>

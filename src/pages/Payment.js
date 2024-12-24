@@ -10,9 +10,9 @@ import axios from "axios";
 const dummyUserInfo = {
   name: "홍길동",
   phone: "01012345678",
-  zip_code: "61245",
-  main_address: "서울시 강남구 역삼동 123-45",
-  details_address: "201동 1503호",
+  zipCode: "61245",
+  mainAddress: "서울시 강남구 역삼동 123-45",
+  detailsAddress: "201동 1503호",
 };
 
 // 임시 데이터
@@ -32,6 +32,13 @@ const Payment = () => {
     mainAddress: "",
     detailsAddress: "",
   }); // 회원 정보
+  const [receiverInfo, setReceiverInfo] = useState({
+    name: "",
+    phone: "",
+    zipCode: "",
+    mainAddress: "",
+    detailsAddress: "",
+  }); // 직접 입력
   const [orderItems, setOrderItems] = useState([]); // 상품 정보
   const [cardNumbers, setCardNumbers] = useState(""); // 카드 번호
   const [totalAmount, setTotalAmount] = useState(0); // 총 금액
@@ -42,45 +49,35 @@ const Payment = () => {
 
   const [shippingMode, setShippingMode] = useState(0); // Shipping radio - 읽기모드(0), 쓰기 모드(1)
 
-  // GET
+  // 더미 데이터를 사용하여 컴포넌트 상태 업데이트
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+    setTimeout(() => {
+      setUserInfo(dummyUserInfo);
+      const newDummy = { ...dummyUserInfo };
+      setReceiverInfo(newDummy);
 
-        // 1. 사용자 정보 가져오기
-        const userResponse = await axios.get(`/api/user?email=${email}`);
-        setUserInfo({
-          name: userResponse.data.name,
-          phone: userResponse.data.phone,
-          zipCode: userResponse.data.zipCode,
-          mainAddress: userResponse.data.mainAddress,
-          detailsAddress: userResponse.data.detailsAddress,
-        });
+      // 더미 상품 정보
+      const dummyOrderItems = [
+        { id: "1", name: "책 A", price: 10000, quantity: 2 },
+        { id: "2", name: "책 B", price: 15000, quantity: 1 },
+      ];
+      setOrderItems(dummyOrderItems);
 
-        // 2. 상품 정보 가져오기
-        const itemIds = cartItems.map((bookId) => bookId.id).join(",");
-        const ProductResponse = await axios.get(`/api/products?ids=${itemIds}`);
-        const productsWithQuantity = ProductResponse.data.map((product) => {
-          const quantity = cartItems.find(
-            (item) => item.id === product.id
-          ).quantity;
-          return { ...product, quantity };
-        });
+      // 총 결제 금액 계산 (상품 총합 + 배송비)
+      const dummyTotalAmount = dummyOrderItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const dummyShippingFee = 3000; // 임의 배송비
+      setTotalAmount(dummyTotalAmount + dummyShippingFee);
+      setShippingFee(dummyShippingFee);
 
-        setOrderItems(productsWithQuantity);
-
-        setLoading(false);
-      } catch (error) {
-        setError("데이터를 가지고 오는 것을 실패하셨습니다.");
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [cartItems, email]);
+      setLoading(false); // 로딩 상태 해제
+    }, 1000); // 1초 후 더미 데이터 설정
+  }, []);
 
   console.log("Payment-userInfo: ", userInfo);
+  console.log("Payment-receiverInfo: ", receiverInfo);
 
   // Shipping 회원정보(0), 쓰기모드(1)
   const onShippingModeChange = (e) => {
@@ -89,7 +86,7 @@ const Payment = () => {
 
   // ShippingInfo 쓰기 모드(1) 상태
   const handleInfoChange = (updatedInfo) => {
-    setUserInfo(updatedInfo);
+    setReceiverInfo(updatedInfo);
   };
 
   // 카드 번호
@@ -128,6 +125,7 @@ const Payment = () => {
         <h2>주문 및 결제</h2>
         <ShippingInfo
           userInfo={userInfo}
+          receiverInfo={receiverInfo}
           shippingMode={shippingMode}
           onShippingModeChange={onShippingModeChange}
           onInfoChange={handleInfoChange}
