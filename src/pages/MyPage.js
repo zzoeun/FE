@@ -4,7 +4,6 @@ import axios from "axios";
 import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
-//import MyInfoModify from "../components/mypage/MyInfoModify";
 import PaymentsList from "../components/mypage/PaymentsList";
 
 const MyPage = () => {
@@ -16,9 +15,12 @@ const MyPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("/api/mypage/getUserInfo", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "http://13.209.143.163:8080/api/mypage/getUserInfo",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setUserData(response.data); // 받아온 데이터 저장
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
