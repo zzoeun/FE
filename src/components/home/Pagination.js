@@ -1,13 +1,19 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-const Pagination = ({ booksPerPage, setCurrentPage }) => {
+const Pagination = ({ books, dropdownOption, longNovel, middleNovel, shortNovel, booksPerPage, setCurrentPage }) => {
   const [currentActive, setCurrentActive] = useState(0);
 
-  const books = useSelector((state) => state.books);
-
-  const buttonCount = Math.ceil(books.length / booksPerPage);
+  let buttonCount = 0;
+  if (dropdownOption === '전체') {
+    buttonCount = Math.ceil(books.length / booksPerPage);
+  } else if (dropdownOption === '장편소설') {
+    buttonCount = Math.ceil(longNovel.length / booksPerPage);
+  } else if (dropdownOption === '중편소설') {
+    buttonCount = Math.ceil(middleNovel.length / booksPerPage);
+  } else {
+    buttonCount = Math.ceil(shortNovel.length / booksPerPage);
+  }
 
   const buttons = [];
 
@@ -25,11 +31,11 @@ const Pagination = ({ booksPerPage, setCurrentPage }) => {
     );
   }
 
-  return <ButtonBox>{buttons}</ButtonBox>;
+  return <ButtonBox>{buttons.length !== 1 && buttons}</ButtonBox>;
 };
 
 const ButtonBox = styled.div`
-  margin: 0px auto 30px;
+  min-height: 45px;
   display: flex;
   justify-content: center;
   gap: 10px;

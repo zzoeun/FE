@@ -223,7 +223,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post("/api/signup", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" }, // 이미지전송해야 해서 multipart 사용
       });
 
       alert("회원가입이 완료되었습니다!");
@@ -259,7 +259,9 @@ const Signup = () => {
           중복 확인
         </SignupConfirmButton>
       </SignupFlexContainer>
-      <SignupFormErrorMessage>{messages.emailMessage}</SignupFormErrorMessage>
+      <SignupFormEmailErrorMessage>
+        {messages.emailMessage}
+      </SignupFormEmailErrorMessage>
 
       <SignupFormLabel>비밀번호</SignupFormLabel>
       <SignupFormInput
@@ -353,7 +355,7 @@ export default Signup;
 
 const SignupForm = styled.form`
   max-width: 700px;
-  margin: 1px auto;
+  margin: 302px auto;
   padding: 100px 30px;
   border: none;
   background-color: #fff;
@@ -368,9 +370,15 @@ const SignupFormTitle = styled.h2`
 `;
 
 const SignupFormErrorMessage = styled.p`
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 30px;
+  font-size: 12px;
+  color: #f06569;
+  margin-top: 0px;
+`;
+
+const SignupFormEmailErrorMessage = styled.p`
+  font-size: 12px;
+  color: #f06569;
+  margin-top: -15px;
 `;
 
 const SignupFormLabel = styled.label`
@@ -408,7 +416,7 @@ const SignupFormInput = styled.input`
 const SignupFormButton = styled.button`
   width: 100%;
   padding: 12px;
-  background-color: #505c6d;
+  background-color: #555555;
   border: none;
   border-radius: 5px;
   color: #fff;
@@ -418,14 +426,14 @@ const SignupFormButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: rgb(0, 121, 70);
+    background-color: #000;
   }
 `;
 
 const SignupConfirmButton = styled.button`
   padding: 10px 20px;
   height: 42px;
-  background-color: #505c6d;
+  background-color: #cccccc;
   border: none;
   border-radius: 5px;
   color: #fff;
@@ -434,7 +442,7 @@ const SignupConfirmButton = styled.button`
   font-weight: bold;
 
   &:hover {
-    background-color: rgb(0, 121, 70);
+    background-color: #999999;
   }
 `;
 

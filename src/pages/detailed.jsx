@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // React Router를 사용하기 위해 추가
 import styled from "styled-components";
 
 const PageContainer = styled.div`
@@ -6,7 +7,7 @@ const PageContainer = styled.div`
   flex-direction: row;
   gap: 20px;
   padding: 20px;
-  margin-top: 302px; /* 헤더 공간 확보 */
+  margin-top: 400px; /* 헤더 공간 확보 */
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
@@ -126,12 +127,34 @@ const QuantityControl = styled.div`
 
 const BookDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate(); // React Router의 useNavigate 훅 사용
 
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  const handleBuyNow = () => alert("즉시 구매했습니다.");
-  const handleAddToCart = () =>
-    alert(`${quantity}개의 상품이 장바구니에 추가되었습니다.`);
+
+  // 즉시 구매 버튼 로직
+  const handleBuyNow = () => {
+    // 즉시 구매 페이지로 이동
+    navigate("/checkout", {
+      state: {
+        item: "Le Grand Atlas des rois de France",
+        quantity: quantity,
+        price: 64000 * quantity,
+      },
+    });
+  };
+
+  // 장바구니 버튼 로직
+  const handleAddToCart = () => {
+    // 장바구니 페이지로 이동
+    navigate("/cart", {
+      state: {
+        item: "Le Grand Atlas des rois de France",
+        quantity: quantity,
+        price: 64000 * quantity,
+      },
+    });
+  };
 
   return (
     <PageContainer>
