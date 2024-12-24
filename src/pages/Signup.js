@@ -206,28 +206,43 @@ const Signup = () => {
       return;
     }
 
-    // FormData 객체 생성
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("email", form.email);
-    formData.append("password", form.password);
-    formData.append("phone", form.phone);
-    formData.append("zip_code", form.zip_code);
-    formData.append("main_address", form.main_address);
-    formData.append("details_address", form.details_address);
-
-    // 이미지 파일이 있는 경우
-    if (form.profile_image) {
-      formData.append("profile_image", form.profile_image);
-    }
-
     try {
-      const response = await axios.post("/api/signup", formData, {
-        headers: { "Content-Type": "multipart/form-data" }, // 이미지전송해야 해서 multipart 사용
-      });
+      // 회원가입 데이터 전송 json 형식
+      const jsonResponse = await axios.post(
+        "/api/signup",
+        {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          phone: form.phone,
+          zip_code: form.zip_code,
+          main_address: form.main_address,
+          details_address: form.details_address,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      console.log("JSON 데이터 전송 성공:", jsonResponse.data);
+
+      // 이미지 파일 전송
+      if (form.profile_image) {
+        const imageData = new FormData();
+        imageData.append("profile_image", form.profile_image);
+
+        const imageResponse = await axios.post(
+          "/api/upload-profile-image",
+          imageData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+
+        console.log("이미지 파일 전송 성공:", imageResponse.data);
+      }
 
       alert("회원가입이 완료되었습니다!");
-      console.log("서버 응답:", response.data);
     } catch (error) {
       console.error("회원가입 실패:", error);
       alert("회원가입 중 오류가 발생했습니다.");

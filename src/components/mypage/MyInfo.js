@@ -26,18 +26,42 @@ const MyInfo = ({ userData, setUserData }) => {
   // 수정 사항 저장 핸들러
   const handleSave = async () => {
     try {
-      // 수정된 데이터를 백엔드에 전송,
+      // JSON 데이터 준비 (이미지 제외)
+      const { profile_image, ...jsonData } = form;
+
+      // JSON 형식으로 데이터 전송
       const response = await axios.put(
         `/api/mypage/putUserInfo/${form.id}`,
-        form,
+        jsonData, // 이미지 제외한 나머지 데이터
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       console.log("수정 성공:", response.data);
 
+      // 프로필 이미지가 변경된 경우, 별도로 처리
+      if (profile_image instanceof File) {
+        const formData = new FormData();
+        formData.append("profile_image", profile_image);
+
+        const imageResponse = await axios.post(
+          `/api/mypage/uploadProfileImage/${form.id}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("이미지 업로드 성공:", imageResponse.data);
+      }
+
       // 부모 컴포넌트에 업데이트된 데이터 전달
-      setUserData(form);
+      setUserData({ ...jsonData, profile_image });
       alert("정보가 성공적으로 수정되었습니다.");
     } catch (error) {
       console.error("정보 수정 실패:", error.response || error.message);
