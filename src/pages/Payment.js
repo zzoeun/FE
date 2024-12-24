@@ -76,6 +76,7 @@ const Payment = ({ cartItems }) => {
 const PaymentPage = styled.div`
   display: flex;
   margin: 0 auto;
+  margin-top: 302px;
   justify-content: center;
   width: 1200px;
 
