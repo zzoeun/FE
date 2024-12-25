@@ -128,7 +128,6 @@ const AgreeButton = styled.button`
       props.isActive ? "#cccccc" : "#fff"}; /* 활성화된 상태일 때 색상 */
     border-radius: 50%; /* 원형으로 만들기 */
     margin-right: 10px;
-    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
   }
 
   p {

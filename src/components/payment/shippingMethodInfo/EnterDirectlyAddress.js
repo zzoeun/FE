@@ -66,6 +66,7 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
               placeholder="우편번호"
               value={editedInfo.zipCode}
               onChange={handleChange}
+              readOnly
             />
             <button className="address-btn" onClick={togglePostCode}>
               주소찾기
@@ -78,6 +79,7 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
               placeholder="기본주소"
               value={editedInfo.mainAddress}
               onChange={handleChange}
+              readOnly
             />
             <input
               type="text"
