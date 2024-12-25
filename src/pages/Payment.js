@@ -49,10 +49,10 @@ const Payment = ({ cartItems = null }) => {
     shippingFee: 0, // 배송비
   });
 
+  const [shippingMode, setShippingMode] = useState(0); // Shipping radio - 읽기모드(0), 쓰기 모드(1)
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [shippingMode, setShippingMode] = useState(0); // Shipping radio - 읽기모드(0), 쓰기 모드(1)
 
   // 더미 데이터를 사용하여 컴포넌트 상태 업데이트
   useEffect(() => {
