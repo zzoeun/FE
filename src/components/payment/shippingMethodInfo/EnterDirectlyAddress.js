@@ -32,7 +32,7 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
   console.log("Input data: ", editedInfo);
 
   return (
-    <div>
+    <>
       <InputContents>
         <label>받으시는 분</label>
         <p>*</p>
@@ -71,7 +71,6 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
               주소찾기
             </button>
           </InputPost>
-
           <InputAddress>
             <input
               type="text"
@@ -103,7 +102,7 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
           </ModalContainer>
         </ModalOverlay>
       )}
-    </div>
+    </>
   );
 };
 
@@ -158,8 +157,14 @@ const InputPost = styled.div`
 `;
 
 const InputAddress = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
   input {
-    width: 450px;
+    width: 100%;
+    max-width: 450px;
+    min-width: 400px;
   }
 `;
 
