@@ -1,1 +1,15 @@
-{ "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }] }
+{
+  "routes": [
+    {
+      "src": "/[^.]+", 
+      "dest": "/", 
+      "status": 200
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)", 
+      "destination": "http://your-backend-url.com/api/$1"
+    }
+  ]
+}

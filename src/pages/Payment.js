@@ -4,6 +4,7 @@ import ShippingInfo from "../components/payment/ShippingInfo";
 import OrderItems from "../components/payment/OrderItems";
 import PaymentMethod from "../components/payment/PaymentMethod";
 import TotalPayment from "../components/payment/TotalPayment";
+import { useLocation } from "react-router";
 
 // 임시 데이터
 const email = "use@example.com"; // email 임시 데이터
@@ -23,6 +24,8 @@ const dummyUserInfo = {
 };
 
 const Payment = ({ cartItems }) => {
+  const location = useLocation();
+  const paymentData = location.state;
   const [userInfo, setUserInfo] = useState(dummyUserInfo); // 회원 정보
   const [orderItems, setOrderItems] = useState([]); // 상품 정보
   const [cardNumbers, setCardNumbers] = useState(""); // 카드 번호
@@ -30,6 +33,14 @@ const Payment = ({ cartItems }) => {
   const [shippingFee, setShippingFee] = useState(0); // 배송비
 
   const [shippingMode, setShippingMode] = useState(0); // Shipping radio - 읽기모드(0), 쓰기 모드(1)
+
+  useEffect(() => {
+    if (paymentData) {
+      setOrderItems(paymentData.orderItems);
+      setTotalAmount(paymentData.totalPrice);
+      setShippingFee(paymentData.deliveryFee);
+    }
+  }, [paymentData]);
 
   console.log("Payment-userInfo: ", userInfo);
 
