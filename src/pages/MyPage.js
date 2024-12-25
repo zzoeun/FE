@@ -5,11 +5,20 @@ import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
 import PaymentsList from "../components/mypage/PaymentsList";
+import SignupConfirmModal from "../components/modal/SignupConfirmModal";
+import { useDispatch, useSelector } from "react-redux";
+import { openModal, closeModal } from "../features/modalSlice";
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("myinfo");
   const [userData, setUserData] = useState(null);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const navigate = useNavigate(); // 페이지 이동
+
+  const dispatch = useDispatch();
+  const modalOpen = useSelector((state) => state.modal); // 모달 상태 가져오기
+  const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
 
   // 백엔드에서 사용자 정보 불러오기
   useEffect(() => {
@@ -24,7 +33,8 @@ const MyPage = () => {
         setUserData(response.data); // 받아온 데이터 저장
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
-        alert("로그인한 회원이 아닙니다.");
+        setModalContent("로그인한 회원이 아닙니다.");
+        dispatch(openModal());
       }
     };
 
@@ -35,13 +45,15 @@ const MyPage = () => {
   const renderContent = () => {
     switch (selectedMenu) {
       case "myinfo":
-        return <MyInfo userData={userData} />;
+        return (
+          <MyInfo userData={userData} setUserData={setUserData} token={token} />
+        );
       case "deleteaccount":
-        return <DeleteAccount />;
+        return <DeleteAccount token={token} />;
       case "paymentslist":
         return <PaymentsList />;
       default:
-        return <MyInfo userData={userData} />;
+        return <MyInfo userData={userData} token={token} />;
     }
   };
 
@@ -61,6 +73,17 @@ const MyPage = () => {
         <PageTitle>{getPageTitle()}</PageTitle>
         {renderContent()}
       </Content>
+      {/* 모달 컴포넌트 */}
+      {modalOpen && (
+        <SignupConfirmModal
+          isOpen={modalOpen}
+          content={modalContent}
+          onClose={() => {
+            dispatch(closeModal());
+            // navigate("/Login");
+          }}
+        />
+      )}
     </Container>
   );
 };

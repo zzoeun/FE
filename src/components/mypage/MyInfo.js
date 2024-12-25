@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import ValidMyInfo from "./ValidMyInfo";
+import SignupConfirmModal from "../modal/SignupConfirmModal";
+import { useDispatch, useSelector } from "react-redux";
+import { openModal, closeModal } from "../../features/modalSlice";
+import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 
-const MyInfo = ({ userData, setUserData }) => {
+const MyInfo = ({ userData, setUserData, token }) => {
   // 초기값을 MyPage에서 받은 `userData`로 설정
   const [form, setForm] = useState(userData || {});
-  const [token, setToken] = useState(null);
+  const dispatch = useDispatch();
+  const modalOpen = useSelector((state) => state.modal); // 모달 상태 가져오기
+  const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
 
   // 입력 값 변경 핸들러
   const handleChange = (e) => {
@@ -23,7 +29,6 @@ const MyInfo = ({ userData, setUserData }) => {
     }
   };
 
-  // 수정 사항 저장 핸들러
   const handleSave = async () => {
     try {
       // JSON 데이터 준비 (이미지 제외)
@@ -31,7 +36,7 @@ const MyInfo = ({ userData, setUserData }) => {
 
       // JSON 형식으로 데이터 전송
       const response = await axios.put(
-        `http://13.209.143.163:8080/api/mypage/putUserInfo/{id}`,
+        `http://13.209.143.163:8080/api/mypage/putUserInfo/${userData.id}`,
         jsonData, // 이미지 제외한 나머지 데이터
         {
           headers: {
@@ -62,10 +67,12 @@ const MyInfo = ({ userData, setUserData }) => {
 
       // 부모 컴포넌트에 업데이트된 데이터 전달
       setUserData({ ...jsonData, profile_image });
-      alert("정보가 성공적으로 수정되었습니다.");
+      setModalContent("정보가 성공적으로 수정되었습니다.");
+      dispatch(openModal());
     } catch (error) {
       console.error("정보 수정 실패:", error.response || error.message);
-      alert("정보 수정 중 오류가 발생했습니다.");
+      setModalContent("정보 수정에 실패했습니다.");
+      dispatch(openModal());
     }
   };
 
@@ -95,6 +102,17 @@ const MyInfo = ({ userData, setUserData }) => {
       >
         수정하기
       </SaveButton>
+      {/* 모달 컴포넌트 */}
+      {modalOpen && (
+        <SignupConfirmModal
+          isOpen={modalOpen}
+          content={modalContent}
+          onClose={() => {
+            dispatch(closeModal());
+            // navigate("/Login");
+          }}
+        />
+      )}
     </FormContainer>
   );
 };
