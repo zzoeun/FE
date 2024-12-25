@@ -4,7 +4,7 @@ import ShippingInfo from "../components/payment/ShippingInfo";
 import OrderItems from "../components/payment/OrderItems";
 import PaymentMethod from "../components/payment/PaymentMethod";
 import TotalPayment from "../components/payment/TotalPayment";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const SHIPPING_FEE = 3000;
@@ -19,11 +19,6 @@ const dummyUserInfo = {
   detailsAddress: "201동 1503호",
 };
 
-const Payment = ({ cartItems }) => {
-  const location = useLocation();
-  const paymentData = location.state;
-  const [userInfo, setUserInfo] = useState(dummyUserInfo); // 회원 정보
-  
 const dummyCartItems = [
   { bookId: 1, quantity: 2 },
   { bookId: 12, quantity: 1 },
@@ -34,6 +29,10 @@ const dummyCartItems = [
 const email = "use@example.com"; // email 임시 데이터
 
 const Payment = ({ cartItems = null }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const paymentData = location.state;
+
   const [userInfo, setUserInfo] = useState({
     name: "",
     phone: "",
@@ -48,7 +47,6 @@ const Payment = ({ cartItems = null }) => {
     mainAddress: "",
     detailsAddress: "",
   }); // 직접 입력
-
   const [orderItems, setOrderItems] = useState([]); // 상품 정보
   const [cardNumbers, setCardNumbers] = useState(""); // 카드 번호
   const [paymentInfo, setPaymentInfo] = useState({
@@ -56,19 +54,25 @@ const Payment = ({ cartItems = null }) => {
     shippingFee: 0, // 배송비
   });
 
+  const [shippingMode, setShippingMode] = useState(0); // Shipping radio - 읽기모드(0), 쓰기 모드(1)
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [shippingMode, setShippingMode] = useState(0); // Shipping radio - 읽기모드(0), 쓰기 모드(1)
 
   useEffect(() => {
     if (paymentData) {
       setOrderItems(paymentData.orderItems);
-      setTotalAmount(paymentData.totalPrice);
-      setShippingFee(paymentData.deliveryFee);
+      setPaymentInfo({
+        totalAmount: paymentData.totalAmount,
+        shippingFee: paymentData.deliveryFee
+      });
+    } else {
+      // 잘못된 접근 처리
+      alert('잘못된 접근입니다.');
+      navigate('/cart');
     }
-  }, [paymentData]);
-  
+  }, [paymentData, navigate]);
+
   // 더미 데이터를 사용하여 컴포넌트 상태 업데이트
   useEffect(() => {
     // 회원 정보 - 더미로 가지고 옴.
@@ -214,8 +218,8 @@ const PaymentPage = styled.div`
   width: 1200px;
 
   h2 {
-    // margin-bottom: 15px;
-    margin: 20px 30px 40px 30px;
+    margin: 30px 30px 40px 30px;
+
     font-size: 30px;
     font-weight: bold;
   }
