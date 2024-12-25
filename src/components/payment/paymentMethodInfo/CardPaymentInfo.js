@@ -70,7 +70,7 @@ const RadioContainer = styled.div`
   }
 
   input: checked {
-    border-color: #495a70;
+    border-color: #999999;
   }
 `;
 
@@ -83,7 +83,7 @@ const InputTextContainer = styled.div`
     margin-right: 20px;
     width: 150px;
     height: 30px;
-    border: 2 px solid #cccccc;
+    border: 1px solid #cccccc;
   }
 `;
 

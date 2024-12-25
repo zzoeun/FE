@@ -199,8 +199,8 @@ const PaymentPage = styled.div`
   width: 1200px;
 
   h2 {
-    // margin-bottom: 15px;
-    margin: 20px 30px 40px 30px;
+    margin: 30px 30px 40px 30px;
+
     font-size: 30px;
     font-weight: bold;
   }

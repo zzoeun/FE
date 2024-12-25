@@ -24,26 +24,31 @@ const DefaultAddress = ({ userInfo }) => {
 };
 
 const DefaultAddressContainer = styled.div`
-  margin: 20px 0 15px 12px;
+  margin-top: 20px;
+  padding: 5px 0 20px 20px;
+
+  border-bottom: 2px solid #f4f4f4;
+
+  p {
+    margin-bottom: 8px;
+  }
 `;
 
 const UserName = styled.p`
-  margin-bottom: 5px;
   font-weight: bold;
   font-size: 20px;
 `;
 
 const UserAddress = styled.div`
   display: flex;
-  margin-bottom: 5px;
 
   p {
-    margin-right: 7px;1
+    margin-right: 7px;
   }
 `;
 
 const UserPhone = styled.p`
-  color: #cccccc;
+  color: #999999;
 `;
 
 export default DefaultAddress;
