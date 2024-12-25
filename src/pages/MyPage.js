@@ -5,6 +5,7 @@ import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
 import PaymentsList from "../components/mypage/PaymentsList";
+import ShoppingCartList from "../components/mypage/ShoppingCartList";
 import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
@@ -50,6 +51,8 @@ const MyPage = () => {
         );
       case "deleteaccount":
         return <DeleteAccount token={token} />;
+      case "shoppingcartlist":
+        return <ShoppingCartList />;
       case "paymentslist":
         return <PaymentsList />;
       default:
@@ -61,6 +64,8 @@ const MyPage = () => {
     switch (selectedMenu) {
       case "paymentslist":
         return "주문결제조회";
+      case "shoppingcartlist":
+        return "내 장바구니";
       default:
         return "마이페이지";
     }
@@ -95,6 +100,7 @@ const Container = styled.div`
   background-color: #f8f9fa;
   min-height: 100vh;
   margin: 302px auto;
+  min-width: 1200px; // 추가: 전체 최소 너비 설정
 `;
 
 const Content = styled.div`
@@ -102,6 +108,8 @@ const Content = styled.div`
   padding: 30px;
   background-color: #fff;
   color: #333;
+  min-width: 800px; // 추가: 컨텐츠 영역 최소 너비 설정
+  overflow-x: auto; // 추가: 필요한 경우에만 가로 스크롤
 `;
 
 const PageTitle = styled.h1`
