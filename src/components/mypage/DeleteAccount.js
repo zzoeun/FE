@@ -20,7 +20,7 @@ const DeleteAccount = ({ token }) => {
   const confirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://13.209.143.163:8080/auth/login`,
+        `http://13.209.143.163:8080/auth/delete`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
