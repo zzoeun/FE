@@ -146,13 +146,17 @@ const InputPost = styled.div`
     height: 45px;
     width: 85px;
 
-    background: #8c8d92;
+    background: #cccccc;
     color: #fff;
 
     border: none;
     border-radius: 4px;
 
     cursor: pointer;
+
+    &:hover {
+      background: #999999;
+    }
   }
 `;
 

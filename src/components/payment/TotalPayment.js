@@ -88,7 +88,7 @@ const PayButton = styled.button`
   margin-top: 40px;
   padding: 15px 20px;
   width: 235px;
-  background: #495a70;
+  background: #555555;
   box-shadow: 0 3px 5px lightgray;
 
   color: white;
@@ -97,6 +97,10 @@ const PayButton = styled.button`
 
   cursor: pointer;
   font-size: 16px;
+
+  &:hover {
+    background: #000;
+  }
 `;
 
 const AgreeButton = styled.button`

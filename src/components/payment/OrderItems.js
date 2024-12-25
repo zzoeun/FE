@@ -137,8 +137,14 @@ const ItemPrice = styled.div`
     padding: 2px 7px 2px 7px;
 
     background-color: #ffff;
-    border: 2px solid #495a70;
-    color: #495a70;
+    border: 2px solid #cccccc;
+    color: #cccccc;
+
+    &:hover {
+      background: #999999;
+      border-color: #999999;
+      color: white;
+    }
   }
 `;
 
