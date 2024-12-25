@@ -1,9 +1,14 @@
 // 결제 금액액
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import CheckIcon from "../../icons/check.svg";
 
 const PaymentAmount = ({ paymentInfo, onPayment }) => {
-  const handlePayment = () => {};
+  const [isAgreeChecked, setIsAgreeChecked] = useState(false);
+
+  const handleAgreeClick = () => {
+    setIsAgreeChecked((prev) => !prev);
+  };
 
   return (
     <TotalPaymentWrapper>
@@ -28,11 +33,17 @@ const PaymentAmount = ({ paymentInfo, onPayment }) => {
         </Total>
       </TotalDetails>
 
-      <PayButton onClick={onPayment}>결제하기</PayButton>
-      <AgreeButton>
-        <img></img>
+      <PayButton
+        onClick={onPayment}
+        disabled={!isAgreeChecked}
+        isActive={isAgreeChecked}
+      >
+        결제하기
+      </PayButton>
+      <AgreeButton onClick={handleAgreeClick} isActive={isAgreeChecked}>
+        <img src={CheckIcon} alt="Check Icon"></img>
         <div>
-          <p>주문/결제 진행 필수 동의</p>
+          <p className="required">주문/결제 진행 필수 동의</p>
           <p>·개인정보수집 및 이용 동의</p>
           <p>·개인정보 판매자 제공 동의</p>
         </div>
@@ -88,18 +99,18 @@ const PayButton = styled.button`
   margin-top: 40px;
   padding: 15px 20px;
   width: 235px;
-  background: #555555;
+  background: ${(props) => (props.isActive ? "#555555" : "#cccccc")};
   box-shadow: 0 3px 5px lightgray;
 
   color: white;
   font-weight: bold;
   border: none;
 
-  cursor: pointer;
+  cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
   font-size: 16px;
 
   &:hover {
-    background: #000;
+    background: ${(props) => (props.isActive ? "#000" : "#cccccc")};
   }
 `;
 
@@ -113,10 +124,21 @@ const AgreeButton = styled.button`
   img {
     height: 20px;
     width: 20px;
-    background-color: pink;
+    background-color: ${(props) =>
+      props.isActive ? "#cccccc" : "#fff"}; /* 활성화된 상태일 때 색상 */
+    border-radius: 50%; /* 원형으로 만들기 */
+    margin-right: 10px;
+    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
   }
 
   p {
+    margin-bottom: 3px;
+  }
+
+  .required {
+    color: black;
+    font-size: 15px;
+    font-weight: bold;
   }
 `;
 
