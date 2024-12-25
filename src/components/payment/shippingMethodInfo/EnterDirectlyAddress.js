@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import DaumPostCode from "react-daum-postcode";
 
 const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
   // ShippingInfo 쓰기 모드(1)
   const [editedInfo, setEditedInfo] = useState(receiverInfo);
+  const [isPostCodeOpen, setIsPostCodeOpen] = useState(false); // 우편번호 상태
 
   const handleChange = (e) => {
     const key = e.target.id;
@@ -11,6 +13,20 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
     const updatedInfo = { ...receiverInfo, [key]: value };
     setEditedInfo(updatedInfo);
     onInfoChange(updatedInfo); // 부모로 변경된 정보 전달
+  };
+
+  // 우편번호 api
+  const handleAddressComplete = (data) => {
+    setEditedInfo({
+      ...editedInfo,
+      zipCode: data.zonecode,
+      mainAddress: data.address,
+    });
+    setIsPostCodeOpen(false); // 입력 후 창 닫기
+  };
+
+  const togglePostCode = () => {
+    setIsPostCodeOpen((prev) => !prev);
   };
 
   console.log("Input data: ", editedInfo);
@@ -51,7 +67,9 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
               value={editedInfo.zipCode}
               onChange={handleChange}
             />
-            <button className="address-btn">주소찾기</button>
+            <button className="address-btn" onClick={togglePostCode}>
+              주소찾기
+            </button>
           </InputPost>
 
           <InputAddress>
@@ -72,6 +90,19 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
           </InputAddress>
         </div>
       </InputContents>
+      {isPostCodeOpen && (
+        <ModalOverlay>
+          <ModalContainer>
+            <button className="close-btn" onClick={togglePostCode}>
+              X
+            </button>
+            <DaumPostCode
+              onComplete={handleAddressComplete}
+              autoClose={false}
+            />
+          </ModalContainer>
+        </ModalOverlay>
+      )}
     </div>
   );
 };
@@ -129,6 +160,38 @@ const InputPost = styled.div`
 const InputAddress = styled.div`
   input {
     width: 450px;
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContainer = styled.div`
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+  max-height: 80%;
+  overflow-y: auto;
+
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
   }
 `;
 
