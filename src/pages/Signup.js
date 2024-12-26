@@ -271,7 +271,7 @@ const Signup = () => {
   return (
     <div>
       <SignupForm onSubmit={handleSubmit} className="signup-form">
-        <SignupFormTitle>회원 정보 입력</SignupFormTitle>
+        <SignupFormTitle>회원정보입력</SignupFormTitle>
         <SignupFormLine />
 
         <SignupFormLabel>이름</SignupFormLabel>
