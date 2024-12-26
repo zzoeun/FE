@@ -4,6 +4,7 @@ import styled from "styled-components";
 import CheckIcon from "../../icons/check.svg";
 import { useNavigate } from "react-router";
 
+
 const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
   const [isAgreeChecked, setIsAgreeChecked] = useState(false);
   const [isIMPModalOpen, setIsIMPModalOpen] = useState(false);
@@ -95,28 +96,30 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
     setIsAgreeChecked((prev) => !prev);
   };
 
+
+  const handleAgreePayment = () => {};
+
   return (
     <TotalPaymentWrapper>
       <h3>최종 결제 금액</h3>
       <TotalDetails>
         <div>
           <p>상품금액</p>
-          <p>{paymentInfo.totalAmount}원</p>
+          <p>{pay.itemAmount}원</p>
         </div>
         <div>
           <p>배송비</p>
-          <p>{paymentInfo.shippingFee}원</p>
+          <p>{pay.deliberyFee}원</p>
         </div>
         <Total>
           <TotalContent>합계</TotalContent>
           <div>
-            <TotalAmount>
-              {paymentInfo.totalAmount + paymentInfo.shippingFee}
-            </TotalAmount>
+            <TotalAmount>{pay.itemAmount + pay.deliberyFee}</TotalAmount>
             <TotalContent>원</TotalContent>
           </div>
         </Total>
       </TotalDetails>
+
 
       <PayButton
         onClick={() => setIsIMPModalOpen(true)}
@@ -127,6 +130,7 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
       </PayButton>
       <AgreeButton onClick={handleAgreeClick} isActive={isAgreeChecked}>
         <img src={CheckIcon} alt="Check Icon"></img>
+
         <div>
           <p className="required">주문/결제 진행 필수 동의</p>
           <p>·개인정보수집 및 이용 동의</p>

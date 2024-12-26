@@ -4,6 +4,7 @@ import ShippingInfo from "../components/payment/ShippingInfo";
 import OrderItems from "../components/payment/OrderItems";
 import PaymentMethod from "../components/payment/PaymentMethod";
 import TotalPayment from "../components/payment/TotalPayment";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useLocation } from "react-router";
 
@@ -40,6 +41,7 @@ const dummyCartItems = [
 const email = "use@example.com"; // email 임시 데이터
 
 const Payment = () => {
+
   const [userInfo, setUserInfo] = useState({
     name: "",
     phone: "",
@@ -66,6 +68,7 @@ const Payment = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   const location = useLocation();
 
   const paymentData = location.state || {};
@@ -73,6 +76,7 @@ const Payment = () => {
 
   // cart or dummyItems
   const selectCartItems = cartItems || dummyCartItems;
+
 
   // 더미 데이터를 사용하여 컴포넌트 상태 업데이트
   useEffect(() => {

@@ -5,7 +5,6 @@ import ShippingMethodInfo from "./shippingMethodInfo/ShippingMethodInfo";
 
 const ShippingInfo = ({
   userInfo,
-  receiverInfo,
   shippingMode,
   onShippingModeChange,
   onInfoChange,
@@ -41,7 +40,6 @@ const ShippingInfo = ({
         <ShippingMethodInfo
           shippingMode={shippingMode}
           userInfo={userInfo}
-          receiverInfo={receiverInfo}
           onInfoChange={onInfoChange}
         />
         <InputContents>
