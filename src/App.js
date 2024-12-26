@@ -27,14 +27,3 @@ const App = () => {
 };
 
 export default App;
-export const fetchBookDetails = async () => {
-  return {
-    id: 1,
-    title: "Le Grand Atlas des rois de France",
-    author: "Jean Dupont",
-    publisher: "Glénat",
-    price: 64000,
-    description:
-      "This book offers a comprehensive guide to the kings of France, including their reigns, achievements, and the historical context of their time.",
-  };
-};

@@ -1,34 +1,29 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // React Router를 사용하기 위해 추가
 import styled from "styled-components";
 
+// 스타일 정의
 const PageContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  gap: 20px;
+  justify-content: space-between;
+  align-items: flex-start;
   padding: 20px;
-  margin-top: 400px; /* 헤더 공간 확보 */
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 400px auto 0 auto; /* 헤더 높이 400px 고려 */
+  max-width: 1200px;
   background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 `;
 
-const ImageContainer = styled.div`
+const LeftContainer = styled.div`
   width: 300px;
   height: 300px;
-  background-color: #f4f4f4; /* 이미지를 넣기 전 회색 배경 */
+  background-color: #eaeaea;
   border-radius: 8px;
-  flex-shrink: 0;
 `;
 
-const ContentContainer = styled.div`
+const RightContainer = styled.div`
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  padding: 20px;
 `;
 
 const Title = styled.h1`
@@ -38,21 +33,21 @@ const Title = styled.h1`
 
 const Author = styled.p`
   font-size: 16px;
-  margin-bottom: 5px;
   color: #555;
+  margin-bottom: 5px;
 `;
 
 const Publisher = styled.p`
   font-size: 16px;
-  margin-bottom: 10px;
   color: #555;
+  margin-bottom: 10px;
 `;
 
 const Price = styled.p`
   font-size: 20px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 20px;
+  margin: 10px 0;
 `;
 
 const Description = styled.p`
@@ -60,31 +55,41 @@ const Description = styled.p`
   line-height: 1.6;
   color: #666;
   margin-bottom: 20px;
-  max-height: 150px; /* 스크롤을 위한 고정 높이 */
-  overflow-y: auto;
-  padding-right: 10px;
+`;
 
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
+const PurchaseContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
 
-  ::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 10px;
-  }
+const QuantityContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
 
-  ::-webkit-scrollbar-track {
-    background-color: #f9f9f9;
-  }
+const QuantityButton = styled.button`
+  width: 30px;
+  height: 30px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+`;
+
+const QuantityDisplay = styled.p`
+  font-size: 16px;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: column;
   gap: 10px;
 `;
 
 const Button = styled.button`
+  flex: 1;
   padding: 10px;
   font-size: 16px;
   font-weight: bold;
@@ -94,95 +99,69 @@ const Button = styled.button`
 
   ${({ variant }) =>
     variant === "buy"
-      ? `background-color: #6c757d;`
-      : `background-color: #555555;`}
-
-  &:hover {
-    opacity: 0.9;
-  }
+      ? `
+      background-color: #555555;
+    `
+      : `
+      background-color: #6c757d;
+    `}
 `;
 
-const QuantityControl = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  button {
-    background-color: #ddd;
-    border: none;
-    border-radius: 8px;
-    padding: 5px 10px;
-    font-size: 18px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #bbb;
-    }
-  }
-
-  span {
-    font-size: 18px;
-  }
-`;
-
+// 메인 컴포넌트
 const BookDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
-  const navigate = useNavigate(); // React Router의 useNavigate 훅 사용
 
-  const handleIncrease = () => setQuantity((prev) => prev + 1);
-  const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  // 샘플 데이터
+  const book = {
+    title: "",
+    author: "",
+    publisher: "",
+    price: "",
+    description: "",
+  };
 
-  // 즉시 구매 버튼 로직
   const handleBuyNow = () => {
-    // 즉시 구매 페이지로 이동
-    navigate("/checkout", {
-      state: {
-        item: "Le Grand Atlas des rois de France",
-        quantity: quantity,
-        price: 64000 * quantity,
-      },
-    });
+    alert(`"${book.title}"을(를) ${quantity}개 즉시 구매합니다.`);
   };
 
-  // 장바구니 버튼 로직
   const handleAddToCart = () => {
-    // 장바구니 페이지로 이동
-    navigate("/cart", {
-      state: {
-        item: "Le Grand Atlas des rois de France",
-        quantity: quantity,
-        price: 64000 * quantity,
-      },
-    });
+    alert(`"${book.title}" ${quantity}개가 장바구니에 추가되었습니다.`);
   };
+
+  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+  const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
 
   return (
     <PageContainer>
-      {/* 왼쪽 이미지 영역 */}
-      <ImageContainer>{/* 여기에 이미지 삽입 */}</ImageContainer>
+      {/* 왼쪽: 이미지 공간 */}
+      <LeftContainer></LeftContainer>
 
-      {/* 오른쪽 정보 및 기능 영역 */}
-      <ContentContainer>
-        <div>
-          <Title></Title>
-          <Author></Author>
-          <Publisher></Publisher>
-          <Price></Price>
-          <Description></Description>
-        </div>
+      {/* 오른쪽: 도서 정보 및 기능 로직 */}
+      <RightContainer>
+        <Title>{book.title}</Title>
+        <Author>저자: {book.author}</Author>
+        <Publisher>출판사: {book.publisher}</Publisher>
+        <Price>가격: {book.price.toLocaleString()}원</Price>
+        <Description>{book.description}</Description>
 
-        <ButtonContainer>
-          <QuantityControl>
-            <button onClick={handleDecrease}>-</button>
-            <span>{quantity}</span>
-            <button onClick={handleIncrease}>+</button>
-          </QuantityControl>
-          <Button variant="buy" onClick={handleBuyNow}>
-            즉시 구매
-          </Button>
-          <Button onClick={handleAddToCart}>장바구니</Button>
-        </ButtonContainer>
-      </ContentContainer>
+        {/* 구매 섹션 */}
+        <PurchaseContainer>
+          {/* 수량 버튼 */}
+          <QuantityContainer>
+            <QuantityButton onClick={decreaseQuantity}>-</QuantityButton>
+            <QuantityDisplay>{quantity}</QuantityDisplay>
+            <QuantityButton onClick={increaseQuantity}>+</QuantityButton>
+          </QuantityContainer>
+
+          {/* 즉시 구매 및 장바구니 */}
+          <ButtonContainer>
+            <Button variant="buy" onClick={handleBuyNow}>
+              즉시 구매
+            </Button>
+            <Button onClick={handleAddToCart}>장바구니</Button>
+          </ButtonContainer>
+        </PurchaseContainer>
+      </RightContainer>
     </PageContainer>
   );
 };
