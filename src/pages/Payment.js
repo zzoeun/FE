@@ -7,8 +7,8 @@ import TotalPayment from "../components/payment/TotalPayment";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const SHIPPING_FEE = 3000;
-const MIN_ORDER_AMOUNT = 30000;
+// const SHIPPING_FEE = 3000;
+// const MIN_ORDER_AMOUNT = 30000;
 
 // 더미 회원 정보
 const dummyUserInfo = {
