@@ -2,8 +2,16 @@
 import React from "react";
 import styled from "styled-components";
 
-const PaymentAmount = ({ paymentInfo, onPayment }) => {
+const PaymentAmount = () => {
+  const pay = {
+    itemAmount: 25000,
+    deliberyFee: 30000,
+  };
+  const total = 50000;
+
   const handlePayment = () => {};
+
+  const handleAgreePayment = () => {};
 
   return (
     <TotalPaymentWrapper>
@@ -11,25 +19,23 @@ const PaymentAmount = ({ paymentInfo, onPayment }) => {
       <TotalDetails>
         <div>
           <p>상품금액</p>
-          <p>{paymentInfo.totalAmount}원</p>
+          <p>{pay.itemAmount}원</p>
         </div>
         <div>
           <p>배송비</p>
-          <p>{paymentInfo.shippingFee}원</p>
+          <p>{pay.deliberyFee}원</p>
         </div>
         <Total>
           <TotalContent>합계</TotalContent>
           <div>
-            <TotalAmount>
-              {paymentInfo.totalAmount + paymentInfo.shippingFee}
-            </TotalAmount>
+            <TotalAmount>{pay.itemAmount + pay.deliberyFee}</TotalAmount>
             <TotalContent>원</TotalContent>
           </div>
         </Total>
       </TotalDetails>
 
-      <PayButton onClick={onPayment}>결제하기</PayButton>
-      <AgreeButton>
+      <PayButton onClick={handlePayment}>결제하기</PayButton>
+      <AgreeButton onClick={handleAgreePayment}>
         <img></img>
         <div>
           <p>주문/결제 진행 필수 동의</p>
