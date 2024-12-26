@@ -16,7 +16,7 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
   console.log("Input data: ", editedInfo);
 
   return (
-    <div>
+    <>
       <InputContents>
         <label>받으시는 분</label>
         <p>*</p>
@@ -39,16 +39,17 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
               id="zip_code"
               placeholder="우편번호"
               onChange={handleChange}
+              readOnly
             />
             <button className="address-btn">주소찾기</button>
           </InputPost>
-
           <InputAddress>
             <input
               type="text"
               id="main_address"
               placeholder="기본주소"
               onChange={handleChange}
+              readOnly
             />
             <input
               type="text"
@@ -59,7 +60,22 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
           </InputAddress>
         </div>
       </InputContents>
-    </div>
+
+      {isPostCodeOpen && (
+        <ModalOverlay>
+          <ModalContainer>
+            <button className="close-btn" onClick={togglePostCode}>
+              X
+            </button>
+            <DaumPostCode
+              onComplete={handleAddressComplete}
+              autoClose={false}
+            />
+          </ModalContainer>
+        </ModalOverlay>
+      )}
+    </>
+
   );
 };
 
@@ -103,19 +119,29 @@ const InputPost = styled.div`
     height: 45px;
     width: 85px;
 
-    background: #8c8d92;
+    background: #cccccc;
     color: #fff;
 
     border: none;
     border-radius: 4px;
 
     cursor: pointer;
+
+    &:hover {
+      background: #999999;
+    }
   }
 `;
 
 const InputAddress = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
   input {
-    width: 450px;
+    width: 100%;
+    max-width: 450px;
+    min-width: 400px;
   }
 `;
 

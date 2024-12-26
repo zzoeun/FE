@@ -92,7 +92,7 @@ const RadioContainer = styled.div`
   }
 
   input: checked {
-    border-color: #495a70;
+    border-color: #000;
   }
 
   p {
