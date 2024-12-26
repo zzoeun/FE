@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Login = () => {
-  const [email, setEmail] = useState("");      // 이메일 상태
+  const [email, setEmail] = useState(""); // 이메일 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
-  const [error, setError] = useState("");       // 에러 메시지 상태
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
+  const [error, setError] = useState(""); // 에러 메시지 상태
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태
 
   // 페이지 로드 시 로그인 상태 확인
   useEffect(() => {
@@ -41,7 +41,6 @@ const Login = () => {
       localStorage.setItem("email", email); // 이메일 저장
       setIsLoggedIn(true); // 로그인 후 상태 변경
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
-
     } catch (err) {
       setError(err.message || "로그인 중 오류가 발생했습니다.");
     }
@@ -61,52 +60,57 @@ const Login = () => {
       <LoginForm onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        {/* 이메일 입력 공간 */}
-        <InputGroup>
-          <Label htmlFor="email">이메일</Label>
-          <Input
-            type="text"
-            id="email"
-            name="email"
-            placeholder="이메일을 입력하세요"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </InputGroup>
+        {/* 로그인 상태 확인 */}
+        {isLoggedIn ? (
+          <>
+            <p>현재 로그인 상태입니다.</p>
+            <LogoutButton type="button" onClick={handleLogout}>
+              로그아웃
+            </LogoutButton>
+          </>
+        ) : (
+          <>
+            {/* 이메일 입력 공간 */}
+            <InputGroup>
+              <Label htmlFor="email">이메일</Label>
+              <Input
+                type="text"
+                id="email"
+                name="email"
+                placeholder="이메일을 입력하세요"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </InputGroup>
 
-        {/* 비밀번호 입력 공간 */}
-        <InputGroup>
-          <Label htmlFor="password">비밀번호</Label>
-          <Input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="비밀번호를 입력하세요"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </InputGroup>
+            {/* 비밀번호 입력 공간 */}
+            <InputGroup>
+              <Label htmlFor="password">비밀번호</Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="비밀번호를 입력하세요"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </InputGroup>
 
-        <CheckboxGroup>
-          <Checkbox type="checkbox" id="auto-login" name="auto-login" />
-          <Label htmlFor="auto-login">자동 로그인</Label>
-        </CheckboxGroup>
+            <CheckboxGroup>
+              <Checkbox type="checkbox" id="auto-login" name="auto-login" />
+              <Label htmlFor="auto-login">자동 로그인</Label>
+            </CheckboxGroup>
 
-        {/* 로그인 버튼 */}
-        <SubmitButton type="submit">로그인</SubmitButton>
+            {/* 로그인 버튼 */}
+            <SubmitButton type="submit">로그인</SubmitButton>
 
-        {/* 하단 링크들 */}
-        <HelpLinks>
-          <a href="/find-id">이메일찾기</a>
-          <a href="/find-password">비밀번호찾기</a>
-          <a href="/signup">회원가입</a>
-        </HelpLinks>
-
-        {/* 로그인이 되어 있을 때만 로그아웃 버튼 표시 */}
-        {isLoggedIn && (
-          <LogoutButton type="button" onClick={handleLogout}>
-            로그아웃
-          </LogoutButton>
+            {/* 하단 링크들 */}
+            <HelpLinks>
+              <a href="/find-id">이메일찾기</a>
+              <a href="/find-password">비밀번호찾기</a>
+              <a href="/signup">회원가입</a>
+            </HelpLinks>
+          </>
         )}
       </LoginForm>
     </LoginContainer>
