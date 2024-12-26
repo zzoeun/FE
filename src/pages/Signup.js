@@ -21,6 +21,7 @@ const Signup = () => {
     email: "",
     password: "",
     passwordConfirm: "",
+    gender: "",
     phone: "",
     zip_code: "",
     main_address: "",
@@ -226,6 +227,7 @@ const Signup = () => {
           name: form.name,
           email: form.email,
           password: form.password,
+          gender: form.gender,
           phone: form.phone,
           zip_code: form.zip_code,
           main_address: form.main_address,
@@ -315,6 +317,14 @@ const Signup = () => {
         <SignupFormErrorMessage>
           {messages.passwordConfirmMessage}
         </SignupFormErrorMessage>
+
+        <SignupFormLabel>성별</SignupFormLabel>
+        <SignupFormInput
+          type="text"
+          name="gender"
+          onChange={handleChange}
+          value={form.gender}
+        />
 
         <SignupFormLabel>휴대폰 번호</SignupFormLabel>
         <SignupFormInput
