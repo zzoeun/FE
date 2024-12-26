@@ -8,7 +8,7 @@ import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
 import ModalContent from "../components/modal/ModalContent"; // ModalContent 임포트
-import Button from "../components/modal/Button"; // Button 임포트
+import ModalButton from "../components/modal/ModalButton"; // Button 임포트
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -17,15 +17,16 @@ const Signup = () => {
   const navigate = useNavigate(); // 페이지 이동
 
   const [form, setForm] = useState({
-    name: "",
+    userName: "",
     email: "",
     password: "",
     passwordConfirm: "",
+    gender: "",
     phone: "",
-    zip_code: "",
-    main_address: "",
-    details_address: "",
-    profile_image: null,
+    zipCode: "",
+    mainAddress: "",
+    detailsAddress: "",
+    profileImage: null,
   });
 
   const [messages, setMessages] = useState({
@@ -48,8 +49,8 @@ const Signup = () => {
   const handleAddressComplete = (data) => {
     setForm({
       ...form,
-      zip_code: data.zonecode,
-      main_address: data.address,
+      zipCode: data.zonecode,
+      mainAddress: data.address,
     });
     setIsPostCodeOpen(false); // 입력 후 창 닫기
   };
@@ -69,7 +70,7 @@ const Signup = () => {
     const file = e.target.files[0];
     if (file) {
       const previewUrl = URL.createObjectURL(file);
-      setForm({ ...form, profile_image: previewUrl });
+      setForm({ ...form, profileImage: previewUrl });
     }
   };
 
@@ -100,7 +101,7 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post("/api/emailcheck", {
+      const response = await axios.post("https://project-be.site/auth/email", {
         email: form.email,
       });
 
@@ -190,14 +191,14 @@ const Signup = () => {
 
     // 모든 입력 필드 확인
     const requiredFields = [
-      "name",
+      "userName",
       "email",
       "password",
       "passwordConfirm",
       "phone",
-      "zip_code",
-      "main_address",
-      "details_address",
+      "zipCode",
+      "mainAddress",
+      "detailsAddress",
     ];
     for (const field of requiredFields) {
       if (!form[field]) {
@@ -221,30 +222,33 @@ const Signup = () => {
     try {
       // 회원가입 데이터 전송 json 형식
       const jsonResponse = await axios.post(
-        "http://13.209.143.163:8080/auth/signup",
+        "https://project-be.site/auth/signup",
         {
-          name: form.name,
+          userName: form.userName,
           email: form.email,
           password: form.password,
+          gender: form.gender,
           phone: form.phone,
-          zip_code: form.zip_code,
-          main_address: form.main_address,
-          details_address: form.details_address,
+          zipCode: form.zipCode,
+          mainAddress: form.mainAddress,
+          detailsAddress: form.detailsAddress,
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
       console.log("JSON 데이터 전송 성공:", jsonResponse.data);
 
       // 이미지 파일 전송
-      if (form.profile_image) {
+      if (form.profileImage) {
         const imageData = new FormData();
-        imageData.append("profile_image", form.profile_image);
+        imageData.append("profileImage", form.profileImage);
 
         const imageResponse = await axios.post(
-          "/api/upload-profile-image",
+          "https://project-be.site/auth/signup",
           imageData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -273,9 +277,9 @@ const Signup = () => {
         <SignupFormLabel>이름</SignupFormLabel>
         <SignupFormInput
           type="text"
-          name="name"
+          name="userName"
           onChange={handleChange}
-          value={form.name}
+          value={form.userName}
         />
 
         <SignupFormLabel>이메일</SignupFormLabel>
@@ -316,6 +320,14 @@ const Signup = () => {
           {messages.passwordConfirmMessage}
         </SignupFormErrorMessage>
 
+        <SignupFormLabel>성별</SignupFormLabel>
+        <SignupFormInput
+          type="text"
+          name="gender"
+          onChange={handleChange}
+          value={form.gender}
+        />
+
         <SignupFormLabel>휴대폰 번호</SignupFormLabel>
         <SignupFormInput
           type="text"
@@ -329,9 +341,9 @@ const Signup = () => {
         <SignupFlexContainer>
           <SignupFormInput
             type="text"
-            name="zip_code"
+            name="zipCode"
             onChange={handleChange}
-            value={form.zip_code}
+            value={form.zipCode}
             readOnly
           />
           <SignupConfirmButton type="button" onClick={togglePostCode}>
@@ -345,18 +357,18 @@ const Signup = () => {
         <SignupFormLabel>기본 주소</SignupFormLabel>
         <SignupFormInput
           type="text"
-          name="main_address"
+          name="mainAddress"
           onChange={handleChange}
-          value={form.main_address}
+          value={form.mainAddress}
           readOnly
         />
 
         <SignupFormLabel>상세 주소</SignupFormLabel>
         <SignupFormInput
           type="text"
-          name="details_address"
+          name="detailsAddress"
           onChange={handleChange}
-          value={form.details_address}
+          value={form.detailsAddress}
         />
 
         <SignupFormLabel>[선택] 프로필 사진</SignupFormLabel>
@@ -365,9 +377,9 @@ const Signup = () => {
           accept="image/*"
           onChange={handleImageChange}
         />
-        {form.profile_image && (
+        {form.profileImage && (
           <img
-            src={form.profile_image}
+            src={form.profileImage}
             alt="프로필 미리보기"
             style={{ width: "100px", marginTop: "10px" }}
           />

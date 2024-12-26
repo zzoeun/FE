@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import ModalContent from "./ModalContent";
-import Button from "./Button";
+import ModalButton from "./ModalButton";
 
 const SignupConfirmModal = ({ isOpen, content, onClose }) => {
   if (!isOpen) {
@@ -13,7 +13,8 @@ const SignupConfirmModal = ({ isOpen, content, onClose }) => {
       <ModalMain>
         <ModalContent>{content}</ModalContent>
         <ModalButtons>
-          <Button onClick={onClose}>확인</Button> {/* onClose 함수 연결 */}
+          <ModalButton onClick={onClose}>확인</ModalButton>{" "}
+          {/* onClose 함수 연결 */}
         </ModalButtons>
       </ModalMain>
     </ModalBackground>

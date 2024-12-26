@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import bookSliceReducer from '../features/bookSlice';
-import modalSliceReducer from '../features/modalSlice';
 import dropdownSliceReducer from '../features/dropdownSlice';
+import modalSliceReducer from '../features/modalSlice';
 
 export default configureStore({
   reducer: {
-    books: bookSliceReducer,
-    modal: modalSliceReducer,
     dropdown: dropdownSliceReducer,
+    modal: modalSliceReducer,
   },
 });

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-// 전화번호 - 넣기 (hook으로 빼야지...)
 const addHyphenPhone = (phoneNum) => {
   var num = phoneNum;
   return num.replace(/^\d[3]-\d[3,4]-\d[4]$/);
@@ -14,36 +13,43 @@ const DefaultAddress = ({ userInfo }) => {
     <DefaultAddressContainer>
       <UserName>{userInfo.name}</UserName>
       <UserAddress>
-        <p>({userInfo.zipCode})</p>
-        <p>{userInfo.mainAddress}</p>
-        <p>{userInfo.detailsAddress}</p>
+        <p>({userInfo.zip_code})</p>
+        <p>{userInfo.main_address}</p>
+        <p>{userInfo.details_address}</p>
       </UserAddress>
       <UserPhone>{addHyphenPhone(userInfo.phone)}</UserPhone>
     </DefaultAddressContainer>
   );
 };
 
+
 const DefaultAddressContainer = styled.div`
-  margin: 20px 0 15px 12px;
+  margin-top: 20px;
+  padding: 5px 0 20px 20px;
+
+  border-bottom: 2px solid #f4f4f4;
+
+  p {
+    margin-bottom: 8px;
+  }
 `;
 
 const UserName = styled.p`
-  margin-bottom: 5px;
   font-weight: bold;
   font-size: 20px;
 `;
 
 const UserAddress = styled.div`
   display: flex;
-  margin-bottom: 5px;
 
   p {
-    margin-right: 7px;1
+    margin-right: 7px;
   }
 `;
 
 const UserPhone = styled.p`
-  color: #cccccc;
+  color: #999999;
 `;
+
 
 export default DefaultAddress;

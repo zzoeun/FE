@@ -1,25 +1,39 @@
-import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { openModal } from '../../features/modalSlice';
 
-function BookItem({ book }) {
+function BookItem({ book, setModal }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const handleAddCartAndOpenModal = () => {
+    setModal(true);
+
+    // const token = localStorage.getItem('token');
+
+    // axios.post('https://project-be.site/cart/add', {
+    //   header: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   body: {
+    //     userId: ,
+    //     quantity: 1,
+    //     bookId: book.book.id,
+    //   },
+    // });
+  };
 
   return (
-    <Card key={book.book_id}>
+    <Card>
       <Wrapper>
         <CardInfo>
           <CardImageBox>
-            <img src='https://placehold.co/100' alt='placehold' width={'100%'} draggable={false} />
+            <img src={book.bookImageUrl} alt={book.bookTitle} draggable={false} />
           </CardImageBox>
-          <Title>{book.title}</Title>
-          <Price>{book.price}</Price>
-          <DiscountPrice>{book.price * 0.9}</DiscountPrice>
+          <Title>{book.bookTitle}</Title>
+          <Price>{book.bookPrice}</Price>
         </CardInfo>
         <CardButtons>
-          <Button onClick={() => navigate(`/detail/${book.book_id}`)}>
+          <Button onClick={() => navigate(`/detail/${book.id}`)}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -35,7 +49,7 @@ function BookItem({ book }) {
               />
             </svg>
           </Button>
-          <Button onClick={() => dispatch(openModal())}>
+          <Button onClick={handleAddCartAndOpenModal}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -60,13 +74,13 @@ function BookItem({ book }) {
 
 const Card = styled.li`
   width: 240px;
-  height: 350px;
+  height: 416px;
   box-shadow: 0 0 0 1px #e0e0e0;
   overflow: hidden;
 `;
 
 const Wrapper = styled.div`
-  transition: all 0.5s;
+  transition: all 0.3s;
   &:hover {
     transform: translateY(-50px);
   }
@@ -76,8 +90,8 @@ const CardInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  height: 350px;
+  justify-content: space-between;
+  gap: 20px;
   text-align: center;
   padding: 20px;
   color: #999999;
@@ -85,20 +99,24 @@ const CardInfo = styled.div`
 
 const CardImageBox = styled.div`
   width: 200px;
-  height: 200px;
+
+  & img {
+    display: block;
+    width: 100%;
+    height: 300px;
+  }
 `;
 
 const Title = styled.h4`
-  min-height: 32px;
-`;
-
-const DiscountPrice = styled.p`
-  font-size: 20px;
-  color: #e14549;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Price = styled.p`
-  text-decoration: line-through;
+  font-size: 20px;
+  color: #656e7f;
 `;
 
 const CardButtons = styled.div`

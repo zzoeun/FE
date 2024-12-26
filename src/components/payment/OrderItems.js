@@ -3,14 +3,47 @@ import React from "react";
 // import styles from "./OrderItems.module.css";
 import styled from "styled-components";
 
-// 금액 ,(콤마) 추가하기
-const addComma = (price) => {
-  const commaPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+// items 금액 계산
+const itemsAmountCalc = (items) => {
+  var deliveryFee = 3000;
+  var total = 0;
 
-  return commaPrice;
+  items.map((item) => {
+    total += item.price;
+  });
+
+  if (total >= 30000) deliveryFee = 0;
+
+  return { total, deliveryFee };
 };
 
-const OrderItems = ({ items, shippingFee }) => {
+// 금액 ,(콤마) 추가하기
+const addComma = (price) => {
+  if (price === undefined || price === null || isNaN(price)) {
+    return price;
+  }
+
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const OrderItems = () => {
+  const items = [
+    {
+      imageUrl: "abcdefg",
+      name: "Mike",
+      amount: 1,
+      price: 2500,
+    },
+    {
+      imageUrl: "hey",
+      name: "Jake",
+      amount: 2,
+      price: 10000,
+    },
+  ];
+
+  const { deliveryFee, total } = itemsAmountCalc(items);
+
   return (
     <OrderItemsWrapper>
       <OrderItemHead>
@@ -25,20 +58,22 @@ const OrderItems = ({ items, shippingFee }) => {
           <Items>
             {items.map((item, index) => (
               <Item key={index}>
-                <img src={item.book_image} alt={item.title} width="50" />
+
+                <img src={item.imageUrl} alt={item.title} width="50" />
+
                 <ItemAmount>
-                  <p>{item.title}</p>
-                  <p>{item.quantity}개</p>
+                  <p>{item.name}</p>
+                  <p>{item.amount}개</p>
                 </ItemAmount>
                 <ItemPrice>
-                  <p>{addComma(item.price * item.quantity)}원</p>
+                  <p>{addComma(item.price * item.amount)}원</p>
                   <button>쿠폰적용</button>
                 </ItemPrice>
               </Item>
             ))}
           </Items>
           <ItemDelivery>
-            <p>{addComma(shippingFee)}원</p>
+            <p>{addComma(deliveryFee)}원</p>
             <P2>택배 배송안내</P2>
           </ItemDelivery>
         </ItemContents>
@@ -137,8 +172,14 @@ const ItemPrice = styled.div`
     padding: 2px 7px 2px 7px;
 
     background-color: #ffff;
-    border: 2px solid #495a70;
-    color: #495a70;
+    border: 2px solid #cccccc;
+    color: #cccccc;
+
+    &:hover {
+      background: #999999;
+      border-color: #999999;
+      color: white;
+    }
   }
 `;
 

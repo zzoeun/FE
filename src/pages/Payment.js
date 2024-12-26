@@ -6,6 +6,7 @@ import PaymentMethod from "../components/payment/PaymentMethod";
 import TotalPayment from "../components/payment/TotalPayment";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useLocation } from "react-router";
 
 const SHIPPING_FEE = 3000;
 const MIN_ORDER_AMOUNT = 30000;
@@ -20,18 +21,26 @@ const dummyUserInfo = {
 };
 
 const dummyCartItems = [
-  { bookId: 1, quantity: 2 },
-  { bookId: 12, quantity: 1 },
-  { bookId: 19, quantity: 3 },
+  {
+    bookId: 9,
+    title: "The Brothers Karamazov",
+    price: 20000,
+    bookImage: "https://placehold.co/200",
+    quantity: 2,
+  },
+  {
+    bookId: 10,
+    title: "Crime and Punishment",
+    price: 16000,
+    bookImage: "https://placehold.co/200",
+    quantity: 1,
+  },
 ]; // 카트에서 가져온 상품 정보 임시 데이터
 
 // 임시 데이터
 const email = "use@example.com"; // email 임시 데이터
 
-const Payment = ({ cartItems = null }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const paymentData = location.state;
+const Payment = () => {
 
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -59,19 +68,15 @@ const Payment = ({ cartItems = null }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (paymentData) {
-      setOrderItems(paymentData.orderItems);
-      setPaymentInfo({
-        totalAmount: paymentData.totalAmount,
-        shippingFee: paymentData.deliveryFee
-      });
-    } else {
-      // 잘못된 접근 처리
-      alert('잘못된 접근입니다.');
-      navigate('/cart');
-    }
-  }, [paymentData, navigate]);
+
+  const location = useLocation();
+
+  const paymentData = location.state || {};
+  const { cartItems, totalPrice, deliveryFee, totalAmount } = paymentData;
+
+  // cart or dummyItems
+  const selectCartItems = cartItems || dummyCartItems;
+
 
   // 더미 데이터를 사용하여 컴포넌트 상태 업데이트
   useEffect(() => {
@@ -82,59 +87,26 @@ const Payment = ({ cartItems = null }) => {
       setReceiverInfo(newDummy);
     }, 1000); // 1초 후 더미 데이터 설정
 
-    const fetchItemData = async () => {
-      try {
-        const response = await axios.get("/data.json");
-        const allBooks = response.data;
+    if (selectCartItems.length > 0) {
+      const filteredItems = selectCartItems.map((item) => ({
+        bookId: item.bookId,
+        title: item.title,
+        price: item.price,
+        imageUrl: item.bookImage,
+        quantity: item.quantity,
+      }));
 
-        // cartItems가 없으면 dummyCartItems 사용
-        const selectCartItems = cartItems || dummyCartItems;
+      setOrderItems(filteredItems);
+    } else {
+      setError("해당 책을 찾을 수 없습니다.");
+    }
 
-        // 특정 id 필터링
-        const paymentItemInfo = selectCartItems
-          .map((cartItem) => {
-            const bookData = allBooks.find(
-              (book) => book.book_id === cartItem.bookId
-            );
-            if (bookData) {
-              return { ...bookData, quantity: cartItem.quantity };
-            } else {
-              return null;
-            }
-          })
-          .filter(Boolean); // null 제거
-
-        //
-        if (paymentItemInfo.length > 0) {
-          setOrderItems(paymentItemInfo);
-
-          // 총 결제 금액 계산 (상품 총합 + 배송비)
-          const totalAmount = paymentItemInfo.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-          const shippingFee = totalAmount > MIN_ORDER_AMOUNT ? 0 : SHIPPING_FEE; // 배송비
-          setPaymentInfo((prevInfo) => ({
-            ...prevInfo,
-            totalAmount,
-            shippingFee,
-          }));
-        } else {
-          setError("해당 책을 찾을 수 없습니다.");
-        }
-      } catch (err) {
-        setError("데이터를 가져오는 데 실패하였습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchItemData();
+    setLoading(false);
   }, [cartItems]);
 
-  console.log("Payment-userInfo: ", userInfo);
-  console.log("Payment-receiverInfo: ", receiverInfo);
-  console.log("Payment-ItemsInfo:", orderItems);
+  // console.log("Payment-userInfo: ", userInfo);
+  // console.log("Payment-receiverInfo: ", receiverInfo);
+  // console.log("Payment-ItemsInfo:", orderItems);
 
   // Shipping 회원정보(0), 쓰기모드(1)
   const onShippingModeChange = (e) => {
@@ -151,40 +123,67 @@ const Payment = ({ cartItems = null }) => {
     setCardNumbers(numbers);
   };
 
-  // 결제 처리 POST
-  const handlePayment = async () => {
-    try {
-      // shippingMode에 따라 수령인 정보 선택
-      const recipientInfo =
-        shippingMode === "0"
-          ? { ...userInfo } // 회원 정보
-          : { ...receiverInfo }; // 직접 입력
-      const paymentData = {
-        email,
-        receiverName: recipientInfo.name,
-        receiverPhone: recipientInfo.phone,
-        zipCode: recipientInfo.zipCode,
-        mainAddress: receiverInfo.mainAddress,
-        detailsAddress: receiverInfo.detailsAddress,
-        paymentCard: cardNumbers,
-        paymentDate: new Date().toISOString().split("T")[0], // 날짜 형식: YYYY-MM-DD
-        paymentTime: new Date().toLocaleTimeString(), // 시간 형식: HH:MM:SS
-        items: orderItems.map(({ book_id, quantity }) => ({
-          book_id,
-          quantity,
-        })),
-      };
+  // 결제 버튼(TotalPayment.js) 쪽으로 넘기는 데이터
+  const getPaymentData = () => {
+    // shippingMode에 따라 수령인 정보 선택
+    const recipientInfo =
+      shippingMode === "0"
+        ? { ...userInfo } // 회원 정보
+        : { ...receiverInfo }; // 직접 입력
 
-      console.log("post: ", paymentData);
+    const firstBookTitle =
+      orderItems.length > 0 ? orderItems[0].title : "데이터 없음";
+    const otherBookCount = orderItems.length > 1 ? orderItems.length - 1 : 0;
 
-      const response = await axios.post("/api/payment", paymentData);
-      alert("Payment Successful!");
-      console.log("Payment Response: ", response.data);
-    } catch (error) {
-      alert("Payment Faild!");
-      console.error("Payment Error: ", error);
-    }
+    const paymentName =
+      `${firstBookTitle}` +
+      `${otherBookCount > 0 ? ` 외 ${otherBookCount}권` : ""}`;
+
+    return {
+      name: paymentName,
+      amount: totalAmount,
+      buyer_email: recipientInfo.email,
+      buyer_name: recipientInfo.name,
+      buyer_tel: recipientInfo.phone,
+      buyer_addr: recipientInfo.mainAddress,
+      buyer_postcode: recipientInfo.zipCode,
+    };
   };
+
+  // 결제 처리 POST
+  // const handlePayment = async () => {
+  //   try {
+  //     // shippingMode에 따라 수령인 정보 선택
+  //     const recipientInfo =
+  //       shippingMode === "0"
+  //         ? { ...userInfo } // 회원 정보
+  //         : { ...receiverInfo }; // 직접 입력
+  //     const paymentData = {
+  //       email,
+  //       receiverName: recipientInfo.name,
+  //       receiverPhone: recipientInfo.phone,
+  //       zipCode: recipientInfo.zipCode,
+  //       mainAddress: receiverInfo.mainAddress,
+  //       detailsAddress: receiverInfo.detailsAddress,
+  //       paymentCard: cardNumbers,
+  //       paymentDate: new Date().toISOString().split("T")[0], // 날짜 형식: YYYY-MM-DD
+  //       paymentTime: new Date().toLocaleTimeString(), // 시간 형식: HH:MM:SS
+  //       items: orderItems.map(({ book_id, quantity }) => ({
+  //         book_id,
+  //         quantity,
+  //       })),
+  //     };
+
+  //     console.log("post: ", paymentData);
+
+  //     const response = await axios.post("/api/payment", paymentData);
+  //     alert("Payment Successful!");
+  //     console.log("Payment Response: ", response.data);
+  //   } catch (error) {
+  //     alert("Payment Faild!");
+  //     console.error("Payment Error: ", error);
+  //   }
+  // };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -204,7 +203,10 @@ const Payment = ({ cartItems = null }) => {
         <PaymentMethod onCardNumbersChange={handleCardNumbersChange} />
       </PaymentContents>
       <PaymentAmount>
-        <TotalPayment paymentInfo={paymentInfo} onPayment={handlePayment} />
+        <TotalPayment
+          paymentInfo={paymentInfo}
+          getPaymentData={getPaymentData}
+        />
       </PaymentAmount>
     </PaymentPage>
   );
