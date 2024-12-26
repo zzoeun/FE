@@ -2,17 +2,10 @@ import React from "react";
 import EnterDirectlyAddress from "./EnterDirectlyAddress";
 import DefaultAddress from "./DefaultAddress";
 
-const ShippingMethodInfo = ({
-  shippingMode,
-  userInfo,
-  receiverInfo,
-  onInfoChange,
-}) => {
-  const mode = String(shippingMode) || "0"; // shippingMode가 없거나 잘못되면, "0"으로 처리
-
+const ShippingMethodInfo = ({ shippingMode, userInfo, onInfoChange }) => {
   const ordererInfo = () => {
-    console.log("ordererInfo: ", mode);
-    switch (mode) {
+    console.log("ordererInfo: ", shippingMode);
+    switch (shippingMode) {
       case "0":
         console.log("회원 정보 모드");
         return (
@@ -25,7 +18,7 @@ const ShippingMethodInfo = ({
         return (
           <>
             <EnterDirectlyAddress
-              receiverInfo={receiverInfo}
+              userInfo={userInfo}
               onInfoChange={onInfoChange}
             />
           </>

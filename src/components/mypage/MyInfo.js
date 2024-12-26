@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import ValidMyInfo from "./ValidMyInfo";
-import SignupConfirmModal from "../modal/SignupConfirmModal";
-import { useDispatch, useSelector } from "react-redux";
-import { openModal, closeModal } from "../../features/modalSlice";
-import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 
-const MyInfo = ({ userData, setUserData, token }) => {
+const MyInfo = ({ userData, setUserData }) => {
   // 초기값을 MyPage에서 받은 `userData`로 설정
   const [form, setForm] = useState(userData || {});
-  const dispatch = useDispatch();
-  const modalOpen = useSelector((state) => state.modal); // 모달 상태 가져오기
-  const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
+  const [token, setToken] = useState(null);
 
   // 입력 값 변경 핸들러
   const handleChange = (e) => {
@@ -29,50 +23,25 @@ const MyInfo = ({ userData, setUserData, token }) => {
     }
   };
 
+  // 수정 사항 저장 핸들러
   const handleSave = async () => {
     try {
-      // JSON 데이터 준비 (이미지 제외)
-      const { profile_image, ...jsonData } = form;
-
-      // JSON 형식으로 데이터 전송
+      // 수정된 데이터를 백엔드에 전송,
       const response = await axios.put(
-        `http://13.209.143.163:8080/api/mypage/putUserInfo/${userData.id}`,
-        jsonData, // 이미지 제외한 나머지 데이터
+        `/api/mypage/putUserInfo/${form.id}`,
+        form,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       console.log("수정 성공:", response.data);
 
-      // 프로필 이미지가 변경된 경우, 별도로 처리
-      if (profile_image instanceof File) {
-        const formData = new FormData();
-        formData.append("profile_image", profile_image);
-
-        const imageResponse = await axios.post(
-          `/api/mypage/uploadProfileImage/${form.id}`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log("이미지 업로드 성공:", imageResponse.data);
-      }
-
       // 부모 컴포넌트에 업데이트된 데이터 전달
-      setUserData({ ...jsonData, profile_image });
-      setModalContent("정보가 성공적으로 수정되었습니다.");
-      dispatch(openModal());
+      setUserData(form);
+      alert("정보가 성공적으로 수정되었습니다.");
     } catch (error) {
       console.error("정보 수정 실패:", error.response || error.message);
-      setModalContent("정보 수정에 실패했습니다.");
-      dispatch(openModal());
+      alert("정보 수정 중 오류가 발생했습니다.");
     }
   };
 
@@ -102,17 +71,6 @@ const MyInfo = ({ userData, setUserData, token }) => {
       >
         수정하기
       </SaveButton>
-      {/* 모달 컴포넌트 */}
-      {modalOpen && (
-        <SignupConfirmModal
-          isOpen={modalOpen}
-          content={modalContent}
-          onClose={() => {
-            dispatch(closeModal());
-            // navigate("/Login");
-          }}
-        />
-      )}
     </FormContainer>
   );
 };

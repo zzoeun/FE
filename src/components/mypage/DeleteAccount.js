@@ -1,40 +1,28 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import React, { useState, useEffect } from "react";
-import SignupModal from "../modal/SignupModal";
-import { useDispatch, useSelector } from "react-redux";
-import { openModal, closeModal } from "../../features/modalSlice";
+import React, { useState } from "react";
 
-const DeleteAccount = ({ token }) => {
+const DeleteAccount = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const modalOpen = useSelector((state) => state.modal);
-  const [modalContent, setModalContent] = useState("");
+  const [token, setToken] = useState(null);
 
-  const handleDeleteProfile = () => {
-    setModalContent("정말 회원 탈퇴를 진행하시겠습니까?");
-    dispatch(openModal());
-  };
-
-  const confirmDelete = async () => {
-    try {
-      const response = await axios.delete(
-        `http://13.209.143.163:8080/auth/delete`,
-        {
+  // 회원탈퇴 로직. 로그인 시 sotorage 활용 여부 확인 후 수정 필요
+  const handleDeleteProfile = async () => {
+    if (window.confirm("정말 회원 탈퇴를 진행하시겠습니까?")) {
+      try {
+        const response = await axios.delete(`/auth/delete`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
-      console.log("삭제 성공:", response.data);
-      setModalContent("회원 탈퇴가 완료되었습니다.");
-      dispatch(openModal());
-      navigate("/");
-    } catch (error) {
-      console.error("회원 탈퇴 실패:", error);
-      setModalContent("회원 탈퇴에 실패했습니다.");
-      dispatch(openModal());
+        });
+        console.log("삭제 성공:", response.data);
+        window.confirm("회원 탈퇴가 완료되었습니다.");
+        navigate("/");
+      } catch (error) {
+        console.error("회원 탈퇴 실패:", error);
+        alert("회원 탈퇴에 실패했습니다.");
+      }
     }
   };
 
@@ -45,15 +33,6 @@ const DeleteAccount = ({ token }) => {
         회원 탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.
       </Description>
       <DeleteButton onClick={handleDeleteProfile}>회원 탈퇴</DeleteButton>
-      {/* 모달 컴포넌트 */}
-      {modalOpen && (
-        <SignupModal
-          isOpen={modalOpen}
-          content={modalContent}
-          onConfirm={confirmDelete} // 확인 버튼 동작
-          onCancel={() => dispatch(closeModal())} // 취소 버튼 동작
-        />
-      )}
     </Container>
   );
 };

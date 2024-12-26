@@ -4,38 +4,25 @@ import axios from "axios";
 import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
+//import MyInfoModify from "../components/mypage/MyInfoModify";
 import PaymentsList from "../components/mypage/PaymentsList";
-import ShoppingCartList from "../components/mypage/ShoppingCartList";
-import SignupConfirmModal from "../components/modal/SignupConfirmModal";
-import { useDispatch, useSelector } from "react-redux";
-import { openModal, closeModal } from "../features/modalSlice";
-import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("myinfo");
   const [userData, setUserData] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const navigate = useNavigate(); // 페이지 이동
-
-  const dispatch = useDispatch();
-  const modalOpen = useSelector((state) => state.modal); // 모달 상태 가져오기
-  const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
+  const [token, setToken] = useState(null);
 
   // 백엔드에서 사용자 정보 불러오기
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          "http://13.209.143.163:8080/api/mypage/getUserInfo",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get("/api/mypage/getUserInfo", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setUserData(response.data); // 받아온 데이터 저장
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
-        setModalContent("로그인한 회원이 아닙니다.");
-        dispatch(openModal());
+        alert("로그인한 회원이 아닙니다.");
       }
     };
 
@@ -78,17 +65,6 @@ const MyPage = () => {
         <PageTitle>{getPageTitle()}</PageTitle>
         {renderContent()}
       </Content>
-      {/* 모달 컴포넌트 */}
-      {modalOpen && (
-        <SignupConfirmModal
-          isOpen={modalOpen}
-          content={modalContent}
-          onClose={() => {
-            dispatch(closeModal());
-            // navigate("/Login");
-          }}
-        />
-      )}
     </Container>
   );
 };
@@ -100,7 +76,6 @@ const Container = styled.div`
   background-color: #f8f9fa;
   min-height: 100vh;
   margin: 302px auto;
-  min-width: 1200px; // 추가: 전체 최소 너비 설정
 `;
 
 const Content = styled.div`
@@ -108,8 +83,6 @@ const Content = styled.div`
   padding: 30px;
   background-color: #fff;
   color: #333;
-  min-width: 800px; // 추가: 컨텐츠 영역 최소 너비 설정
-  overflow-x: auto; // 추가: 필요한 경우에만 가로 스크롤
 `;
 
 const PageTitle = styled.h1`

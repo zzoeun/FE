@@ -1,53 +1,40 @@
 import styled from 'styled-components';
 import BookList from '../components/home/BookList';
 import Modal from '../components/modal/Modal';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { addBooks } from '../features/bookSlice';
+import ModalContent from '../components/modal/ModalContent';
+import { useState } from 'react';
+import Button from '../components/modal/ModalButton';
+import ModalButtons from '../components/modal/ModalButtons';
+import { useNavigate } from 'react-router';
 
 const Home = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const [modal, setModal] = useState(false);
 
-  const dispatch = useDispatch();
+  const handleCloseModal = () => {
+    setModal(false);
+  };
 
-  const modal = useSelector((state) => state.modal);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    // 서버로부터 데이터 가져오기
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get('data.json', { signal: controller.signal });
-        // 가져온 데이터 전역 state에 저장
-        dispatch(addBooks(response.data));
-      } catch (error) {
-        if (!axios.isCancel(error)) {
-          setError(error.message);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-
-    // 페이지 unmount 시 axios get 요청 취소
-    return () => {
-      controller.abort();
-    };
-  }, [dispatch]);
-
-  if (loading) return <LoadingMessage>로딩 중...</LoadingMessage>;
-  if (error) return <ErrorMessage>{error}</ErrorMessage>;
+  const handleMoveCartPage = () => {
+    navigate('/cart');
+    setModal(false);
+  };
 
   return (
     <Main>
-      {modal && <Modal />}
-      <BookList />
+      {modal && (
+        <Modal>
+          <ModalContent>
+            <p>장바구니에 상품을 담았습니다.</p>
+            <p>장바구니로 바로 이동하시겠습니까?</p>
+          </ModalContent>
+          <ModalButtons>
+            <Button onClick={handleMoveCartPage}>확인</Button>
+            <Button onClick={handleCloseModal}>취소</Button>
+          </ModalButtons>
+        </Modal>
+      )}
+      <BookList setModal={setModal} />
     </Main>
   );
 };
@@ -55,14 +42,5 @@ const Home = () => {
 const Main = styled.main`
   padding-bottom: 50px;
 `;
-
-const LoadingMessage = styled.div`
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ErrorMessage = styled(LoadingMessage)``;
 
 export default Home;
