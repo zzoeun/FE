@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
+
+  // 페이지 로드 시 로그인 상태 확인
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true); // 토큰이 있으면 로그인 상태로 설정
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,14 +41,14 @@ const Login = () => {
       // 1. 토큰 저장
       localStorage.setItem("token", data.token);
 
-      // 2. 이메일 및 비밀번호 저장 (이메일만 저장하는 것을 권장)
+      // 2. 이메일 저장
       localStorage.setItem("email", email);
-      // localStorage.setItem("password", password);  // 비밀번호 저장은 권장하지 않음 (보안 위험)
 
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
 
-      // 로그인 후 추가 작업
-      // 예: window.location.href = '/dashboard';
+      // 로그인 후 상태 변경
+      setIsLoggedIn(true);
+
     } catch (err) {
       setError(err.message || "로그인 중 오류가 발생했습니다.");
     }
@@ -50,6 +59,7 @@ const Login = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     alert("로그아웃 되었습니다.");
+    setIsLoggedIn(false); // 로그아웃 시 상태 변경
     setEmail("");
     setPassword("");
   };
@@ -89,6 +99,7 @@ const Login = () => {
           <Label htmlFor="auto-login">자동 로그인</Label>
         </CheckboxGroup>
         
+        {/* 로그인 버튼 한 번만 사용 */}
         <SubmitButton type="submit">로그인</SubmitButton>
         
         <HelpLinks>
@@ -97,9 +108,12 @@ const Login = () => {
           <a href="/signup">회원가입</a>
         </HelpLinks>
         
-        <LogoutButton type="button" onClick={handleLogout}>
-          로그아웃
-        </LogoutButton>
+        {/* 로그인이 되어 있을 때만 로그아웃 버튼 표시 */}
+        {isLoggedIn && (
+          <LogoutButton type="button" onClick={handleLogout}>
+            로그아웃
+          </LogoutButton>
+        )}
       </LoginForm>
     </LoginContainer>
   );
