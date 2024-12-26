@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import styled from 'styled-components';
 import Dropdown from '../home/Dropdown';
 import { useState } from 'react';
@@ -7,7 +7,6 @@ import user from '../../icons/user.svg';
 const Navbar = () => {
   const [userInfo, setUserInfo] = useState(null);
 
-  const navigate = useNavigate();
   const location = useLocation();
 
   return (
@@ -20,18 +19,18 @@ const Navbar = () => {
             {!userInfo ? (
               <>
                 <LocationItem>
-                  <LocationButton onClick={() => navigate('/login')}>로그인</LocationButton>
+                  <LocationLink to={'/login'}>로그인</LocationLink>
                 </LocationItem>
                 {location.pathname !== '/signup' && (
                   <LocationItem>
-                    <LocationButton onClick={() => navigate('/signup')}>회원가입</LocationButton>
+                    <LocationLink to={'/signup'}>회원가입</LocationLink>
                   </LocationItem>
                 )}
               </>
             ) : (
               <LocationItem>
-                <User onClick={() => navigate('/mypage')}>
-                  <img src={user} alt='profile' />
+                <User to={'/mypage'}>
+                  <img src={userInfo.profileImage} alt='profile' />
                   <p>USER NAME</p>
                 </User>
               </LocationItem>
@@ -73,15 +72,17 @@ const LocationItem = styled.li`
   cursor: pointer;
 `;
 
-const LocationButton = styled.button`
-  border: none;
-  background: transparent;
+const LocationLink = styled(Link)`
   font-size: 16px;
   color: #999999;
-  cursor: pointer;
+  text-decoration: none;
+
+  &:visited {
+    color: #999999;
+  }
 `;
 
-const User = styled(LocationButton)`
+const User = styled(LocationLink)`
   display: flex;
   align-items: center;
   gap: 5px;
@@ -90,6 +91,10 @@ const User = styled(LocationButton)`
     display: block;
     width: 35px;
     height: 35px;
+  }
+
+  & p {
+    margin-top: 3px;
   }
 `;
 
