@@ -1,11 +1,21 @@
-import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { openModal } from '../../features/modalSlice';
 
-function BookItem({ book }) {
+function BookItem({ book, setModal }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const handleAddCartAndOpenModal = () => {
+    setModal(true);
+
+    // axios.post('https://project-be.site/cart/add', {
+    //   body: {
+    //     userId: ,
+    //     quantity: 1,
+    //     bookId: book.book_id,
+    //   },
+    // });
+  };
 
   return (
     <Card key={book.book_id}>
@@ -16,7 +26,6 @@ function BookItem({ book }) {
           </CardImageBox>
           <Title>{book.title}</Title>
           <Price>{book.price}</Price>
-          <DiscountPrice>{book.price * 0.9}</DiscountPrice>
         </CardInfo>
         <CardButtons>
           <Button onClick={() => navigate(`/detail/${book.book_id}`)}>
@@ -35,7 +44,7 @@ function BookItem({ book }) {
               />
             </svg>
           </Button>
-          <Button onClick={() => dispatch(openModal())}>
+          <Button onClick={handleAddCartAndOpenModal}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -60,7 +69,7 @@ function BookItem({ book }) {
 
 const Card = styled.li`
   width: 240px;
-  height: 350px;
+  height: 316px;
   box-shadow: 0 0 0 1px #e0e0e0;
   overflow: hidden;
 `;
@@ -76,8 +85,8 @@ const CardInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  height: 350px;
+  justify-content: space-between;
+  gap: 20px;
   text-align: center;
   padding: 20px;
   color: #999999;
@@ -89,16 +98,15 @@ const CardImageBox = styled.div`
 `;
 
 const Title = styled.h4`
-  min-height: 32px;
-`;
-
-const DiscountPrice = styled.p`
-  font-size: 20px;
-  color: #e14549;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const Price = styled.p`
-  text-decoration: line-through;
+  font-size: 20px;
+  color: #656e7f;
 `;
 
 const CardButtons = styled.div`
