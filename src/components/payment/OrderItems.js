@@ -3,20 +3,6 @@ import React from "react";
 // import styles from "./OrderItems.module.css";
 import styled from "styled-components";
 
-// items 금액 계산
-const itemsAmountCalc = (items) => {
-  var deliveryFee = 3000;
-  var total = 0;
-
-  items.map((item) => {
-    total += item.price;
-  });
-
-  if (total >= 30000) deliveryFee = 0;
-
-  return { total, deliveryFee };
-};
-
 // 금액 ,(콤마) 추가하기
 const addComma = (price) => {
   if (price === undefined || price === null || isNaN(price)) {
@@ -26,24 +12,7 @@ const addComma = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-const OrderItems = () => {
-  const items = [
-    {
-      imageUrl: "abcdefg",
-      name: "Mike",
-      amount: 1,
-      price: 2500,
-    },
-    {
-      imageUrl: "hey",
-      name: "Jake",
-      amount: 2,
-      price: 10000,
-    },
-  ];
-
-  const { deliveryFee, total } = itemsAmountCalc(items);
-
+const OrderItems = ({ items, shippingFee }) => {
   return (
     <OrderItemsWrapper>
       <OrderItemHead>
@@ -58,7 +27,6 @@ const OrderItems = () => {
           <Items>
             {items.map((item, index) => (
               <Item key={index}>
-
                 <img src={item.imageUrl} alt={item.title} width="50" />
 
                 <ItemAmount>
@@ -73,7 +41,7 @@ const OrderItems = () => {
             ))}
           </Items>
           <ItemDelivery>
-            <p>{addComma(deliveryFee)}원</p>
+            <p>{addComma(shippingFee)}원</p>
             <P2>택배 배송안내</P2>
           </ItemDelivery>
         </ItemContents>
