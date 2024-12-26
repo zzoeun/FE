@@ -17,7 +17,7 @@ function BookItem({ book, setModal }) {
     //   body: {
     //     userId: ,
     //     quantity: 1,
-    //     bookId: book.book_id,
+    //     bookId: book.book.id,
     //   },
     // });
   };
