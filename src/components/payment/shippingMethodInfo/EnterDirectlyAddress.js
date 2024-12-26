@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import DaumPostCode from "react-daum-postcode";
 
 const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
-  // ShippingInfo 쓰기 모드(1)
   const [editedInfo, setEditedInfo] = useState(userInfo);
+  const [isPostCodeOpen, setIsPostCodeOpen] = useState(false);
 
   const handleChange = (e) => {
     const key = e.target.id;
@@ -13,7 +14,20 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
     onInfoChange(updatedInfo); // 부모로 변경된 정보 전달
   };
 
-  console.log("Input data: ", editedInfo);
+  const handleAddressComplete = (data) => {
+    const updatedInfo = {
+      ...editedInfo,
+      zip_code: data.zonecode,
+      main_address: data.address,
+    };
+    setEditedInfo(updatedInfo);
+    onInfoChange(updatedInfo); // 부모로 변경된 정보 전달
+    setIsPostCodeOpen(false); // 모달 닫기
+  };
+
+  const togglePostCode = () => {
+    setIsPostCodeOpen((prev) => !prev);
+  };
 
   return (
     <>
@@ -41,7 +55,9 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
               onChange={handleChange}
               readOnly
             />
-            <button className="address-btn">주소찾기</button>
+            <button className="address-btn" onClick={togglePostCode}>
+              주소찾기
+            </button>
           </InputPost>
           <InputAddress>
             <input
@@ -75,34 +91,19 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
         </ModalOverlay>
       )}
     </>
-
   );
 };
 
 const InputContents = styled.div`
   display: flex;
   align-items: center;
-  padding: 8px 0 8px 0;
+  padding: 8px 0;
 
   border-bottom: 2px solid #f4f4f4;
 
   p {
     color: red;
     margin-right: 45px;
-  }
-
-  select {
-    margin: 8px 0 8px 10px;
-    padding-left: 10px;
-    height: 45px;
-    width: 530px;
-
-    color: #898989;
-
-    border: 2px solid #cccccc;
-  }
-
-  div {
   }
 `;
 
@@ -121,10 +122,8 @@ const InputPost = styled.div`
 
     background: #cccccc;
     color: #fff;
-
     border: none;
     border-radius: 4px;
-
     cursor: pointer;
 
     &:hover {
@@ -143,6 +142,27 @@ const InputAddress = styled.div`
     max-width: 450px;
     min-width: 400px;
   }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContainer = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 `;
 
 export default EnterDirectlyAddress;
