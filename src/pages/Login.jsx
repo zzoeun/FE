@@ -10,7 +10,6 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [bearerToken, setBearerToken] = useState(null);
 
-  // 앱 로드 시 로그인 상태 확인
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     const savedBearerToken = localStorage.getItem('bearerToken');
@@ -38,9 +37,7 @@ const AuthProvider = ({ children }) => {
     setIsLoggedIn(false);
   };
 
-  const checkLoginStatus = () => {
-    return isLoggedIn;
-  };
+  const checkLoginStatus = () => isLoggedIn;
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, token, bearerToken, login, logout, checkLoginStatus }}>
@@ -122,7 +119,7 @@ const Login = () => {
       <LoginForm onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        {checkLoginStatus() ? ( // 로그인 상태 확인
+        {checkLoginStatus() ? (
           <>
             <p>현재 로그인 상태입니다.</p>
             {userData && <p>사용자 이름: {userData.username}</p>}
@@ -177,28 +174,25 @@ const App = () => (
 const LoginContainer = styled.div`
   width: 400px;
   margin: 400px auto;
-  border: 1px solid #ccc;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  background-color: #f9f9f9;
 `;
 
 const LoginTitle = styled.h2`
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #333;
 `;
 
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 15px;
-`;
-
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 14px;
-  text-align: center;
+  gap: 20px;
 `;
 
 const InputGroup = styled.div`
@@ -208,40 +202,47 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   font-size: 14px;
-  color: #333;
+  color: #555;
+  margin-bottom: 5px;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #fff;
+
+  &:focus {
+    border-color: #007bff;
+    outline: none;
+  }
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
-  background-color: #555555;
+  padding: 12px;
+  background-color: #007bff;
   color: white;
-  padding: 10px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
 
   &:hover {
-    background-color: #000;
+    background-color: #0056b3;
   }
 `;
 
 const HelpLinks = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
+  justify-content: space-around;
+  margin-top: 20px;
 
   a {
     text-decoration: none;
-    font-size: 14px;
+    font-size: 13px;
     color: #007bff;
 
     &:hover {
@@ -250,19 +251,24 @@ const HelpLinks = styled.div`
   }
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+`;
+
 const LogoutButton = styled.button`
   width: 100%;
-  background-color: #ff4d4d;
+  background-color: #dc3545;
   color: white;
-  padding: 10px;
+  padding: 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  margin-top: 10px;
 
   &:hover {
-    background-color: #cc0000;
+    background-color: #c82333;
   }
 `;
 
