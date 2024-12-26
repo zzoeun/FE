@@ -101,7 +101,7 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post("/api/emailcheck", {
+      const response = await axios.post("https://project-be.site/auth/email", {
         email: form.email,
       });
 
@@ -271,7 +271,7 @@ const Signup = () => {
   return (
     <div>
       <SignupForm onSubmit={handleSubmit} className="signup-form">
-        <SignupFormTitle>회원정보입력</SignupFormTitle>
+        <SignupFormTitle>회원 정보 입력</SignupFormTitle>
         <SignupFormLine />
 
         <SignupFormLabel>이름</SignupFormLabel>
@@ -377,7 +377,7 @@ const Signup = () => {
           accept="image/*"
           onChange={handleImageChange}
         />
-        {form.profile_image && (
+        {form.profileImage && (
           <img
             src={form.profileImage}
             alt="프로필 미리보기"
