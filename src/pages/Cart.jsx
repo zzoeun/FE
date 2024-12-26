@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 import Order from '../components/Cart/Order';
 import CartItemList from '../components/Cart/CartItemList';
@@ -181,45 +182,53 @@ const Cart = () => {
     <CartContainer>
       <CartTitle>장바구니</CartTitle>
       <CartContents>
-        <CartContent>
-          <CartCategory>
-            <SelectButton>
-                <input 
-                  type="checkbox"
-                  checked={cartItems.length > 0 && selectedItems.length === cartItems.length}
-                  onChange={handleSelectAll}
+      <CartContent>
+            {cartItems.length > 0 ? (
+              <>
+                <CartCategory>
+                  <SelectButton>
+                    <input 
+                      type="checkbox"
+                      checked={cartItems.length > 0 && selectedItems.length === cartItems.length}
+                      onChange={handleSelectAll}
+                    />
+                  </SelectButton>
+                  <SelectButton onClick={handleSelectAll}>
+                    전체선택
+                  </SelectButton>
+                  <CategoryButton onClick={handleSelectedOrder}>
+                    선택주문
+                  </CategoryButton>
+                  <CategoryButton onClick={handleSelectedDelete}>
+                    선택삭제
+                  </CategoryButton>
+                </CartCategory>
+                <CartItemList 
+                  items={cartItems}
+                  selectedItems={selectedItems}
+                  setSelectedItems={setSelectedItems}
+                  updateItemQuantity={updateItemQuantity}
+                  onItemDelete={handleItemDelete}
                 />
-              </SelectButton>
-            <SelectButton onClick={handleSelectAll}>
-                전체선택
-            </SelectButton>
-            <CategoryButton>선택주문</CategoryButton>
-            <CategoryButton onClick={handleSelectedDelete}>
-                선택삭제
-            </CategoryButton>
-          </CartCategory>
-          <CartComment>
-          <CartItemList 
-            items={cartItems}
-            selectedItems={selectedItems}
-            setSelectedItems={setSelectedItems}
-            updateItemQuantity={updateItemQuantity}
-            onItemDelete={handleItemDelete}
-          />
-          <CartItemAmount 
-            totalPrice={calculateTotalPrice()}
-            deliveryFee={calculateTotalDelivery()}
-          />
-            <CartIcon>
-              <img src={ShoppingCartIcon} alt="icon" width="150px" height="150px"/>  
-            </CartIcon>
-            <IconComment>장바구니에 담긴 상품이 없습니다</IconComment>
-          </CartComment>
-        </CartContent>
+                <CartItemAmount 
+                  totalPrice={calculateTotalPrice()}
+                  deliveryFee={calculateTotalDelivery()}
+                />
+              </>
+            ) : (
+              <CartComment>
+                <CartIcon>
+                  <img src={ShoppingCartIcon} alt="icon" width="150px" height="150px"/>  
+                </CartIcon>
+                <IconComment>장바구니에 담긴 상품이 없습니다</IconComment>
+              </CartComment>
+            )}
+          </CartContent>
         <Order 
           selectedItems={selectedItems}
           totalPrice={calculateTotalPrice()}
           deliveryFee={calculateTotalDelivery()}
+          onPaymentClick={handlePayment}
         />
       </CartContents>
     </CartContainer>
