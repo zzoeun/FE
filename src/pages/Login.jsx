@@ -1,11 +1,49 @@
-import React, { useState } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 
-const Login = () => {
+// AuthContext 생성
+const AuthContext = createContext();
 
-  const [email, setEmail] = useState(""); // 이메일 상태
-  const [password, setPassword] = useState(""); // 비밀번호 상태
-  const [error, setError] = useState(""); // 에러 메시지 상태
+// AuthProvider 컴포넌트
+const AuthProvider = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 페이지 로드 시 로그인 상태 확인 (localStorage 사용)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // 로그인 처리
+  const login = (token, email) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("email", email);
+    setIsLoggedIn(true);
+  };
+
+  // 로그아웃 처리
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    setIsLoggedIn(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// Login 컴포넌트
+const Login = () => {
+  const { isLoggedIn, login, logout } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [userData, setUserData] = useState(null); // 추가된 상태
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,57 +55,54 @@ const Login = () => {
     }
 
     try {
-
-
-      console.log("로그인 시도 중..."); // 콘솔 로그 추가
-      // 예시 로그인 API 요청 (백엔드 URL 수정 필요)
-
+      console.log("로그인 시도 중...");
       const response = await fetch("https://project-be.site/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
+      // 로그인 실패 시 처리
       if (!response.ok) {
         throw new Error("로그인 실패! 이메일 또는 비밀번호를 확인하세요.");
       }
 
+      // 응답 본문에서 bearer_token 추출
       const data = await response.json();
+      const bearerToken = data.bearer_token; // 응답 본문에서 bearer_token 추출
 
+      if (!bearerToken) {
+        throw new Error("토큰을 받지 못했습니다.");
+      }
 
-      // 2. 이메일 및 비밀번호 저장 (이메일만 저장하는 것을 권장)
-      localStorage.setItem("email", email);
-      // localStorage.setItem("password", password);  // 비밀번호 저장은 권장하지 않음 (보안 위험)
+      console.log("받은 토큰:", bearerToken); // 받은 토큰을 콘솔에 출력
 
+      // 로그인 후 로그인 상태 및 데이터 처리
+      login(bearerToken, email); // 로그인 상태 업데이트
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
 
-      // 로그인 후 추가 작업
-      // 예: window.location.href = '/dashboard';
+      // 로그인 후 사용자 데이터 가져오기 (예시로 /user/info API 사용)
+      const userResponse = await fetch("https://project-be.site/user/info", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${bearerToken}`, // 헤더에 Bearer token 포함
+        },
+      });
 
-      // 로그인 성공 시 JWT 토큰을 로컬스토리지에 저장
-      localStorage.setItem("authToken", data.token); // 여기서 'data.token'은 서버에서 반환된 토큰
-      alert(`로그인 성공! 환영합니다, ${data.username}님.`);
+      if (!userResponse.ok) {
+        throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
+      }
 
-      // 로그인 후 필요한 추가 작업 (예: 리디렉션 등)
-      // 예: history.push('/dashboard') 또는 window.location.href = '/dashboard'
-
+      const userInfo = await userResponse.json();
+      setUserData(userInfo); // 사용자 정보 저장
     } catch (err) {
       setError(err.message || "로그인 중 오류가 발생했습니다.");
     }
   };
 
   const handleLogout = () => {
-    // 로그아웃 로직
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
+    logout(); // 로그아웃 처리
     alert("로그아웃 되었습니다.");
-
-    setEmail("");
-    setPassword("");
-
-    setEmail(""); // 이메일 상태 초기화
-    setPassword(""); // 비밀번호 상태 초기화
-
   };
 
   return (
@@ -76,70 +111,60 @@ const Login = () => {
       <LoginForm onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        
+        {isLoggedIn ? (
+          <>
+            <p>현재 로그인 상태입니다.</p>
+            {userData && <p>사용자 이름: {userData.username}</p>}
+            <LogoutButton type="button" onClick={handleLogout}>
+              로그아웃
+            </LogoutButton>
+          </>
+        ) : (
+          <>
+            <InputGroup>
+              <Label htmlFor="email">이메일</Label>
+              <Input
+                type="text"
+                id="email"
+                name="email"
+                placeholder="이메일을 입력하세요"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </InputGroup>
 
+            <InputGroup>
+              <Label htmlFor="password">비밀번호</Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="비밀번호를 입력하세요"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </InputGroup>
 
-        {/* 이메일 입력 공간 */}
+            <SubmitButton type="submit">로그인</SubmitButton>
 
-        <InputGroup>
-          <Label htmlFor="email">이메일</Label>
-          <Input
-            type="text"
-            id="email"
-            name="email"
-            placeholder="이메일을 입력하세요"
-            value={email}
-
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </InputGroup>
-        
-       
-
-        {/* 비밀번호 입력 공간 */}
-
-        <InputGroup>
-          <Label htmlFor="password">비밀번호</Label>
-          <Input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="비밀번호를 입력하세요"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </InputGroup>
-
-        <CheckboxGroup>
-          <Checkbox type="checkbox" id="auto-login" name="auto-login" />
-          <Label htmlFor="auto-login">자동 로그인</Label>
-        </CheckboxGroup>
-        
-
-
-        {/* 로그인 버튼 */}
-        <SubmitButton type="submit">로그인</SubmitButton>
-
-        {/* 하단 링크들 */}
-
-        <HelpLinks>
-          <a href="/find-id">이메일찾기</a>
-          <a href="/find-password">비밀번호찾기</a>
-          <a href="/signup">회원가입</a>
-        </HelpLinks>
-
-        
-
-
-        {/* 비회원 주문조회, 중복확인, 로그아웃 버튼 */}
-        <GuestOrderButton type="button">비회원 주문조회</GuestOrderButton>
-        <OptionalButton type="button">중복확인</OptionalButton>
-
-        <LogoutButton type="button" onClick={handleLogout}>
-          로그아웃
-        </LogoutButton>
+            <HelpLinks>
+              <a href="/find-id">이메일 찾기</a>
+              <a href="/find-password">비밀번호 찾기</a>
+              <a href="/signup">회원가입</a>
+            </HelpLinks>
+          </>
+        )}
       </LoginForm>
     </LoginContainer>
+  );
+};
+
+// App 컴포넌트 (AuthProvider로 전체 앱 감싸기)
+const App = () => {
+  return (
+    <AuthProvider>
+      <Login />
+    </AuthProvider>
   );
 };
 
@@ -189,16 +214,6 @@ const Input = styled.input`
   font-size: 16px;
 `;
 
-const CheckboxGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const Checkbox = styled.input`
-  margin: 0;
-`;
-
 const SubmitButton = styled.button`
   width: 100%;
   background-color: #555555;
@@ -246,4 +261,4 @@ const LogoutButton = styled.button`
   }
 `;
 
-export default Login;
+export default App;
