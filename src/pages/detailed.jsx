@@ -164,15 +164,11 @@ const BookDetailPage = () => {
       {/* 오른쪽 정보 및 기능 영역 */}
       <ContentContainer>
         <div>
-          <Title>Le Grand Atlas des rois de France</Title>
-          <Author>저자: Jean Dupont</Author>
-          <Publisher>출판사: Glénat</Publisher>
-          <Price>64,000원</Price>
-          <Description>
-            This book offers a comprehensive guide to the kings of France,
-            including their reigns, achievements, and the historical context of
-            their time. It's a must-have for history enthusiasts!
-          </Description>
+          <Title></Title>
+          <Author></Author>
+          <Publisher></Publisher>
+          <Price></Price>
+          <Description></Description>
         </div>
 
         <ButtonContainer>
