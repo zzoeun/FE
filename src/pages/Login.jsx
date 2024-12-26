@@ -67,9 +67,8 @@ const Login = () => {
         throw new Error("로그인 실패! 이메일 또는 비밀번호를 확인하세요.");
       }
 
+      // 응답 본문에서 bearer_token 추출
       const data = await response.json();
-
-      // 로그인 성공 시 bearer_token을 응답 본문에서 추출
       const bearerToken = data.bearer_token;  // 응답 본문에서 bearer_token 추출
 
       if (!bearerToken) {
