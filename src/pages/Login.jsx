@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-import styled from "styled-components";
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import styled from 'styled-components';
 
 // AuthContext 생성
 const AuthContext = createContext();
@@ -7,104 +7,114 @@ const AuthContext = createContext();
 // AuthProvider 컴포넌트
 const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState(null);
+  const [bearerToken, setBearerToken] = useState(null);
 
-  // 페이지 로드 시 로그인 상태 확인 (localStorage 사용)
+  // 앱 로드 시 로그인 상태 확인
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const savedToken = localStorage.getItem('token');
+    const savedBearerToken = localStorage.getItem('bearerToken');
+
+    if (savedToken && savedBearerToken) {
+      setToken(savedToken);
+      setBearerToken(savedBearerToken);
       setIsLoggedIn(true);
     }
   }, []);
 
-  // 로그인 처리
-  const login = (token, email) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("email", email);
+  const login = (newToken, newBearerToken) => {
+    localStorage.setItem('token', newToken);
+    localStorage.setItem('bearerToken', newBearerToken);
+    setToken(newToken);
+    setBearerToken(newBearerToken);
     setIsLoggedIn(true);
   };
 
-  // 로그아웃 처리
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
+    localStorage.removeItem('token');
+    localStorage.removeItem('bearerToken');
+    setToken(null);
+    setBearerToken(null);
     setIsLoggedIn(false);
   };
 
+  const checkLoginStatus = () => {
+    return isLoggedIn;
+  };
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, token, bearerToken, login, logout, checkLoginStatus }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+export const useAuth = () => useContext(AuthContext);
+
 // Login 컴포넌트
 const Login = () => {
-  const { isLoggedIn, login, logout } = useContext(AuthContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [userData, setUserData] = useState(null); // 추가된 상태
+  const { isLoggedIn, login, logout, bearerToken, checkLoginStatus } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [userData, setUserData] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // 에러 초기화
+    setError('');
 
     if (!email || !password) {
-      setError("이메일과 비밀번호를 입력해주세요.");
+      setError('이메일과 비밀번호를 입력해주세요.');
       return;
     }
 
     try {
-      console.log("로그인 시도 중...");
-      const response = await fetch("https://project-be.site/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('https://project-be.site/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
-      // 로그인 실패 시 처리
-      if (!response.ok) {
-        throw new Error("로그인 실패! 이메일 또는 비밀번호를 확인하세요.");
-      }
+      if (!response.ok) throw new Error('로그인 실패! 이메일 또는 비밀번호를 확인하세요.');
 
-      // 응답 본문에서 bearer_token 추출
-      const data = await response.json();
-      const bearerToken = data.bearer_token;  // 응답 본문에서 bearer_token 추출
+      const { token: newToken, bearer_token: newBearerToken } = await response.json();
 
-      if (!bearerToken) {
-        throw new Error("토큰을 받지 못했습니다.");
-      }
+      if (!newToken || !newBearerToken) throw new Error('토큰을 받지 못했습니다.');
 
-      console.log("받은 토큰:", bearerToken); // 받은 토큰을 콘솔에 출력
+      login(newToken, newBearerToken);
+      alert('로그인 성공!');
+    } catch (err) {
+      setError(err.message || '로그인 중 오류가 발생했습니다.');
+    }
+  };
 
-      // 로그인 후 로그인 상태 및 데이터 처리
-      login(bearerToken, email); // 로그인 상태 업데이트
-      alert(`로그인 성공! 환영합니다, ${data.username}님.`);
-
-      // 로그인 후 사용자 데이터 가져오기 (예시로 /user/info API 사용)
-      const userResponse = await fetch("https://project-be.site/user/info", {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${bearerToken}`, // 헤더에 Bearer token 포함
-        },
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch('https://project-be.site/user/info', {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${bearerToken}` },
       });
 
-      if (!userResponse.ok) {
-        throw new Error("사용자 정보를 가져오는 데 실패했습니다.");
-      }
+      if (!response.ok) throw new Error('사용자 정보를 가져오는 데 실패했습니다.');
 
-      const userInfo = await userResponse.json();
-      setUserData(userInfo); // 사용자 정보 저장
-
+      const userInfo = await response.json();
+      setUserData(userInfo);
     } catch (err) {
-      setError(err.message || "로그인 중 오류가 발생했습니다.");
+      setError(err.message || '사용자 데이터를 가져오는 중 오류가 발생했습니다.');
     }
   };
 
   const handleLogout = () => {
-    logout(); // 로그아웃 처리
-    alert("로그아웃 되었습니다.");
+    logout();
+    setUserData(null);
+    alert('로그아웃 되었습니다.');
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchUserData();
+    }
+  }, [isLoggedIn]);
 
   return (
     <LoginContainer>
@@ -112,13 +122,11 @@ const Login = () => {
       <LoginForm onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        {isLoggedIn ? (
+        {checkLoginStatus() ? ( // 로그인 상태 확인
           <>
             <p>현재 로그인 상태입니다.</p>
             {userData && <p>사용자 이름: {userData.username}</p>}
-            <LogoutButton type="button" onClick={handleLogout}>
-              로그아웃
-            </LogoutButton>
+            <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
           </>
         ) : (
           <>
@@ -127,7 +135,6 @@ const Login = () => {
               <Input
                 type="text"
                 id="email"
-                name="email"
                 placeholder="이메일을 입력하세요"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -139,7 +146,6 @@ const Login = () => {
               <Input
                 type="password"
                 id="password"
-                name="password"
                 placeholder="비밀번호를 입력하세요"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -160,14 +166,12 @@ const Login = () => {
   );
 };
 
-// App 컴포넌트 (AuthProvider로 전체 앱 감싸기)
-const App = () => {
-  return (
-    <AuthProvider>
-      <Login />
-    </AuthProvider>
-  );
-};
+// App 컴포넌트
+const App = () => (
+  <AuthProvider>
+    <Login />
+  </AuthProvider>
+);
 
 // Styled-components 정의
 const LoginContainer = styled.div`
