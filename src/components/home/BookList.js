@@ -46,7 +46,7 @@ const BookList = ({ setModal }) => {
     return () => {
       controller.abort();
     };
-  }, [currentPage, dropdownOption]);
+  }, [dropdownOption, currentPage]);
 
   if (loading) return <LoadingMessage>로딩 중...</LoadingMessage>;
   if (error) return <ErrorMessage>{error}</ErrorMessage>;
