@@ -116,7 +116,7 @@ const OrderButton = styled.div`
   cursor: ${props => props.isEmpty ? 'not-allowed' : 'pointer'};
   margin-top: 75px;
   margin-left: 30px;
-  background-color: ${props => props.isEmpty ? 'lightgray' : '#F5F5F5'};
+  background-color: ${props => props.isEmpty ? '#555555' : '#F5F5F5'};
   padding: 20px;
   opacity: ${props => props.isEmpty ? 0.7 : 1};
   transition: all 0.3s ease;

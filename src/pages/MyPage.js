@@ -36,24 +36,30 @@ const MyPage = () => {
   const renderContent = () => {
     switch (selectedMenu) {
       case "myinfo":
-        return <MyInfo userData={userData} />;
-      case "deleteaccount":
-        return <DeleteAccount />;
-      case "paymentslist":
-        return <PaymentsList />;
-      default:
-        return <MyInfo userData={userData} />;
-    }
-  };
-
-  const getPageTitle = () => {
-    switch (selectedMenu) {
-      case "paymentslist":
-        return "주문결제조회";
-      default:
-        return "마이페이지";
-    }
-  };
+        return (
+          <MyInfo userData={userData} setUserData={setUserData} token={token} />
+        );
+        case "deleteaccount":
+          return <DeleteAccount token={token} />;
+        case "shoppingcartlist":
+          return <ShoppingCartList />;
+        case "paymentslist":
+          return <PaymentsList />;
+        default:
+          return <MyInfo userData={userData} token={token} />;
+      }
+    };
+  
+    const getPageTitle = () => {
+      switch (selectedMenu) {
+        case "paymentslist":
+          return "주문결제조회";
+        case "shoppingcartlist":
+          return "내 장바구니";
+        default:
+          return "마이페이지";
+      }
+    };
 
   return (
     <Container>
