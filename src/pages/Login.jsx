@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");      // 이메일 상태
+  const [password, setPassword] = useState(""); // 비밀번호 상태
+  const [error, setError] = useState("");       // 에러 메시지 상태
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 추가
 
   // 페이지 로드 시 로그인 상태 확인
@@ -17,7 +17,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); // 에러 초기화
 
     if (!email || !password) {
       setError("이메일과 비밀번호를 입력해주세요.");
@@ -37,17 +37,10 @@ const Login = () => {
       }
 
       const data = await response.json();
-
-      // 1. 토큰 저장
-      localStorage.setItem("token", data.token);
-
-      // 2. 이메일 저장
-      localStorage.setItem("email", email);
-
+      localStorage.setItem("token", data.token); // 토큰 저장
+      localStorage.setItem("email", email); // 이메일 저장
+      setIsLoggedIn(true); // 로그인 후 상태 변경
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
-
-      // 로그인 후 상태 변경
-      setIsLoggedIn(true);
 
     } catch (err) {
       setError(err.message || "로그인 중 오류가 발생했습니다.");
@@ -58,10 +51,8 @@ const Login = () => {
     // 로그아웃 로직
     localStorage.removeItem("token");
     localStorage.removeItem("email");
-    alert("로그아웃 되었습니다.");
     setIsLoggedIn(false); // 로그아웃 시 상태 변경
-    setEmail("");
-    setPassword("");
+    alert("로그아웃 되었습니다.");
   };
 
   return (
@@ -69,7 +60,8 @@ const Login = () => {
       <LoginTitle>LOGIN</LoginTitle>
       <LoginForm onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        
+
+        {/* 이메일 입력 공간 */}
         <InputGroup>
           <Label htmlFor="email">이메일</Label>
           <Input
@@ -81,7 +73,8 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </InputGroup>
-        
+
+        {/* 비밀번호 입력 공간 */}
         <InputGroup>
           <Label htmlFor="password">비밀번호</Label>
           <Input
@@ -98,16 +91,17 @@ const Login = () => {
           <Checkbox type="checkbox" id="auto-login" name="auto-login" />
           <Label htmlFor="auto-login">자동 로그인</Label>
         </CheckboxGroup>
-        
-        {/* 로그인 버튼 한 번만 사용 */}
+
+        {/* 로그인 버튼 */}
         <SubmitButton type="submit">로그인</SubmitButton>
-        
+
+        {/* 하단 링크들 */}
         <HelpLinks>
           <a href="/find-id">이메일찾기</a>
           <a href="/find-password">비밀번호찾기</a>
           <a href="/signup">회원가입</a>
         </HelpLinks>
-        
+
         {/* 로그인이 되어 있을 때만 로그아웃 버튼 표시 */}
         {isLoggedIn && (
           <LogoutButton type="button" onClick={handleLogout}>
