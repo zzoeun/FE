@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 import Order from '../components/Cart/Order';
 import CartItemList from '../components/Cart/CartItemList';
@@ -8,34 +9,120 @@ import ShoppingCartIcon from '../icons/shopping-cart.svg'
 
 const Cart = () => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      title: "Un conte peut en",
-      price: 18400,
-      quantity: 1
-    },
-    {
-      id: 2,
-      title: "Un",
-      price: 17900,
-      quantity: 1
-    },
-    {
-      id: 3,
-      title: "Un en",
-      price: 17900,
-      quantity: 1
-    }
-  ]);
+  const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const updateItemQuantity = (itemId, newQuantity) => {
-    setCartItems(cartItems.map(item => 
-      item.id === itemId 
-        ? { ...item, quantity: newQuantity }
-        : item
-    ));
+  // 장바구니 목록 조회
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+          setIsLoading(false);
+          return;
+        }
+
+        const response = await axios.get('http://13.209.143.163:8080/api/mypage/getCartItems', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const formattedItems = response.data.cartItems.map(item => ({
+          id: item.cartId,
+          bookId: item.bookId,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.bookImage,
+          publisher: item.publisher,
+          author: item.author
+        }));
+
+        setCartItems(formattedItems);
+      } catch (err) {
+        console.error('장바구니 정보 조회 실패:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
+  // 수량 변경 함수
+  const updateItemQuantity = async (itemId, newQuantity) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put('http://13.209.143.163:8080/api/mypage/putCartOption', 
+        { 
+          cartId: itemId, 
+          quantity: newQuantity 
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      setCartItems(cartItems.map(item =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      ));
+    } catch (err) {
+      console.error('수량 변경 실패:', err);
+      alert('수량 변경에 실패했습니다.');
+    }
+  };
+
+  // 상품 삭제 함수
+  const handleItemDelete = async (itemId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete('http://13.209.143.163:8080/api/mypage/deleteCartItems', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        data: { cartId: itemId }
+      });
+
+      setCartItems(cartItems.filter(item => item.id !== itemId));
+      setSelectedItems(selectedItems.filter(id => id !== itemId));
+    } catch (err) {
+      console.error('상품 삭제 실패:', err);
+      alert('상품 삭제에 실패했습니다.');
+    }
+  };
+
+  // 결제 처리 함수
+  const handlePayment = () => {
+    if (selectedItems.length === 0) {
+      alert('선택된 상품이 없습니다.');
+      return;
+    }
+
+    const selectedProducts = cartItems
+      .filter(item => selectedItems.includes(item.id))
+      .map(item => ({
+        cart_id: item.id,
+        book_id: item.bookId,
+        book_title: item.title,
+        book_price: item.price,
+        quantity: item.quantity,
+        total_price: item.price * item.quantity
+      }));
+
+    const paymentData = {
+      orderItems: selectedProducts,
+      totalPrice: calculateTotalPrice(),
+      deliveryFee: calculateTotalDelivery(),
+      totalAmount: calculateTotalPrice() + calculateTotalDelivery()
+    };
+
+    navigate('/payment', { state: paymentData });
   };
   
   const calculateTotalPrice = () => {
@@ -56,18 +143,41 @@ const Cart = () => {
     }
   };
 
-  const handleSelectedDelete = () => {
+  // 선택 삭제 함수
+  const handleSelectedDelete = async () => {
     if (selectedItems.length === 0) {
       alert('선택된 상품이 없습니다.');
       return;
     }
-    setCartItems(cartItems.filter(item => !selectedItems.includes(item.id)));
-    setSelectedItems([]);
+
+    try {
+      const token = localStorage.getItem('token');
+
+      for (const itemId of selectedItems) {
+        await axios.delete('http://13.209.143.163:8080/api/mypage/deleteCartItems', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          data: { cartId: itemId }
+        });
+      }
+
+      setCartItems(cartItems.filter(item => !selectedItems.includes(item.id)));
+      setSelectedItems([]);
+      
+    } catch (err) {
+      console.error('선택 삭제 실패:', err);
+      alert('선택한 상품 삭제에 실패했습니다.');
+    }
   };
 
-  const handleItemDelete = (itemId) => {
-    setCartItems(cartItems.filter(item => item.id !== itemId));
-    setSelectedItems(selectedItems.filter(id => id !== itemId));
+  // 선택 주문 함수
+  const handleSelectedOrder = () => {
+    if (selectedItems.length === 0) {
+      alert('선택된 상품이 없습니다.');
+      return;
+    }
+    handlePayment();
   };
 
   return (
@@ -75,45 +185,53 @@ const Cart = () => {
     <CartContainer>
       <CartTitle>장바구니</CartTitle>
       <CartContents>
-        <CartContent>
-          <CartCategory>
-            <SelectButton>
-                <input 
-                  type="checkbox"
-                  checked={cartItems.length > 0 && selectedItems.length === cartItems.length}
-                  onChange={handleSelectAll}
+      <CartContent>
+            {cartItems.length > 0 ? (
+              <>
+                <CartCategory>
+                  <SelectButton>
+                    <input 
+                      type="checkbox"
+                      checked={cartItems.length > 0 && selectedItems.length === cartItems.length}
+                      onChange={handleSelectAll}
+                    />
+                  </SelectButton>
+                  <SelectButton onClick={handleSelectAll}>
+                    전체선택
+                  </SelectButton>
+                  <CategoryButton onClick={handleSelectedOrder}>
+                    선택주문
+                  </CategoryButton>
+                  <CategoryButton onClick={handleSelectedDelete}>
+                    선택삭제
+                  </CategoryButton>
+                </CartCategory>
+                <CartItemList 
+                  items={cartItems}
+                  selectedItems={selectedItems}
+                  setSelectedItems={setSelectedItems}
+                  updateItemQuantity={updateItemQuantity}
+                  onItemDelete={handleItemDelete}
                 />
-              </SelectButton>
-            <SelectButton onClick={handleSelectAll}>
-                전체선택
-            </SelectButton>
-            <CategoryButton>선택주문</CategoryButton>
-            <CategoryButton onClick={handleSelectedDelete}>
-                선택삭제
-            </CategoryButton>
-          </CartCategory>
-          <CartComment>
-          <CartItemList 
-            items={cartItems}
-            selectedItems={selectedItems}
-            setSelectedItems={setSelectedItems}
-            updateItemQuantity={updateItemQuantity}
-            onItemDelete={handleItemDelete}
-          />
-          <CartItemAmount 
-            totalPrice={calculateTotalPrice()}
-            deliveryFee={calculateTotalDelivery()}
-          />
-            <CartIcon>
-              <img src={ShoppingCartIcon} alt="icon" width="150px" height="150px"/>  
-            </CartIcon>
-            <IconComment>장바구니에 담긴 상품이 없습니다</IconComment>
-          </CartComment>
-        </CartContent>
+                <CartItemAmount 
+                  totalPrice={calculateTotalPrice()}
+                  deliveryFee={calculateTotalDelivery()}
+                />
+              </>
+            ) : (
+              <CartComment>
+                <CartIcon>
+                  <img src={ShoppingCartIcon} alt="icon" width="150px" height="150px"/>  
+                </CartIcon>
+                <IconComment>장바구니에 담긴 상품이 없습니다</IconComment>
+              </CartComment>
+            )}
+          </CartContent>
         <Order 
           selectedItems={selectedItems}
           totalPrice={calculateTotalPrice()}
           deliveryFee={calculateTotalDelivery()}
+          onPaymentClick={handlePayment}
         />
       </CartContents>
     </CartContainer>
@@ -125,6 +243,7 @@ export default Cart;
 
 const Wrapper = styled.div`
   padding: 0 120px;
+  margin-top: 302px;
   width: 100%;
   display: flex;
   justify-content: center;
