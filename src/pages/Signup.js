@@ -8,7 +8,7 @@ import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
 import ModalContent from "../components/modal/ModalContent"; // ModalContent 임포트
-import Button from "../components/modal/Button"; // Button 임포트
+import ModalButton from "../components/modal/ModalButton"; // Button 임포트
 
 const Signup = () => {
   const dispatch = useDispatch();

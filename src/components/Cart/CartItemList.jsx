@@ -36,7 +36,9 @@ const CartItemList = ({ items, selectedItems, setSelectedItems, updateItemQuanti
                 }}
               />
             </ListCheckBox>
-            <ListImage></ListImage>
+            <ListImage>
+              <img src={item.image} alt={item.title} />
+            </ListImage>
             <ListProduct>
               <ProductTitle>{item.title}</ProductTitle>
               <ProductCount>
@@ -108,8 +110,12 @@ const ListCheckBox = styled.div`
 const ListImage = styled.div`
   width: 120px;
   height: 120px;
-  background-color: pink;
   margin-left: 30px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const ListProduct = styled.div`
