@@ -1,21 +1,17 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 
-const Pagination = ({ totalPages, setCurrentPage }) => {
-  const [currentActive, setCurrentActive] = useState(0);
-
+const Pagination = ({ totalPages, currentPage, setCurrentPage }) => {
   const buttons = [];
 
   for (let i = 0; i < totalPages; i++) {
     buttons.push(
       <Button
+        style={{ background: `${i === currentPage ? '#656e7f' : '#e0e0e0'}` }}
         key={i}
         onClick={() => {
-          setCurrentActive(i);
           setCurrentPage(i);
           window.scrollTo(0, 0);
         }}
-        style={{ background: `${currentActive === i ? '#656e7f' : '#e0e0e0'}` }}
       ></Button>
     );
   }
@@ -35,7 +31,6 @@ const Button = styled.button`
   height: 15px;
   border: none;
   border-radius: 50%;
-  background: #e0e0e0;
   cursor: pointer;
 `;
 
