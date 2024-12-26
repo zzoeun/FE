@@ -119,6 +119,7 @@ const Payment = () => {
     setCardNumbers(numbers);
   };
 
+  // 결제 버튼(TotalPayment.js) 쪽으로 넘기는 데이터
   const getPaymentData = () => {
     // shippingMode에 따라 수령인 정보 선택
     const recipientInfo =
