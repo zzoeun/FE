@@ -18,17 +18,17 @@ function BookItem({ book, setModal }) {
   };
 
   return (
-    <Card key={book.book_id}>
+    <Card>
       <Wrapper>
         <CardInfo>
           <CardImageBox>
-            <img src='https://placehold.co/100' alt='placehold' width={'100%'} draggable={false} />
+            <img src={book.bookImageUrl} alt={book.bookTitle} width={'100%'} draggable={false} />
           </CardImageBox>
-          <Title>{book.title}</Title>
-          <Price>{book.price}</Price>
+          <Title>{book.bookTitle}</Title>
+          <Price>{book.bookPrice}</Price>
         </CardInfo>
         <CardButtons>
-          <Button onClick={() => navigate(`/detail/${book.book_id}`)}>
+          <Button onClick={() => navigate(`/detail/${book.id}`)}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

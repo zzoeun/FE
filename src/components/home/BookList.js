@@ -30,7 +30,7 @@ const BookList = ({ setModal }) => {
         signal: controller.signal,
       });
       const data = response.data;
-      setBooks([...data.content]);
+      setBooks(data.content);
       setTotalPages(data.totalPages);
     } catch (error) {
       setError(error.message);
@@ -57,7 +57,7 @@ const BookList = ({ setModal }) => {
       <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <CardList>
         {books.map((book) => (
-          <BookItem key={book.book_id} book={book} setModal={setModal} />
+          <BookItem key={book.id} book={book} setModal={setModal} />
         ))}
       </CardList>
     </section>
