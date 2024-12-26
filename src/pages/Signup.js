@@ -221,7 +221,7 @@ const Signup = () => {
     try {
       // 회원가입 데이터 전송 json 형식
       const jsonResponse = await axios.post(
-        "http://13.209.143.163:8080/auth/signup",
+        "https://project-be.site/auth/signup",
         {
           name: form.name,
           email: form.email,

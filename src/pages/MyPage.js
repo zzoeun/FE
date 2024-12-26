@@ -25,7 +25,7 @@ const MyPage = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          "http://13.209.143.163:8080/api/mypage/getUserInfo",
+          "https://project-be.site/api/mypage/getUserInfo",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

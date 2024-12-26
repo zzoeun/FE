@@ -36,7 +36,7 @@ const MyInfo = ({ userData, setUserData, token }) => {
 
       // JSON 형식으로 데이터 전송
       const response = await axios.put(
-        `http://13.209.143.163:8080/api/mypage/putUserInfo/${userData.id}`,
+        `https://project-be.site/api/mypage/putUserInfo/${userData.id}`,
         jsonData, // 이미지 제외한 나머지 데이터
         {
           headers: {
