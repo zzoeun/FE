@@ -17,7 +17,7 @@ const Login = () => {
 
     try {
       console.log("로그인 시도 중...");
-      const response = await fetch("/auth/login", {
+      const response = await fetch("https://project-be.site/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
