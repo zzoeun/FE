@@ -19,10 +19,8 @@ const BookList = ({ setModal }) => {
 
     if (dropdownOption === '전체') {
       booksUrl = 'https://project-be.site/books';
-      setCurrentPage(0);
     } else {
       booksUrl = `https://project-be.site/books/category/${dropdownOption}`;
-      setCurrentPage(0);
     }
 
     setLoading(true);
@@ -48,7 +46,7 @@ const BookList = ({ setModal }) => {
     return () => {
       controller.abort();
     };
-  }, [currentPage, dropdownOption]);
+  }, [dropdownOption, currentPage]);
 
   if (loading) return <LoadingMessage>로딩 중...</LoadingMessage>;
   if (error) return <ErrorMessage>{error}</ErrorMessage>;
