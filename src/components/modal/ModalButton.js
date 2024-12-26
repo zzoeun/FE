@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Button = ({ type = 'button', onClick, children }) => {
+const MoodalButton = ({ type = 'button', onClick, children }) => {
   return (
     <ButtonStyle type={type} onClick={onClick}>
       {children}
@@ -29,4 +29,4 @@ const ButtonStyle = styled.button`
   }
 `;
 
-export default Button;
+export default MoodalButton;
