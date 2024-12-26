@@ -19,9 +19,11 @@ const itemsAmountCalc = (items) => {
 
 // 금액 ,(콤마) 추가하기
 const addComma = (price) => {
-  const commaPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (price === undefined || price === null || isNaN(price)) {
+    return price;
+  }
 
-  return commaPrice;
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 const OrderItems = () => {
@@ -56,7 +58,9 @@ const OrderItems = () => {
           <Items>
             {items.map((item, index) => (
               <Item key={index}>
-                <img src={item.imageUrl} alt={item.name} width="50" />
+
+                <img src={item.imageUrl} alt={item.title} width="50" />
+
                 <ItemAmount>
                   <p>{item.name}</p>
                   <p>{item.amount}개</p>
@@ -168,8 +172,14 @@ const ItemPrice = styled.div`
     padding: 2px 7px 2px 7px;
 
     background-color: #ffff;
-    border: 2px solid #495a70;
-    color: #495a70;
+    border: 2px solid #cccccc;
+    color: #cccccc;
+
+    &:hover {
+      background: #999999;
+      border-color: #999999;
+      color: white;
+    }
   }
 `;
 

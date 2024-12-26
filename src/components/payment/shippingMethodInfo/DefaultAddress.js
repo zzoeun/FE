@@ -22,14 +22,34 @@ const DefaultAddress = ({ userInfo }) => {
   );
 };
 
-const DefaultAddressContainer = styled.div``;
 
-const UserName = styled.p``;
+const DefaultAddressContainer = styled.div`
+  margin-top: 20px;
+  padding: 5px 0 20px 20px;
 
-const UserAddress = styled.div`
-  display: felx;
+  border-bottom: 2px solid #f4f4f4;
+
+  p {
+    margin-bottom: 8px;
+  }
 `;
 
-const UserPhone = styled.p``;
+const UserName = styled.p`
+  font-weight: bold;
+  font-size: 20px;
+`;
+
+const UserAddress = styled.div`
+  display: flex;
+
+  p {
+    margin-right: 7px;
+  }
+`;
+
+const UserPhone = styled.p`
+  color: #999999;
+`;
+
 
 export default DefaultAddress;
