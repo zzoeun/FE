@@ -1,49 +1,57 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import BookItem from './BookItem';
 import Pagination from './Pagination';
+import axios from 'axios';
 
 const BookList = () => {
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const [booksPerPage, setBooksPerPage] = useState(15); // 페이지당 최대 데이터 개수
+  const [books, setBooks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const books = useSelector((state) => state.books);
   const dropdownOption = useSelector((state) => state.dropdown);
 
-  // 현재 페이지에 표시될 데이터 목록을 보여주기 위한 첫 번째 index, 마지막 index 구하기
-  const firstBooksIndex = (currentPage - 1) * booksPerPage; // 첫 번째 index
-  const lastBooksIndex = firstBooksIndex + booksPerPage; // 두 번째 index
+  const fetchData = async () => {
+    let booksUrl = 'https://project-be.site/books';
 
-  let currentBooks;
-  const longNovel = books.filter((book) => book.category === '장편소설');
-  const middleNovel = books.filter((book) => book.category === '중편소설');
-  const shortNovel = books.filter((book) => book.category === '단편소설');
+    if (dropdownOption === '전체') {
+      booksUrl = 'https://project-be.site/books';
+    } else {
+      booksUrl = `https://project-be.site/books/category/${dropdownOption}`;
+    }
 
-  if (dropdownOption === '전체') {
-    currentBooks = books.slice(firstBooksIndex, lastBooksIndex); // 페이지에 해당하는 데이터만 가져오기
-  } else if (dropdownOption === '장편소설') {
-    currentBooks = longNovel.slice(firstBooksIndex, lastBooksIndex);
-  } else if (dropdownOption === '중편소설') {
-    currentBooks = middleNovel.slice(firstBooksIndex, lastBooksIndex);
-  } else {
-    currentBooks = shortNovel.slice(firstBooksIndex, lastBooksIndex);
-  }
+    console.log(booksUrl);
+
+    setLoading(true);
+
+    try {
+      const response = await axios.get(`${booksUrl}?page=${currentPage}`);
+      const data = response.data;
+      setBooks([...data.content]);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, dropdownOption]);
+
+  if (loading) return <LoadingMessage>로딩 중...</LoadingMessage>;
+  if (error) return <ErrorMessage>{error}</ErrorMessage>;
 
   return (
     <section>
       <BookListTitle>오늘의 책 [Today's Book]</BookListTitle>
-      <Pagination
-        books={books}
-        longNovel={longNovel}
-        middleNovel={middleNovel}
-        shortNovel={shortNovel}
-        dropdownOption={dropdownOption}
-        booksPerPage={booksPerPage}
-        setCurrentPage={setCurrentPage}
-      />
+      <Pagination totalPages={totalPages} setCurrentPage={setCurrentPage} />
       <CardList>
-        {currentBooks.map((book) => (
+        {books.map((book) => (
           <BookItem key={book.book_id} book={book} />
         ))}
       </CardList>
@@ -66,5 +74,14 @@ const CardList = styled.ul`
   flex-wrap: wrap;
   gap: 1px;
 `;
+
+const LoadingMessage = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const ErrorMessage = styled(LoadingMessage)``;
 
 export default BookList;
