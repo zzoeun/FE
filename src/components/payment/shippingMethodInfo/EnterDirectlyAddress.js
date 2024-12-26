@@ -7,6 +7,7 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
   const [editedInfo, setEditedInfo] = useState(userInfo);
   const [isPostCodeOpen, setIsPostCodeOpen] = useState(false);
 
+  // input에 쓴 내용 저장장
   const handleChange = (e) => {
     const key = e.target.id;
     const value = e.target.value;
@@ -36,13 +37,23 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
       <InputContents>
         <label>받으시는 분</label>
         <p>*</p>
-        <input type="text" id="name" onChange={handleChange} />
+        <input
+          type="text"
+          id="name"
+          value={editedInfo.name}
+          onChange={handleChange}
+        />
       </InputContents>
 
       <InputContents>
         <label>휴대폰 번호</label>
         <p>*</p>
-        <input type="text" id="phone" onChange={handleChange} />
+        <input
+          type="text"
+          id="phone"
+          value={editedInfo.phone}
+          onChange={handleChange}
+        />
       </InputContents>
 
       <InputContents>
@@ -52,8 +63,9 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
           <InputPost>
             <input
               type="text"
-              id="zip_code"
+              id="zipCode"
               placeholder="우편번호"
+              value={editedInfo.zipCode}
               onChange={handleChange}
               readOnly
             />
@@ -64,15 +76,17 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
           <InputAddress>
             <input
               type="text"
-              id="main_address"
+              id="mainAddress"
               placeholder="기본주소"
+              value={editedInfo.mainAddress}
               onChange={handleChange}
               readOnly
             />
             <input
               type="text"
-              id="detail_address"
+              id="detailsAddress"
               placeholder="상세주소"
+              value={editedInfo.detailsAddress}
               onChange={handleChange}
             />
           </InputAddress>
