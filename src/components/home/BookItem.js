@@ -27,7 +27,7 @@ function BookItem({ book, setModal }) {
       <Wrapper>
         <CardInfo>
           <CardImageBox>
-            <img src={book.bookImageUrl} alt={book.bookTitle} width={'100%'} draggable={false} />
+            <img src={book.bookImageUrl} alt={book.bookTitle} draggable={false} />
           </CardImageBox>
           <Title>{book.bookTitle}</Title>
           <Price>{book.bookPrice}</Price>
@@ -74,13 +74,13 @@ function BookItem({ book, setModal }) {
 
 const Card = styled.li`
   width: 240px;
-  height: 316px;
+  height: 416px;
   box-shadow: 0 0 0 1px #e0e0e0;
   overflow: hidden;
 `;
 
 const Wrapper = styled.div`
-  transition: all 0.5s;
+  transition: all 0.3s;
   &:hover {
     transform: translateY(-50px);
   }
@@ -99,7 +99,12 @@ const CardInfo = styled.div`
 
 const CardImageBox = styled.div`
   width: 200px;
-  height: 200px;
+
+  & img {
+    display: block;
+    width: 100%;
+    height: 300px;
+  }
 `;
 
 const Title = styled.h4`
