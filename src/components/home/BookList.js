@@ -5,7 +5,7 @@ import BookItem from './BookItem';
 import Pagination from './Pagination';
 import axios from 'axios';
 
-const BookList = () => {
+const BookList = ({ setModal }) => {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -14,7 +14,7 @@ const BookList = () => {
 
   const dropdownOption = useSelector((state) => state.dropdown);
 
-  const fetchData = async () => {
+  const fetchData = async (controller) => {
     let booksUrl = 'https://project-be.site/books';
 
     if (dropdownOption === '전체') {
@@ -23,12 +23,12 @@ const BookList = () => {
       booksUrl = `https://project-be.site/books/category/${dropdownOption}`;
     }
 
-    console.log(booksUrl);
-
     setLoading(true);
 
     try {
-      const response = await axios.get(`${booksUrl}?page=${currentPage}`);
+      const response = await axios.get(`${booksUrl}?page=${currentPage}`, {
+        signal: controller.signal,
+      });
       const data = response.data;
       setBooks([...data.content]);
       setTotalPages(data.totalPages);
@@ -40,7 +40,12 @@ const BookList = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    const controller = new AbortController();
+    fetchData(controller);
+
+    return () => {
+      controller.abort();
+    };
   }, [currentPage, dropdownOption]);
 
   if (loading) return <LoadingMessage>로딩 중...</LoadingMessage>;
@@ -49,10 +54,10 @@ const BookList = () => {
   return (
     <section>
       <BookListTitle>오늘의 책 [Today's Book]</BookListTitle>
-      <Pagination totalPages={totalPages} setCurrentPage={setCurrentPage} />
+      <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <CardList>
         {books.map((book) => (
-          <BookItem key={book.book_id} book={book} />
+          <BookItem key={book.book_id} book={book} setModal={setModal} />
         ))}
       </CardList>
     </section>
