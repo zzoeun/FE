@@ -14,7 +14,6 @@ const Cart = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 장바구니 목록 조회
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
@@ -53,7 +52,6 @@ const Cart = () => {
     fetchCartItems();
   }, []);
 
-  // 수량 변경 함수
   const updateItemQuantity = async (itemId, newQuantity) => {
     try {
       const token = localStorage.getItem('token');
@@ -78,7 +76,6 @@ const Cart = () => {
     }
   };
 
-  // 상품 삭제 함수
   const handleItemDelete = async (itemId) => {
     try {
       const token = localStorage.getItem('token');
@@ -97,7 +94,6 @@ const Cart = () => {
     }
   };
 
-  // 결제 처리 함수
   const handlePayment = () => {
     if (selectedItems.length === 0) {
       alert('선택된 상품이 없습니다.');
@@ -143,7 +139,6 @@ const Cart = () => {
     }
   };
 
-  // 선택 삭제 함수
   const handleSelectedDelete = async () => {
     if (selectedItems.length === 0) {
       alert('선택된 상품이 없습니다.');
@@ -171,7 +166,6 @@ const Cart = () => {
     }
   };
 
-  // 선택 주문 함수
   const handleSelectedOrder = () => {
     if (selectedItems.length === 0) {
       alert('선택된 상품이 없습니다.');
