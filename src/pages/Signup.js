@@ -70,7 +70,7 @@ const Signup = () => {
     const file = e.target.files[0];
     if (file) {
       const previewUrl = URL.createObjectURL(file);
-      setForm({ ...form, profile_image: previewUrl });
+      setForm({ ...form, profileImage: previewUrl });
     }
   };
 
@@ -379,7 +379,7 @@ const Signup = () => {
         />
         {form.profile_image && (
           <img
-            src={form.profile_image}
+            src={form.profileImage}
             alt="프로필 미리보기"
             style={{ width: "100px", marginTop: "10px" }}
           />
