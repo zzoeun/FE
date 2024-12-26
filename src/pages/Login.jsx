@@ -19,7 +19,7 @@ const Login = () => {
     try {
       console.log("로그인 시도 중..."); // 콘솔 로그 추가
       // 예시 로그인 API 요청 (백엔드 URL 수정 필요)
-      const response = await fetch("http://13.209.143.163:8080/auth/login", {
+      const response = await fetch("https://project-be.site/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
