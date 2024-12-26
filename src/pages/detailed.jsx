@@ -101,7 +101,7 @@ const Button = styled.button`
   ${({ variant }) =>
     variant === "buy"
       ? `
-      background-color: #007bff;
+      background-color: #555555;
     `
       : `
       background-color: #6c757d;
