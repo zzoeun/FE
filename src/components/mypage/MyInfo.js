@@ -28,7 +28,7 @@ const MyInfo = ({ userData, setUserData }) => {
     try {
       // 수정된 데이터를 백엔드에 전송,
       const response = await axios.put(
-        `/api/mypage/putUserInfo/${form.id}`,
+        `https://project-be.site/api/mypage/putUserInfo/${form.id}`,
         form,
         {
           headers: { Authorization: `Bearer ${token}` },
