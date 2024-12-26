@@ -4,7 +4,6 @@ import styled from "styled-components";
 import CheckIcon from "../../icons/check.svg";
 import { useNavigate } from "react-router";
 
-
 const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
   const [isAgreeChecked, setIsAgreeChecked] = useState(false);
   const [isIMPModalOpen, setIsIMPModalOpen] = useState(false);
@@ -96,7 +95,6 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
     setIsAgreeChecked((prev) => !prev);
   };
 
-
   const handleAgreePayment = () => {};
 
   return (
@@ -105,21 +103,22 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
       <TotalDetails>
         <div>
           <p>상품금액</p>
-          <p>{pay.itemAmount}원</p>
+          <p>{paymentInfo.itemAmount}원</p>
         </div>
         <div>
           <p>배송비</p>
-          <p>{pay.deliberyFee}원</p>
+          <p>{paymentInfo.deliberyFee}원</p>
         </div>
         <Total>
           <TotalContent>합계</TotalContent>
           <div>
-            <TotalAmount>{pay.itemAmount + pay.deliberyFee}</TotalAmount>
+            <TotalAmount>
+              {paymentInfo.itemAmount + paymentInfo.deliberyFee}
+            </TotalAmount>
             <TotalContent>원</TotalContent>
           </div>
         </Total>
       </TotalDetails>
-
 
       <PayButton
         onClick={() => setIsIMPModalOpen(true)}
