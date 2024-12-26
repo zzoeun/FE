@@ -5,9 +5,11 @@ import styled from "styled-components";
 
 // 금액 ,(콤마) 추가하기
 const addComma = (price) => {
-  const commaPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (price === undefined || price === null || isNaN(price)) {
+    return price;
+  }
 
-  return commaPrice;
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 const OrderItems = ({ items, shippingFee }) => {
@@ -25,7 +27,7 @@ const OrderItems = ({ items, shippingFee }) => {
           <Items>
             {items.map((item, index) => (
               <Item key={index}>
-                <img src={item.book_image} alt={item.title} width="50" />
+                <img src={item.imageUrl} alt={item.title} width="50" />
                 <ItemAmount>
                   <p>{item.title}</p>
                   <p>{item.quantity}개</p>

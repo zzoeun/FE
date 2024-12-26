@@ -1,10 +1,95 @@
 // 결제 금액액
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CheckIcon from "../../icons/check.svg";
+import { useNavigate } from "react-router";
 
-const PaymentAmount = ({ paymentInfo, onPayment }) => {
+const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
   const [isAgreeChecked, setIsAgreeChecked] = useState(false);
+  const [isIMPModalOpen, setIsIMPModalOpen] = useState(false);
+  const [isSuccessIMPModalOpen, setIsSuccessIMPModalOpen] = useState(false);
+  const [isIamportLoaded, setIsIamportLoaded] = useState(false); // IMP 로딩 여부
+  const navigate = useNavigate();
+
+  console.log("IMP:", window.IMP);
+
+  useEffect(() => {
+    const checkIamport = () => {
+      if (window.IMP) {
+        setIsIamportLoaded(true);
+      } else {
+        setTimeout(checkIamport, 100); // 100ms마다 IMP가 로드되었는지 체크
+      }
+    };
+
+    checkIamport(); // 최초 호출
+  }, []);
+
+  const handlePayment = async () => {
+    if (!isIamportLoaded) {
+      alert("결제 시스템이 준비되지 않았습니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+
+    // 데이터 가지고 오기
+    const paymentData = await getPaymentData();
+
+    if (!paymentData) {
+      alert("결제 데이터를 가져오는 데 실패했습니다.");
+      return;
+    }
+
+    const {
+      name,
+      amount,
+      buyer_email,
+      buyer_name,
+      buyer_tel,
+      buyer_addr,
+      buyer_postcode,
+    } = paymentData;
+
+    const IMP = window.IMP;
+    IMP.init("imp74831283");
+
+    const today = new Date();
+    const hours = today.getHours();
+    const minutes = today.getMinutes();
+    const seconds = today.getSeconds();
+    const milliseconds = today.getMilliseconds();
+    const makeMerchantUid = `${hours}${minutes}${seconds}${milliseconds}`;
+
+    console.log("");
+    console.log("IMPMerChantUid: ", `IMP${makeMerchantUid}`);
+
+    IMP.request_pay(
+      {
+        pg: "html5_inicis.INIpayTest",
+        pay_method: "card",
+        merchant_uid: `IMP${makeMerchantUid}`,
+        name,
+        amount: 100,
+        buyer_email,
+        buyer_name,
+        buyer_tel,
+        buyer_addr,
+        buyer_postcode,
+      },
+      (rsp) => {
+        if (rsp.success) {
+          console.log("결제 성공: ", rsp);
+          console.log(rsp.imp_uid);
+          setIsIMPModalOpen(false);
+          setIsSuccessIMPModalOpen(true);
+          setTimeout(() => {
+            navigate("/mypage"); // 결제 내역 페이지로 이동
+          }, 2000);
+        } else {
+          alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
+        }
+      }
+    );
+  };
 
   const handleAgreeClick = () => {
     setIsAgreeChecked((prev) => !prev);
@@ -34,7 +119,7 @@ const PaymentAmount = ({ paymentInfo, onPayment }) => {
       </TotalDetails>
 
       <PayButton
-        onClick={onPayment}
+        onClick={() => setIsIMPModalOpen(true)}
         disabled={!isAgreeChecked}
         isActive={isAgreeChecked}
       >
@@ -48,6 +133,24 @@ const PaymentAmount = ({ paymentInfo, onPayment }) => {
           <p>·개인정보 판매자 제공 동의</p>
         </div>
       </AgreeButton>
+
+      {isIMPModalOpen && (
+        <IMPModalOverlay>
+          <IMPModalContent>
+            <h2>결제를 진행하시겠습니까?</h2>
+            <IMPButton onClick={handlePayment}>결제하기</IMPButton>
+            <IMPButton onClick={() => setIsIMPModalOpen(false)}>취소</IMPButton>
+          </IMPModalContent>
+        </IMPModalOverlay>
+      )}
+
+      {isSuccessIMPModalOpen && (
+        <IMPModalOverlay>
+          <IMPModalContent>
+            <h2>결제가 완료되었습니다!</h2>
+          </IMPModalContent>
+        </IMPModalOverlay>
+      )}
     </TotalPaymentWrapper>
   );
 };
@@ -138,6 +241,49 @@ const AgreeButton = styled.button`
     color: black;
     font-size: 15px;
     font-weight: bold;
+  }
+`;
+
+const IMPModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const IMPModalContent = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+`;
+
+const IMPButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:last-child {
+    background-color: #6c757d;
+
+    &:hover {
+      background-color: #5a6268;
+    }
   }
 `;
 
