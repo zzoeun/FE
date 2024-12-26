@@ -8,7 +8,12 @@ function BookItem({ book, setModal }) {
   const handleAddCartAndOpenModal = () => {
     setModal(true);
 
+    // const token = localStorage.getItem('token');
+
     // axios.post('https://project-be.site/cart/add', {
+    //   header: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
     //   body: {
     //     userId: ,
     //     quantity: 1,

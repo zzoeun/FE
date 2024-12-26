@@ -15,6 +15,7 @@ const BookList = ({ setModal }) => {
   const dropdownOption = useSelector((state) => state.dropdown);
 
   const fetchData = async (controller) => {
+    const token = localStorage.getItem('token');
     let booksUrl = 'https://project-be.site/books';
 
     if (dropdownOption === '전체') {
@@ -28,6 +29,9 @@ const BookList = ({ setModal }) => {
     try {
       const response = await axios.get(`${booksUrl}?page=${currentPage}`, {
         signal: controller.signal,
+        header: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = response.data;
       setBooks(data.content);
