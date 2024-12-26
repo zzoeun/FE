@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 // 스타일 정의
 const PageContainer = styled.div`
@@ -100,7 +101,7 @@ const Button = styled.button`
   ${({ variant }) =>
     variant === "buy"
       ? `
-      background-color: #555555;
+      background-color: #007bff;
     `
       : `
       background-color: #6c757d;
@@ -110,6 +111,7 @@ const Button = styled.button`
 // 메인 컴포넌트
 const BookDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
   // 샘플 데이터
   const book = {
@@ -122,10 +124,12 @@ const BookDetailPage = () => {
 
   const handleBuyNow = () => {
     alert(`"${book.title}"을(를) ${quantity}개 즉시 구매합니다.`);
+    navigate("/buy"); // 즉시 구매 페이지로 이동
   };
 
   const handleAddToCart = () => {
     alert(`"${book.title}" ${quantity}개가 장바구니에 추가되었습니다.`);
+    navigate("/cart"); // 장바구니 페이지로 이동
   };
 
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
