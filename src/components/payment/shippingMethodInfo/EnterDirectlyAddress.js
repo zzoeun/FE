@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import DaumPostCode from "react-daum-postcode";
 
-const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
+const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
   // ShippingInfo 쓰기 모드(1)
-  const [editedInfo, setEditedInfo] = useState(userInfo);
+  const [editedInfo, setEditedInfo] = useState(receiverInfo);
   const [isPostCodeOpen, setIsPostCodeOpen] = useState(false);
 
   // input에 쓴 내용 저장장
   const handleChange = (e) => {
     const key = e.target.id;
     const value = e.target.value;
-    const updatedInfo = { ...userInfo, [key]: value };
+    const updatedInfo = { ...editedInfo, [key]: value };
     setEditedInfo(updatedInfo);
     onInfoChange(updatedInfo); // 부모로 변경된 정보 전달
   };

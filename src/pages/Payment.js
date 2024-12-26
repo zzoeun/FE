@@ -93,6 +93,11 @@ const Payment = () => {
       }));
 
       setOrderItems(filteredItems);
+
+      setPaymentInfo({
+        totalAmount,
+        shippingFee: deliveryFee,
+      });
     } else {
       setError("해당 책을 찾을 수 없습니다.");
     }
