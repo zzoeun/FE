@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import DaumPostCode from "react-daum-postcode";
 
 const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
   // ShippingInfo 쓰기 모드(1)
   const [editedInfo, setEditedInfo] = useState(userInfo);
+  const [isPostCodeOpen, setIsPostCodeOpen] = useState(false);
 
   const handleChange = (e) => {
     const key = e.target.id;
@@ -11,6 +13,20 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
     const updatedInfo = { ...userInfo, [key]: value };
     setEditedInfo(updatedInfo);
     onInfoChange(updatedInfo); // 부모로 변경된 정보 전달
+  };
+
+  // 우편번호 api
+  const handleAddressComplete = (data) => {
+    setEditedInfo({
+      ...editedInfo,
+      zipCode: data.zonecode,
+      mainAddress: data.address,
+    });
+    setIsPostCodeOpen(false); // 입력 후 창 닫기
+  };
+
+  const togglePostCode = () => {
+    setIsPostCodeOpen((prev) => !prev);
   };
 
   console.log("Input data: ", editedInfo);
@@ -41,7 +57,9 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
               onChange={handleChange}
               readOnly
             />
-            <button className="address-btn">주소찾기</button>
+            <button className="address-btn" onClick={togglePostCode}>
+              주소찾기
+            </button>
           </InputPost>
           <InputAddress>
             <input
@@ -75,7 +93,6 @@ const EnterDirectlyAddress = ({ userInfo, onInfoChange }) => {
         </ModalOverlay>
       )}
     </>
-
   );
 };
 
@@ -145,4 +162,35 @@ const InputAddress = styled.div`
   }
 `;
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContainer = styled.div`
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+  max-height: 80%;
+  overflow-y: auto;
+
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+`;
 export default EnterDirectlyAddress;
