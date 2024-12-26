@@ -1,19 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 
-const Login = () => {
-  const [email, setEmail] = useState(""); // 이메일 상태
-  const [password, setPassword] = useState(""); // 비밀번호 상태
-  const [error, setError] = useState(""); // 에러 메시지 상태
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태
+// AuthContext 생성
+const AuthContext = createContext();
 
-  // 페이지 로드 시 로그인 상태 확인
+// AuthProvider 컴포넌트
+const AuthProvider = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // 페이지 로드 시 로그인 상태 확인 (localStorage 사용)
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setIsLoggedIn(true); // 토큰이 있으면 로그인 상태로 설정
+      setIsLoggedIn(true);
     }
   }, []);
+
+  // 로그인 처리
+  const login = (token, email) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("email", email);
+    setIsLoggedIn(true);
+  };
+
+  // 로그아웃 처리
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    setIsLoggedIn(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// Login 컴포넌트
+const Login = () => {
+  const { isLoggedIn, login, logout } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,9 +66,7 @@ const Login = () => {
       }
 
       const data = await response.json();
-      localStorage.setItem("token", data.token); // 토큰 저장
-      localStorage.setItem("email", email); // 이메일 저장
-      setIsLoggedIn(true); // 로그인 후 상태 변경
+      login(data.token, email); // 로그인 상태 업데이트
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
     } catch (err) {
       setError(err.message || "로그인 중 오류가 발생했습니다.");
@@ -47,10 +74,7 @@ const Login = () => {
   };
 
   const handleLogout = () => {
-    // 로그아웃 로직
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
-    setIsLoggedIn(false); // 로그아웃 시 상태 변경
+    logout(); // 로그아웃 처리
     alert("로그아웃 되었습니다.");
   };
 
@@ -60,7 +84,6 @@ const Login = () => {
       <LoginForm onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        {/* 로그인 상태 확인 */}
         {isLoggedIn ? (
           <>
             <p>현재 로그인 상태입니다.</p>
@@ -70,7 +93,6 @@ const Login = () => {
           </>
         ) : (
           <>
-            {/* 이메일 입력 공간 */}
             <InputGroup>
               <Label htmlFor="email">이메일</Label>
               <Input
@@ -83,7 +105,6 @@ const Login = () => {
               />
             </InputGroup>
 
-            {/* 비밀번호 입력 공간 */}
             <InputGroup>
               <Label htmlFor="password">비밀번호</Label>
               <Input
@@ -96,24 +117,26 @@ const Login = () => {
               />
             </InputGroup>
 
-            <CheckboxGroup>
-              <Checkbox type="checkbox" id="auto-login" name="auto-login" />
-              <Label htmlFor="auto-login">자동 로그인</Label>
-            </CheckboxGroup>
-
-            {/* 로그인 버튼 */}
             <SubmitButton type="submit">로그인</SubmitButton>
 
-            {/* 하단 링크들 */}
             <HelpLinks>
-              <a href="/find-id">이메일찾기</a>
-              <a href="/find-password">비밀번호찾기</a>
+              <a href="/find-id">이메일 찾기</a>
+              <a href="/find-password">비밀번호 찾기</a>
               <a href="/signup">회원가입</a>
             </HelpLinks>
           </>
         )}
       </LoginForm>
     </LoginContainer>
+  );
+};
+
+// App 컴포넌트 (AuthProvider로 전체 앱 감싸기)
+const App = () => {
+  return (
+    <AuthProvider>
+      <Login />
+    </AuthProvider>
   );
 };
 
@@ -163,16 +186,6 @@ const Input = styled.input`
   font-size: 16px;
 `;
 
-const CheckboxGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const Checkbox = styled.input`
-  margin: 0;
-`;
-
 const SubmitButton = styled.button`
   width: 100%;
   background-color: #555555;
@@ -220,4 +233,4 @@ const LogoutButton = styled.button`
   }
 `;
 
-export default Login;
+export default App;
