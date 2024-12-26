@@ -61,12 +61,18 @@ const Login = () => {
         body: JSON.stringify({ email, password }),
       });
 
+      // 헤더에서 bearer_token 추출
+      const bearerToken = response.headers.get('bearer_token');
+      console.log(bearerToken); // 콘솔에 출력
+
       if (!response.ok) {
         throw new Error("로그인 실패! 이메일 또는 비밀번호를 확인하세요.");
       }
 
       const data = await response.json();
-      login(data.token, email); // 로그인 상태 업데이트
+
+      // 로그인 후 bearerToken을 사용하여 로그인 처리
+      login(bearerToken, email); // 로그인 상태 업데이트
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
     } catch (err) {
       setError(err.message || "로그인 중 오류가 발생했습니다.");
