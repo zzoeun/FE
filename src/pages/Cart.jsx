@@ -103,12 +103,15 @@ const Cart = () => {
     const selectedProducts = cartItems
       .filter(item => selectedItems.includes(item.id))
       .map(item => ({
-        cart_id: item.id,
-        book_id: item.bookId,
-        book_title: item.title,
-        book_price: item.price,
+        cartId: item.id,       
+        bookId: item.bookId,     
+        title: item.title,        
+        price: item.price,        
         quantity: item.quantity,
-        total_price: item.price * item.quantity
+        totalPrice: item.price * item.quantity,  
+        image: item.image,        
+        publisher: item.publisher, 
+        author: item.author      
       }));
 
     const paymentData = {
@@ -237,8 +240,8 @@ export default Cart;
 
 const Wrapper = styled.div`
   padding: 0 120px;
-  margin-top: 302px;
   width: 100%;
+  margin-top: 302px;
   display: flex;
   justify-content: center;
   
