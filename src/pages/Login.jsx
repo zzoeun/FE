@@ -69,6 +69,8 @@ const Login = () => {
 
       // 응답 본문에서 bearer_token 추출
       const data = await response.json();
+
+      // 로그인 성공 시 bearer_token을 응답 본문에서 추출
       const bearerToken = data.bearer_token; // 응답 본문에서 bearer_token 추출
 
       if (!bearerToken) {
@@ -110,7 +112,6 @@ const Login = () => {
       <LoginTitle>LOGIN</LoginTitle>
       <LoginForm onSubmit={handleSubmit}>
         {error && <ErrorMessage>{error}</ErrorMessage>}
-
         {isLoggedIn ? (
           <>
             <p>현재 로그인 상태입니다.</p>
