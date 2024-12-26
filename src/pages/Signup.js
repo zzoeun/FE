@@ -227,6 +227,7 @@ const Signup = () => {
           name: form.name,
           email: form.email,
           password: form.password,
+          gender: form.gender,
           phone: form.phone,
           zip_code: form.zip_code,
           main_address: form.main_address,
