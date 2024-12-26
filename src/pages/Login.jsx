@@ -67,12 +67,17 @@ const Login = () => {
         throw new Error("로그인 실패! 이메일 또는 비밀번호를 확인하세요.");
       }
 
-      // 로그인 성공 시 bearer_token을 헤더에서 추출
-      const bearerToken = response.headers.get("bearer_token");
-      console.log(bearerToken); // 콘솔에 출력
-
       const data = await response.json();
-      
+
+      // 로그인 성공 시 bearer_token을 응답 본문에서 추출
+      const bearerToken = data.bearer_token;  // 응답 본문에서 bearer_token 추출
+
+      if (!bearerToken) {
+        throw new Error("토큰을 받지 못했습니다.");
+      }
+
+      console.log("받은 토큰:", bearerToken); // 받은 토큰을 콘솔에 출력
+
       // 로그인 후 로그인 상태 및 데이터 처리
       login(bearerToken, email); // 로그인 상태 업데이트
       alert(`로그인 성공! 환영합니다, ${data.username}님.`);
@@ -259,4 +264,3 @@ const LogoutButton = styled.button`
 `;
 
 export default App;
-
