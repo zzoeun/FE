@@ -32,13 +32,16 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
     }
 
     const {
-      name,
+      name, // 상품 정보 (title 외 n권)
       amount,
-      buyer_email,
-      buyer_name,
-      buyer_tel,
-      buyer_addr,
-      buyer_postcode,
+      userId,
+      buyerEmail,
+      buyerName,
+      buyerPhone,
+      cardNumbers,
+      zipCode,
+      mainAddress,
+      detailsAddress,
     } = paymentData;
 
     const IMP = window.IMP;
@@ -53,20 +56,22 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
         merchant_uid: makeMerchantUid,
         name,
         amount,
-        buyer_email,
-        buyer_name,
-        buyer_tel,
-        buyer_addr,
-        buyer_postcode,
+        buyer_email: buyerEmail,
+        buyer_name: buyerName,
+        buyer_tel: buyerPhone,
+        buyer_addr: mainAddress,
+        buyer_postcode: zipCode,
       },
+      // POST API 여기서부터터 아래까지 삭제하고 복붙해넣으시면 됩니다!
       (rsp) => {
         if (rsp.success) {
           setModalType("success");
+
           setTimeout(() => navigate("/mypage"), 2000);
         } else {
           alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
         }
-      }
+      } // 여기까지
     );
   };
 
