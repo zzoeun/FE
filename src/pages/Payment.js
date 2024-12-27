@@ -41,6 +41,8 @@ const email = "use@example.com"; // email 임시 데이터
 
 const Payment = () => {
   const [userInfo, setUserInfo] = useState({
+    userId: "",
+    email: "",
     name: "",
     phone: "",
     zipCode: "",
@@ -48,6 +50,8 @@ const Payment = () => {
     detailsAddress: "",
   }); // 회원 정보
   const [receiverInfo, setReceiverInfo] = useState({
+    userId: "",
+    email: "",
     name: "",
     phone: "",
     zipCode: "",
@@ -76,12 +80,15 @@ const Payment = () => {
 
   // 더미 데이터를 사용하여 컴포넌트 상태 업데이트
   useEffect(() => {
-    // 회원 정보 - 더미로 가지고 옴.
+    // 회원 정보 - 더미로 가지고 옴. - 삭제 후 GET API 추가하기기
+    // GET 회원정보 API
+    // 여기서부터
     setTimeout(() => {
       setUserInfo(dummyUserInfo);
       const newDummy = { ...dummyUserInfo };
       setReceiverInfo(newDummy);
     }, 1000); // 1초 후 더미 데이터 설정
+    // 여기까지 삭제 후 복붙!
 
     if (selectCartItems.length > 0) {
       const filteredItems = selectCartItems.map((item) => ({
@@ -151,13 +158,16 @@ const Payment = () => {
       `${otherBookCount > 0 ? ` 외 ${otherBookCount}권` : ""}`;
 
     return {
-      name: paymentName,
+      name: paymentName, // 상품 정보
       amount: totalAmount,
-      buyer_email: recipientInfo.email,
-      buyer_name: recipientInfo.name,
-      buyer_tel: recipientInfo.phone,
-      buyer_addr: recipientInfo.mainAddress,
-      buyer_postcode: recipientInfo.zipCode,
+      userId: receiverInfo.userId,
+      buyerEmail: recipientInfo.email,
+      buyerName: recipientInfo.name,
+      buyerPhone: recipientInfo.phone,
+      cardNumbers,
+      zipCode: recipientInfo.zipCode,
+      mainAddress: recipientInfo.mainAddress,
+      detailsAddress: receiverInfo.detailsAddress,
     };
   };
 
