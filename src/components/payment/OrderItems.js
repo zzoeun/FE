@@ -13,6 +13,8 @@ const addComma = (price) => {
 };
 
 const OrderItems = ({ items, shippingFee }) => {
+  console.log("Orderitems: ", items, shippingFee);
+
   return (
     <OrderItemsWrapper>
       <OrderItemHead>
@@ -30,11 +32,11 @@ const OrderItems = ({ items, shippingFee }) => {
                 <img src={item.imageUrl} alt={item.title} width="50" />
 
                 <ItemAmount>
-                  <p>{item.name}</p>
-                  <p>{item.amount}개</p>
+                  <p>{item.title}</p>
+                  <p>{item.quantity}개</p>
                 </ItemAmount>
                 <ItemPrice>
-                  <p>{addComma(item.price * item.amount)}원</p>
+                  <p>{addComma(item.price * item.quantity)}원</p>
                   <button>쿠폰적용</button>
                 </ItemPrice>
               </Item>

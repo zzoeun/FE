@@ -103,17 +103,17 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
       <TotalDetails>
         <div>
           <p>상품금액</p>
-          <p>{paymentInfo.itemAmount}원</p>
+          <p>{paymentInfo.totalPrice}원</p>
         </div>
         <div>
           <p>배송비</p>
-          <p>{paymentInfo.deliberyFee}원</p>
+          <p>{paymentInfo.shippingFee}원</p>
         </div>
         <Total>
           <TotalContent>합계</TotalContent>
           <div>
             <TotalAmount>
-              {paymentInfo.itemAmount + paymentInfo.deliberyFee}
+              {paymentInfo.totalPrice + paymentInfo.shippingFee}
             </TotalAmount>
             <TotalContent>원</TotalContent>
           </div>
