@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import DaumPostCode from "react-daum-postcode";
 
+
 const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
   // ShippingInfo 쓰기 모드(1)
   const [editedInfo, setEditedInfo] = useState(receiverInfo);
+
   const [isPostCodeOpen, setIsPostCodeOpen] = useState(false);
 
   // input에 쓴 내용 저장장
@@ -24,6 +26,7 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
       mainAddress: data.address,
     });
     setIsPostCodeOpen(false); // 입력 후 창 닫기
+
   };
 
   const togglePostCode = () => {
@@ -31,6 +34,7 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
   };
 
   console.log("Input data: ", editedInfo);
+
 
   return (
     <>
@@ -113,27 +117,13 @@ const EnterDirectlyAddress = ({ receiverInfo, onInfoChange }) => {
 const InputContents = styled.div`
   display: flex;
   align-items: center;
-  padding: 8px 0 8px 0;
+  padding: 8px 0;
 
   border-bottom: 2px solid #f4f4f4;
 
   p {
     color: red;
     margin-right: 45px;
-  }
-
-  select {
-    margin: 8px 0 8px 10px;
-    padding-left: 10px;
-    height: 45px;
-    width: 530px;
-
-    color: #898989;
-
-    border: 2px solid #cccccc;
-  }
-
-  div {
   }
 `;
 
@@ -152,10 +142,8 @@ const InputPost = styled.div`
 
     background: #cccccc;
     color: #fff;
-
     border: none;
     border-radius: 4px;
-
     cursor: pointer;
 
     &:hover {
@@ -182,6 +170,7 @@ const ModalOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -207,4 +196,5 @@ const ModalContainer = styled.div`
     cursor: pointer;
   }
 `;
+
 export default EnterDirectlyAddress;

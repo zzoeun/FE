@@ -220,44 +220,37 @@ const Signup = () => {
     }
 
     try {
-      // 회원가입 데이터 전송 json 형식
-      const jsonResponse = await axios.post(
+      // FormData 객체 생성
+      const formData = new FormData();
+      formData.append("userName", form.userName);
+      formData.append("email", form.email);
+      formData.append("password", form.password);
+      formData.append("gender", form.gender);
+      formData.append("phone", form.phone);
+      formData.append("zipCode", form.zipCode);
+      formData.append("mainAddress", form.mainAddress);
+      formData.append("detailsAddress", form.detailsAddress);
+
+      // 이미지가 존재하면 추가
+      if (form.profileImage) {
+        const file = document.querySelector('input[type="file"]').files[0];
+        formData.append("profileImage", file);
+      }
+
+      // Axios 요청
+      const response = await axios.post(
         "https://project-be.site/auth/signup",
-        {
-          userName: form.userName,
-          email: form.email,
-          password: form.password,
-          gender: form.gender,
-          phone: form.phone,
-          zipCode: form.zipCode,
-          mainAddress: form.mainAddress,
-          detailsAddress: form.detailsAddress,
-        },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      console.log("JSON 데이터 전송 성공:", jsonResponse.data);
+      console.log("회원가입 데이터 전송 성공:", response.data);
 
-      // 이미지 파일 전송
-      if (form.profileImage) {
-        const imageData = new FormData();
-        imageData.append("profileImage", form.profileImage);
-
-        const imageResponse = await axios.post(
-          "https://project-be.site/auth/signup",
-          imageData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-
-        console.log("이미지 파일 전송 성공:", imageResponse.data);
-      }
-
+      // 모달 띄우기
       setModalContent("회원가입이 완료되었습니다!");
       dispatch(openModal());
     } catch (error) {

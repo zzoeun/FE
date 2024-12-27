@@ -1,29 +1,27 @@
-// 결제 금액액
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import CheckIcon from "../../icons/check.svg";
 import { useNavigate } from "react-router";
 
 const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
   const [isAgreeChecked, setIsAgreeChecked] = useState(false);
-  const [isIMPModalOpen, setIsIMPModalOpen] = useState(false);
-  const [isSuccessIMPModalOpen, setIsSuccessIMPModalOpen] = useState(false);
-  const [isIamportLoaded, setIsIamportLoaded] = useState(false); // IMP 로딩 여부
+  const [modalType, setModalType] = useState(""); // "payment" 또는 "success"
+  const [isIamportLoaded, setIsIamportLoaded] = useState(false);
   const navigate = useNavigate();
-
-  console.log("IMP:", window.IMP);
 
   useEffect(() => {
     const checkIamport = () => {
       if (window.IMP) {
         setIsIamportLoaded(true);
       } else {
-        setTimeout(checkIamport, 100); // 100ms마다 IMP가 로드되었는지 체크
+        setTimeout(checkIamport, 100);
       }
     };
-
-    checkIamport(); // 최초 호출
+    checkIamport();
   }, []);
+
+  const handleAgreeClick = () => {
+    setIsAgreeChecked((prev) => !prev);
+  };
 
   const handlePayment = async () => {
     if (!isIamportLoaded) {
@@ -31,9 +29,7 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
       return;
     }
 
-    // 데이터 가지고 오기
     const paymentData = await getPaymentData();
-
     if (!paymentData) {
       alert("결제 데이터를 가져오는 데 실패했습니다.");
       return;
@@ -52,21 +48,13 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
     const IMP = window.IMP;
     IMP.init("imp74831283");
 
-    const today = new Date();
-    const hours = today.getHours();
-    const minutes = today.getMinutes();
-    const seconds = today.getSeconds();
-    const milliseconds = today.getMilliseconds();
-    const makeMerchantUid = `${hours}${minutes}${seconds}${milliseconds}`;
-
-    console.log("");
-    console.log("IMPMerChantUid: ", `IMP${makeMerchantUid}`);
+    const makeMerchantUid = `IMP${Date.now()}`;
 
     IMP.request_pay(
       {
         pg: "html5_inicis.INIpayTest",
         pay_method: "card",
-        merchant_uid: `IMP${makeMerchantUid}`,
+        merchant_uid: makeMerchantUid,
         name,
         amount,
         buyer_email,
@@ -77,13 +65,8 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
       },
       (rsp) => {
         if (rsp.success) {
-          console.log("결제 성공: ", rsp);
-          console.log(rsp.imp_uid);
-          setIsIMPModalOpen(false);
-          setIsSuccessIMPModalOpen(true);
-          setTimeout(() => {
-            navigate("/mypage"); // 결제 내역 페이지로 이동
-          }, 2000);
+          setModalType("success");
+          setTimeout(() => navigate("/mypage"), 2000);
         } else {
           alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
         }
@@ -96,6 +79,7 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
   };
 
   const handleAgreePayment = () => {};
+
 
   return (
     <TotalPaymentWrapper>
@@ -121,38 +105,44 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
       </TotalDetails>
 
       <PayButton
-        onClick={() => setIsIMPModalOpen(true)}
+        onClick={() => setModalType("payment")}
         disabled={!isAgreeChecked}
         isActive={isAgreeChecked}
       >
         결제하기
       </PayButton>
-      <AgreeButton onClick={handleAgreeClick} isActive={isAgreeChecked}>
-        <img src={CheckIcon} alt="Check Icon"></img>
 
-        <div>
-          <p className="required">주문/결제 진행 필수 동의</p>
-          <p>·개인정보수집 및 이용 동의</p>
-          <p>·개인정보 판매자 제공 동의</p>
-        </div>
-      </AgreeButton>
+      <AgreeContainer>
+        <label>
+          <input
+            type="checkbox"
+            checked={isAgreeChecked}
+            onChange={handleAgreeClick}
+          />
+          <span>
+            <p className="required">주문/결제 진행 필수 동의</p>
+            <p>· 개인정보수집 및 이용 동의</p>
+            <p>· 개인정보 판매자 제공 동의</p>
+          </span>
+        </label>
+      </AgreeContainer>
 
-      {isIMPModalOpen && (
-        <IMPModalOverlay>
-          <IMPModalContent>
+      {modalType === "payment" && (
+        <ModalOverlay>
+          <ModalContent>
             <h2>결제를 진행하시겠습니까?</h2>
-            <IMPButton onClick={handlePayment}>결제하기</IMPButton>
-            <IMPButton onClick={() => setIsIMPModalOpen(false)}>취소</IMPButton>
-          </IMPModalContent>
-        </IMPModalOverlay>
+            <ModalButton onClick={handlePayment}>결제하기</ModalButton>
+            <ModalButton onClick={() => setModalType("")}>취소</ModalButton>
+          </ModalContent>
+        </ModalOverlay>
       )}
 
-      {isSuccessIMPModalOpen && (
-        <IMPModalOverlay>
-          <IMPModalContent>
+      {modalType === "success" && (
+        <ModalOverlay>
+          <ModalContent>
             <h2>결제가 완료되었습니다!</h2>
-          </IMPModalContent>
-        </IMPModalOverlay>
+          </ModalContent>
+        </ModalOverlay>
       )}
     </TotalPaymentWrapper>
   );
@@ -161,7 +151,6 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
 const TotalPaymentWrapper = styled.div`
   width: 280px;
   margin: 20px;
-  margin-top: 30px;
   padding: 20px;
   border: 1px solid #ddd;
   background: #fff;
@@ -187,7 +176,6 @@ const TotalDetails = styled.div`
 const Total = styled.div`
   margin-top: 10px;
   padding-top: 10px;
-
   border-top: 2px solid #f4f4f4;
   color: black;
 `;
@@ -206,12 +194,9 @@ const PayButton = styled.button`
   padding: 15px 20px;
   width: 235px;
   background: ${(props) => (props.isActive ? "#555555" : "#cccccc")};
-  box-shadow: 0 3px 5px lightgray;
-
   color: white;
   font-weight: bold;
   border: none;
-
   cursor: ${(props) => (props.isActive ? "pointer" : "not-allowed")};
   font-size: 16px;
 
@@ -220,24 +205,15 @@ const PayButton = styled.button`
   }
 `;
 
-const AgreeButton = styled.button`
-  display: flex;
+const AgreeContainer = styled.div`
   margin-top: 20px;
-  background-color: #fff;
-  border: none;
-  cursor: pointer;
-
-  img {
-    height: 20px;
-    width: 20px;
-    background-color: ${(props) =>
-      props.isActive ? "#cccccc" : "#fff"}; /* 활성화된 상태일 때 색상 */
-    border-radius: 50%; /* 원형으로 만들기 */
-    margin-right: 10px;
+  label {
+    display: flex;
+    cursor: pointer;
   }
 
-  p {
-    margin-bottom: 3px;
+  input {
+    margin-right: 10px;
   }
 
   .required {
@@ -247,7 +223,7 @@ const AgreeButton = styled.button`
   }
 `;
 
-const IMPModalOverlay = styled.div`
+const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -259,7 +235,7 @@ const IMPModalOverlay = styled.div`
   align-items: center;
 `;
 
-const IMPModalContent = styled.div`
+const ModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 10px;
@@ -267,7 +243,7 @@ const IMPModalContent = styled.div`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 `;
 
-const IMPButton = styled.button`
+const ModalButton = styled.button`
   background-color: #007bff;
   color: white;
   border: none;
