@@ -220,22 +220,33 @@ const Signup = () => {
     }
 
     try {
+      // 회원가입 요청 데이터 객체 생성
+      const signUpRequestForm = {
+        userName: form.userName,
+        email: form.email,
+        password: form.password,
+        gender: form.gender,
+        phone: form.phone,
+        zipCode: form.zipCode,
+        mainAddress: form.mainAddress,
+        detailsAddress: form.detailsAddress,
+      };
+
+      // JSON 문자열로 변환
+      const signUpRequestJson = JSON.stringify(signUpRequestForm);
+
       // FormData 객체 생성
       const formData = new FormData();
-      formData.append("userName", form.userName);
-      formData.append("email", form.email);
-      formData.append("password", form.password);
-      formData.append("gender", form.gender);
-      formData.append("phone", form.phone);
-      formData.append("zipCode", form.zipCode);
-      formData.append("mainAddress", form.mainAddress);
-      formData.append("detailsAddress", form.detailsAddress);
 
       // 이미지가 존재하면 추가
-      if (form.profileImage) {
-        const file = document.querySelector('input[type="file"]').files[0];
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
         formData.append("profileImage", file);
       }
+
+      // JSON 데이터를 FormData에 추가
+      formData.append("signUpRequest", signUpRequestJson);
 
       // Axios 요청
       const response = await axios.post(
@@ -253,6 +264,7 @@ const Signup = () => {
       // 모달 띄우기
       setModalContent("회원가입이 완료되었습니다!");
       dispatch(openModal());
+      navigate("/Login");
     } catch (error) {
       console.error("회원가입 실패:", error);
 
