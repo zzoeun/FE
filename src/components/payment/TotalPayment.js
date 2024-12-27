@@ -19,10 +19,6 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
     checkIamport();
   }, []);
 
-  const handleAgreeClick = () => {
-    setIsAgreeChecked((prev) => !prev);
-  };
-
   const handlePayment = async () => {
     if (!isIamportLoaded) {
       alert("결제 시스템이 준비되지 않았습니다. 잠시 후 다시 시도해주세요.");
@@ -36,13 +32,16 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
     }
 
     const {
-      name,
+      name, // 상품 정보 (title 외 n권)
       amount,
-      buyer_email,
-      buyer_name,
-      buyer_tel,
-      buyer_addr,
-      buyer_postcode,
+      userId,
+      buyerEmail,
+      buyerName,
+      buyerPhone,
+      cardNumbers,
+      zipCode,
+      mainAddress,
+      detailsAddress,
     } = paymentData;
 
     const IMP = window.IMP;
@@ -57,22 +56,30 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
         merchant_uid: makeMerchantUid,
         name,
         amount,
-        buyer_email,
-        buyer_name,
-        buyer_tel,
-        buyer_addr,
-        buyer_postcode,
+        buyer_email: buyerEmail,
+        buyer_name: buyerName,
+        buyer_tel: buyerPhone,
+        buyer_addr: mainAddress,
+        buyer_postcode: zipCode,
       },
+      // POST API 여기서부터터 아래까지 삭제하고 복붙해넣으시면 됩니다!
       (rsp) => {
         if (rsp.success) {
           setModalType("success");
+
           setTimeout(() => navigate("/mypage"), 2000);
         } else {
           alert(`결제에 실패하였습니다. 에러 내용: ${rsp.error_msg}`);
         }
-      }
+      } // 여기까지
     );
   };
+
+  const handleAgreeClick = () => {
+    setIsAgreeChecked((prev) => !prev);
+  };
+
+  const handleAgreePayment = () => {};
 
   return (
     <TotalPaymentWrapper>
@@ -80,17 +87,17 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
       <TotalDetails>
         <div>
           <p>상품금액</p>
-          <p>{paymentInfo.itemAmount}원</p>
+          <p>{paymentInfo.totalPrice}원</p>
         </div>
         <div>
           <p>배송비</p>
-          <p>{paymentInfo.deliveryFee}원</p>
+          <p>{paymentInfo.shippingFee}원</p>
         </div>
         <Total>
           <TotalContent>합계</TotalContent>
           <div>
             <TotalAmount>
-              {paymentInfo.itemAmount + paymentInfo.deliveryFee}
+              {paymentInfo.totalPrice + paymentInfo.shippingFee}
             </TotalAmount>
             <TotalContent>원</TotalContent>
           </div>
