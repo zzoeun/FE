@@ -4,9 +4,9 @@ import DaumPostCode from "react-daum-postcode";
 
 const Address = () => {
   const [form, setForm] = useState({
-    zip_code: "",
-    main_address: "",
-    details_address: "",
+    zipCode: "",
+    mainAddress: "",
+    detailsAddress: "",
   });
 
   const [isPostCodeOpen, setIsPostCodeOpen] = useState(null);
@@ -15,8 +15,8 @@ const Address = () => {
   const handleAddressComplete = (data) => {
     setForm({
       ...form,
-      zip_code: data.zonecode,
-      main_address: data.address,
+      zipCode: data.zonecode,
+      mainAddress: data.address,
     });
     setIsPostCodeOpen(false); // 입력 후 창 닫기
   };
@@ -42,8 +42,8 @@ const Address = () => {
         <FlexContainer>
           <Input
             type="text"
-            name="zip_code"
-            value={form.zip_code}
+            name="zipCode"
+            value={form.zipCode}
             readOnly
             onChange={handleChange}
           />
@@ -60,8 +60,8 @@ const Address = () => {
         <Label>기본 주소</Label>
         <Input
           type="text"
-          name="main_address"
-          value={form.main_address}
+          name="mainAddress"
+          value={form.mainAddress}
           readOnly
           onChange={handleChange}
         />
@@ -71,8 +71,8 @@ const Address = () => {
         <Label>상세 주소</Label>
         <Input
           type="text"
-          name="details_address"
-          value={form.details_address}
+          name="detailsAddress"
+          value={form.detailsAddress}
           onChange={handleChange}
         />
       </FormGroup>

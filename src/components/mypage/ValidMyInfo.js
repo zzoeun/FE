@@ -1,35 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import axios from "axios";
 import Address from "./Address";
 
-const ValidMyInfo = () => {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
-
-  const [messages, setMessages] = useState({
+const ValidMyInfo = ({ form, handleChange }) => {
+  const [messages, setMessages] = React.useState({
     emailMessage: "",
     phoneMessage: "",
   });
 
-  const [isValid, setIsValid] = useState({
+  const [isValid, setIsValid] = React.useState({
     isEmail: false,
     isPhone: false,
   });
 
-  // 입력 값 변경 핸들러
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
   // 이메일 유효성 검사
   const onChangeEmail = (e) => {
     const currentEmail = e.target.value;
-    handleChange(e);
+    handleChange(e); // 부모 상태 업데이트
     const emailRegExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
     if (!emailRegExp.test(currentEmail)) {
@@ -44,40 +31,10 @@ const ValidMyInfo = () => {
     }
   };
 
-  // 이메일 중복 확인
-  const onChangeEmailConfirm = async () => {
-    if (!form.email) {
-      alert("이메일을 입력해주세요.");
-      return;
-    }
-    try {
-      const response = await axios.post("/api/emailcheck", {
-        email: form.email,
-      });
-
-      if (response.data.isDuplicate) {
-        setMessages({
-          ...messages,
-          emailMessage: "이미 사용 중인 이메일입니다.",
-        });
-        setIsValid({ ...isValid, isEmail: false });
-      } else {
-        setMessages({
-          ...messages,
-          emailMessage: "사용 가능한 이메일입니다.",
-        });
-        setIsValid({ ...isValid, isEmail: true });
-      }
-    } catch (error) {
-      console.error("이메일 확인 실패:", error);
-      alert("이메일 중복 확인 중 오류가 발생했습니다.");
-    }
-  };
-
   // 휴대폰 번호 유효성 검사
   const onChangePhone = (e) => {
     const currentPhone = e.target.value;
-    handleChange(e);
+    handleChange(e); // 부모 상태 업데이트
     const phoneRegExp = /^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/;
 
     if (!phoneRegExp.test(currentPhone)) {
@@ -96,8 +53,21 @@ const ValidMyInfo = () => {
     <FormContainer>
       <FormWrapper>
         <FormGroup>
+          <Label>아이디</Label>
+          <Input
+            name="userId"
+            value={form.userId || ""}
+            onChange={handleChange}
+          />
+        </FormGroup>
+
+        <FormGroup>
           <Label>이름</Label>
-          <Input name="name" value={form.name || ""} onChange={handleChange} />
+          <Input
+            name="userName"
+            value={form.userName || ""}
+            onChange={handleChange}
+          />
         </FormGroup>
 
         <FormGroup>
@@ -117,10 +87,8 @@ const ValidMyInfo = () => {
             onChange={onChangeEmail}
           />
           <Message>{messages.emailMessage}</Message>
-          <ConfirmButton onClick={onChangeEmailConfirm}>
-            중복 확인
-          </ConfirmButton>
         </FormGroup>
+
         <FormGroup>
           <Label>휴대폰번호</Label>
           <Input
@@ -130,6 +98,7 @@ const ValidMyInfo = () => {
           />
           <Message>{messages.phoneMessage}</Message>
         </FormGroup>
+
         <Address />
       </FormWrapper>
     </FormContainer>

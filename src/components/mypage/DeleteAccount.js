@@ -5,7 +5,7 @@ import React, { useState } from "react";
 
 const DeleteAccount = () => {
   const navigate = useNavigate();
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("bearer_token"));
 
   // 회원탈퇴 로직. 로그인 시 sotorage 활용 여부 확인 후 수정 필요
   const handleDeleteProfile = async () => {
