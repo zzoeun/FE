@@ -68,7 +68,7 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
         pay_method: "card",
         merchant_uid: `IMP${makeMerchantUid}`,
         name,
-        amount: 100,
+        amount,
         buyer_email,
         buyer_name,
         buyer_tel,

@@ -144,6 +144,8 @@ const Payment = () => {
       orderItems.length > 0 ? orderItems[0].title : "데이터 없음";
     const otherBookCount = orderItems.length > 1 ? orderItems.length - 1 : 0;
 
+    const totalAmount = paymentInfo.totalPrice + paymentInfo.shippingFee;
+
     const paymentName =
       `${firstBookTitle}` +
       `${otherBookCount > 0 ? ` 외 ${otherBookCount}권` : ""}`;
