@@ -4,7 +4,7 @@ import Cart from "./pages/Cart";
 import Signup from "./pages/Signup";
 import Payment from "./pages/Payment";
 import MyPage from "./pages/MyPage";
-import Detailed from "./pages/Detailed";
+import Detailed from "./pages/detailed";
 import Login from "./pages/Login";
 import Layout from "./components/layout/Layout";
 

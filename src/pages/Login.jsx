@@ -17,6 +17,8 @@ function Login() {
           password: password,
         })
         .then((response) => {
+          let bearer_token = response.headers.bearer_token; 
+          localStorage.setItem("bearer_token", bearer_token); //테스트 토큰 저장
           const token = response.data.token;
           localStorage.setItem("token", token); // 토큰 저장
           console.log("토큰이 로컬 스토리지에 저장되었습니다:", token);

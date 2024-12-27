@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import ModalContent from "./ModalContent";
-import Button from "./Button";
+import ModalButton from "./ModalButton";
 import { useDispatch } from "react-redux";
 
 const SignupModal = ({ isOpen, content, onConfirm, onCancel }) => {
@@ -31,8 +31,8 @@ const SignupModal = ({ isOpen, content, onConfirm, onCancel }) => {
       <ModalMain>
         <ModalContent>{content}</ModalContent>
         <ModalButtons>
-          <Button onClick={handleConfirm}>확인</Button>
-          <Button onClick={handleCancel}>취소</Button>
+          <ModalButton onClick={handleConfirm}>확인</ModalButton>
+          <ModalButton onClick={handleCancel}>취소</ModalButton>
         </ModalButtons>
       </ModalMain>
     </ModalBackground>
