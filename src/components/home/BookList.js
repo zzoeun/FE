@@ -48,10 +48,6 @@ const BookList = ({ setModal }) => {
     };
   }, [currentPage, dropdownOption]);
 
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [dropdownOption]);
-
   if (loading) return <LoadingMessage>로딩 중...</LoadingMessage>;
   if (error) return <ErrorMessage>{error}</ErrorMessage>;
 
