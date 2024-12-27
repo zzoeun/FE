@@ -8,14 +8,16 @@ function BookItem({ book, setModal, userData, token }) {
   const handleAddCartAndOpenModal = () => {
     setModal(true);
 
-    axios.post('https://project-be.site/cart/add', {
-      header: { Authorization: `Bearer ${token}` },
-      body: {
-        userId: userData.userId,
-        quantity: 1,
-        bookId: book.book.id,
-      },
-    });
+    if (token) {
+      axios.post('https://project-be.site/cart/add', {
+        header: { Authorization: `Bearer ${token}` },
+        body: {
+          userId: userData.userId,
+          quantity: 1,
+          bookId: book.book.id,
+        },
+      });
+    }
   };
 
   return (
