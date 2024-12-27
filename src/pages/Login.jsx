@@ -17,9 +17,11 @@ function Login() {
           password: password,
         })
         .then((response) => {
-          let bearer_token = response.headers.bearer_token; 
+          let bearer_token = response.headers.bearer_token;
           localStorage.setItem("bearer_token", bearer_token); //테스트 토큰 저장
+          console.log(response);
           const token = response.data.token;
+          console.log(token);
           localStorage.setItem("token", token); // 토큰 저장
           console.log("토큰이 로컬 스토리지에 저장되었습니다:", token);
           alert(email + "님 환영합니다.");
@@ -28,14 +30,13 @@ function Login() {
         .catch((error) => {
           console.error("로그인 오류:", error);
           alert(
-            "이메일일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요."
+            "이메일 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요."
           );
         });
     }
   };
 
   return (
-    
     <div style={styles.container}>
       <form style={styles.form}>
         <h2>로그인</h2>
@@ -43,6 +44,7 @@ function Login() {
           type="email"
           placeholder="이메일"
           value={email}
+          저
           onChange={(e) => setEmail(e.target.value)}
           style={styles.input}
         />
