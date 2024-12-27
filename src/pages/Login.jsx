@@ -17,6 +17,8 @@ function Login() {
           password: password,
         })
         .then((response) => {
+          let bearer_token = response.headers.bearer_token;
+          localStorage.setItem("bearer_token", bearer_token); //테스트 토큰 저장
           console.log(response);
           const token = response.data.token;
           console.log(token);
@@ -42,6 +44,7 @@ function Login() {
           type="email"
           placeholder="이메일"
           value={email}
+          저
           onChange={(e) => setEmail(e.target.value)}
           style={styles.input}
         />
