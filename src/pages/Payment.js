@@ -23,14 +23,14 @@ const dummyCartItems = [
   {
     bookId: 9,
     title: "The Brothers Karamazov",
-    price: 20000,
+    price: 10,
     bookImage: "https://placehold.co/200",
     quantity: 2,
   },
   {
     bookId: 10,
     title: "Crime and Punishment",
-    price: 16000,
+    price: 1,
     bookImage: "https://placehold.co/200",
     quantity: 1,
   },
@@ -57,7 +57,7 @@ const Payment = () => {
   const [orderItems, setOrderItems] = useState([]); // 상품 정보
   const [cardNumbers, setCardNumbers] = useState(""); // 카드 번호
   const [paymentInfo, setPaymentInfo] = useState({
-    totalAmount: 0, // 총 금액
+    totalPrice: 0, // 총 금액
     shippingFee: 0, // 배송비
   });
 
@@ -93,6 +93,19 @@ const Payment = () => {
       }));
 
       setOrderItems(filteredItems);
+
+      // cart에서 못받아왔을 때... dummy data 총가격, 배송비
+      const totalPrice = filteredItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const shippingFee = totalPrice > MIN_ORDER_AMOUNT ? 0 : SHIPPING_FEE;
+
+      setPaymentInfo((prevInfo) => ({
+        ...prevInfo,
+        totalPrice,
+        shippingFee,
+      }));
     } else {
       setError("해당 책을 찾을 수 없습니다.");
     }
@@ -130,6 +143,8 @@ const Payment = () => {
     const firstBookTitle =
       orderItems.length > 0 ? orderItems[0].title : "데이터 없음";
     const otherBookCount = orderItems.length > 1 ? orderItems.length - 1 : 0;
+
+    const totalAmount = paymentInfo.totalPrice + paymentInfo.shippingFee;
 
     const paymentName =
       `${firstBookTitle}` +

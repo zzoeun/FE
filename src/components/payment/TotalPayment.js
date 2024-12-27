@@ -74,23 +74,30 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
     );
   };
 
+  const handleAgreeClick = () => {
+    setIsAgreeChecked((prev) => !prev);
+  };
+
+  const handleAgreePayment = () => {};
+
+
   return (
     <TotalPaymentWrapper>
       <h3>최종 결제 금액</h3>
       <TotalDetails>
         <div>
           <p>상품금액</p>
-          <p>{paymentInfo.itemAmount}원</p>
+          <p>{paymentInfo.totalPrice}원</p>
         </div>
         <div>
           <p>배송비</p>
-          <p>{paymentInfo.deliveryFee}원</p>
+          <p>{paymentInfo.shippingFee}원</p>
         </div>
         <Total>
           <TotalContent>합계</TotalContent>
           <div>
             <TotalAmount>
-              {paymentInfo.itemAmount + paymentInfo.deliveryFee}
+              {paymentInfo.totalPrice + paymentInfo.shippingFee}
             </TotalAmount>
             <TotalContent>원</TotalContent>
           </div>
