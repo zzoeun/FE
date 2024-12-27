@@ -19,11 +19,11 @@ function Login() {
         .then((response) => {
           let bearer_token = response.headers.bearer_token;
           localStorage.setItem("bearer_token", bearer_token); //테스트 토큰 저장
-          console.log(response);
-          const token = response.data.token;
-          console.log(token);
-          localStorage.setItem("token", token); // 토큰 저장
-          console.log("토큰이 로컬 스토리지에 저장되었습니다:", token);
+          console.log(bearer_token);
+          console.log(
+            "bearer_token이 로컬 스토리지에 저장되었습니다:",
+            bearer_token
+          );
           alert(email + "님 환영합니다.");
           window.location.href = "/"; // 로그인 성공 후 리다이렉트
         })
