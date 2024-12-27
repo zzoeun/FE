@@ -19,10 +19,6 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
     checkIamport();
   }, []);
 
-  const handleAgreeClick = () => {
-    setIsAgreeChecked((prev) => !prev);
-  };
-
   const handlePayment = async () => {
     if (!isIamportLoaded) {
       alert("결제 시스템이 준비되지 않았습니다. 잠시 후 다시 시도해주세요.");
@@ -79,7 +75,6 @@ const PaymentAmount = ({ paymentInfo, getPaymentData }) => {
   };
 
   const handleAgreePayment = () => {};
-
 
   return (
     <TotalPaymentWrapper>
