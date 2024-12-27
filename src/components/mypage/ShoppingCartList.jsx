@@ -12,7 +12,7 @@ const ShoppingCartList = () => {
   const [error, setError] = useState(null);
 
   const checkToken = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('Bearer token');
     if (!token) {
       alert('로그인이 필요한 서비스입니다.');
       navigate('/login');
@@ -53,7 +53,7 @@ const ShoppingCartList = () => {
         console.error('장바구니 정보 조회 실패:', err);
         if (err.response?.status === 401) {
           alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-          localStorage.removeItem('token');
+          localStorage.removeItem('Bearer token');
           navigate('/login');
           return;
         }
@@ -82,7 +82,7 @@ const ShoppingCartList = () => {
     } catch (err) {
       if (err.response?.status === 401) {
         alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-        localStorage.removeItem('token');
+        localStorage.removeItem('Bearer token');
         navigate('/login');
         return;
       }
@@ -106,7 +106,7 @@ const ShoppingCartList = () => {
     } catch (err) {
       if (err.response?.status === 401) {
         alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
-        localStorage.removeItem('token');
+        localStorage.removeItem('Bearer token');
         navigate('/login');
         return;
       }
