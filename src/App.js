@@ -4,7 +4,7 @@ import Cart from "./pages/Cart";
 import Signup from "./pages/Signup";
 import Payment from "./pages/Payment";
 import MyPage from "./pages/MyPage";
-import Detailed from "./pages/detailed";
+import Detail from "./pages/Detail";
 import Login from "./pages/Login";
 import Layout from "./components/layout/Layout";
 
@@ -18,7 +18,7 @@ const App = () => {
           <Route path="signup" element={<Signup />} />
           <Route path="payment" element={<Payment />} />
           <Route path="mypage" element={<MyPage />} />
-          <Route path="detailed" element={<Detailed />} />
+          <Route path="detail" element={<Detail />} />
           <Route path="login" element={<Login />} />
         </Route>
       </Routes>

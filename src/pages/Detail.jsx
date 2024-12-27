@@ -109,7 +109,7 @@ const Button = styled.button`
 `;
 
 // 메인 컴포넌트
-const Detailed = () => {
+const Detail = () => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 
@@ -170,4 +170,4 @@ const Detailed = () => {
   );
 };
 
-export default Detailed;
+export default Detail;
