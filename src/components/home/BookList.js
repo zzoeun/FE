@@ -41,7 +41,7 @@ const BookList = ({ setModal, userData, token }) => {
     return () => {
       controller.abort();
     };
-  }, [dropdownOption, currentPage]);
+  }, [currentPage, dropdownOption]);
 
   return (
     <section>
