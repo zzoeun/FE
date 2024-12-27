@@ -5,11 +5,13 @@ import ShippingMethodInfo from "./shippingMethodInfo/ShippingMethodInfo";
 
 const ShippingInfo = ({
   userInfo,
+  receiverInfo,
   shippingMode,
   onShippingModeChange,
   onInfoChange,
 }) => {
   console.log("Sipping Radio: ", shippingMode);
+  console.log("userInfo:", userInfo);
 
   return (
     <ShippingInfoWrapper>
@@ -40,6 +42,7 @@ const ShippingInfo = ({
         <ShippingMethodInfo
           shippingMode={shippingMode}
           userInfo={userInfo}
+          receiverInfo={receiverInfo}
           onInfoChange={onInfoChange}
         />
         <InputContents>

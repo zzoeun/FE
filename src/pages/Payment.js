@@ -23,14 +23,14 @@ const dummyCartItems = [
   {
     bookId: 9,
     title: "The Brothers Karamazov",
-    price: 20000,
+    price: 10,
     bookImage: "https://placehold.co/200",
     quantity: 2,
   },
   {
     bookId: 10,
     title: "Crime and Punishment",
-    price: 16000,
+    price: 1,
     bookImage: "https://placehold.co/200",
     quantity: 1,
   },
@@ -41,6 +41,8 @@ const email = "use@example.com"; // email 임시 데이터
 
 const Payment = () => {
   const [userInfo, setUserInfo] = useState({
+    userId: "",
+    email: "",
     name: "",
     phone: "",
     zipCode: "",
@@ -48,6 +50,8 @@ const Payment = () => {
     detailsAddress: "",
   }); // 회원 정보
   const [receiverInfo, setReceiverInfo] = useState({
+    userId: "",
+    email: "",
     name: "",
     phone: "",
     zipCode: "",
@@ -57,7 +61,7 @@ const Payment = () => {
   const [orderItems, setOrderItems] = useState([]); // 상품 정보
   const [cardNumbers, setCardNumbers] = useState(""); // 카드 번호
   const [paymentInfo, setPaymentInfo] = useState({
-    totalAmount: 0, // 총 금액
+    totalPrice: 0, // 총 금액
     shippingFee: 0, // 배송비
   });
 
@@ -76,12 +80,15 @@ const Payment = () => {
 
   // 더미 데이터를 사용하여 컴포넌트 상태 업데이트
   useEffect(() => {
-    // 회원 정보 - 더미로 가지고 옴.
+    // 회원 정보 - 더미로 가지고 옴. - 삭제 후 GET API 추가하기기
+    // GET 회원정보 API
+    // 여기서부터
     setTimeout(() => {
       setUserInfo(dummyUserInfo);
       const newDummy = { ...dummyUserInfo };
       setReceiverInfo(newDummy);
     }, 1000); // 1초 후 더미 데이터 설정
+    // 여기까지 삭제 후 복붙!
 
     if (selectCartItems.length > 0) {
       const filteredItems = selectCartItems.map((item) => ({
@@ -93,6 +100,19 @@ const Payment = () => {
       }));
 
       setOrderItems(filteredItems);
+
+      // cart에서 못받아왔을 때... dummy data 총가격, 배송비
+      const totalPrice = filteredItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const shippingFee = totalPrice > MIN_ORDER_AMOUNT ? 0 : SHIPPING_FEE;
+
+      setPaymentInfo((prevInfo) => ({
+        ...prevInfo,
+        totalPrice,
+        shippingFee,
+      }));
     } else {
       setError("해당 책을 찾을 수 없습니다.");
     }
@@ -131,18 +151,23 @@ const Payment = () => {
       orderItems.length > 0 ? orderItems[0].title : "데이터 없음";
     const otherBookCount = orderItems.length > 1 ? orderItems.length - 1 : 0;
 
+    const totalAmount = paymentInfo.totalPrice + paymentInfo.shippingFee;
+
     const paymentName =
       `${firstBookTitle}` +
       `${otherBookCount > 0 ? ` 외 ${otherBookCount}권` : ""}`;
 
     return {
-      name: paymentName,
+      name: paymentName, // 상품 정보
       amount: totalAmount,
-      buyer_email: recipientInfo.email,
-      buyer_name: recipientInfo.name,
-      buyer_tel: recipientInfo.phone,
-      buyer_addr: recipientInfo.mainAddress,
-      buyer_postcode: recipientInfo.zipCode,
+      userId: receiverInfo.userId,
+      buyerEmail: recipientInfo.email,
+      buyerName: recipientInfo.name,
+      buyerPhone: recipientInfo.phone,
+      cardNumbers,
+      zipCode: recipientInfo.zipCode,
+      mainAddress: recipientInfo.mainAddress,
+      detailsAddress: receiverInfo.detailsAddress,
     };
   };
 
