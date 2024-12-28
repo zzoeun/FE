@@ -5,7 +5,7 @@ import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
 import PaymentsList from "../components/mypage/PaymentsList";
-import ShoppingCartList from "../components/mypage/ShoppingCartList";
+import Cart from "./Cart";
 import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
@@ -51,8 +51,8 @@ const MyPage = () => {
         );
       case "deleteaccount":
         return <DeleteAccount token={token} />;
-      case "shoppingcartlist":
-        return <ShoppingCartList token={token} />;
+      case "cart":
+        return <Cart />;
       case "paymentslist":
         return <PaymentsList />;
       default:
@@ -64,7 +64,7 @@ const MyPage = () => {
     switch (selectedMenu) {
       case "paymentslist":
         return "주문결제조회";
-      case "shoppingcartlist":
+      case "cart":
         return "내 장바구니";
       case "modifyInfo":
         return "내 정보";
