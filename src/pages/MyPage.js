@@ -21,6 +21,27 @@ const MyPage = () => {
   const modalOpen = useSelector((state) => state.modal); // 모달 상태 가져오기
   const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
 
+  // 백엔드에서 사용자 정보 불러오기
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          "https://project-be.site/api/mypage/getUserInfo",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setUserData(response.data); // 받아온 데이터 저장
+      } catch (error) {
+        console.error("데이터 불러오기 실패:", error);
+        setModalContent("로그인한 회원이 아닙니다.");
+        dispatch(openModal());
+      }
+    };
+
+    fetchUserData(); // 사용자 정보 가져오기
+  }, [token]); // 토큰이 변경될 때마다 실행
+
   // 현재 메뉴에 따라 다른 화면 렌더링
   const renderContent = () => {
     switch (selectedMenu) {
@@ -46,7 +67,7 @@ const MyPage = () => {
       case "cart":
         return "내 장바구니";
       case "modifyInfo":
-        return "내 정보 수정";
+        return "내 정보";
       default:
         return "마이페이지";
     }
