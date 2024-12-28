@@ -120,7 +120,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.error("이메일 확인 실패:", error);
-      setModalContent("중복 확인 중 오류가 발생했습니다.");
+      setModalContent("이미 사용 중인 이메일입니다.");
       dispatch(openModal());
     }
   };
@@ -264,7 +264,6 @@ const Signup = () => {
       // 모달 띄우기
       setModalContent("회원가입이 완료되었습니다!");
       dispatch(openModal());
-      navigate("/Login");
     } catch (error) {
       console.error("회원가입 실패:", error);
 
@@ -403,6 +402,7 @@ const Signup = () => {
           content={modalContent}
           onClose={() => {
             dispatch(closeModal());
+            navigate("/login"); // 로그인 페이지로 이동
           }}
         />
       )}

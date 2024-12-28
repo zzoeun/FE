@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import styled from "styled-components";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("bearer_token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const handleLogin = () => {
     if (email === "") {
@@ -18,14 +27,10 @@ function Login() {
         })
         .then((response) => {
           let bearer_token = response.headers.bearer_token;
-          localStorage.setItem("bearer_token", bearer_token); //테스트 토큰 저장
-          console.log(bearer_token);
-          console.log(
-            "bearer_token이 로컬 스토리지에 저장되었습니다:",
-            bearer_token
-          );
-          alert(email + "님 환영합니다.");
-          window.location.href = "/"; // 로그인 성공 후 리다이렉트
+          localStorage.setItem("bearer_token", bearer_token); // 토큰 저장
+          setIsLoggedIn(true);
+          alert(`${email}님 환영합니다.`);
+          window.location.href = "/";
         })
         .catch((error) => {
           console.error("로그인 오류:", error);
@@ -36,67 +41,110 @@ function Login() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("bearer_token"); // 토큰 삭제
+    setIsLoggedIn(false);
+    alert("로그아웃 되었습니다.");
+  };
+
   return (
-    <div style={styles.container}>
-      <form style={styles.form}>
-        <h2>로그인</h2>
-        <input
-          type="email"
-          placeholder="이메일"
-          value={email}
-          저
-          onChange={(e) => setEmail(e.target.value)}
-          style={styles.input}
-        />
-        <input
-          type="password"
-          placeholder="패스워드"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-        />
-        <button type="button" onClick={handleLogin} style={styles.button}>
-          로그인
-        </button>
-      </form>
-    </div>
+    <Container>
+      {isLoggedIn ? (
+        <LoggedInContainer>
+          <Message>이미 로그인된 회원입니다.</Message>
+          <Button onClick={handleLogout} secondary>
+            로그아웃
+          </Button>
+        </LoggedInContainer>
+      ) : (
+        <Form>
+          <h2>로그인</h2>
+          <Input
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            type="password"
+            placeholder="패스워드"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button type="button" onClick={handleLogin}>
+            로그인
+          </Button>
+        </Form>
+      )}
+    </Container>
   );
 }
 
-const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    backgroundColor: "#f5f5f5",
-  },
-  form: {
-    backgroundColor: "#fff",
-    padding: "20px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    width: "300px",
-    textAlign: "center",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    margin: "10px 0",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-    fontSize: "16px",
-  },
-  button: {
-    width: "100%",
-    padding: "10px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    fontSize: "16px",
-    cursor: "pointer",
-  },
-};
+const Container = styled.div`
+  margin-top: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgb(255, 255, 255);
+`;
+
+const Form = styled.form`
+  background-color: #fff;
+  color: #333;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+`;
+
+const LoggedInContainer = styled.div`
+  background-color: #fff;
+  color: #333;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const Title = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+`;
+
+const Message = styled.p`
+  font-size: 18px;
+  margin-bottom: 20px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 12px;
+  background-color: ${(props) => (props.secondary ? "#e74c3c" : "#3498db")};
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #555555;
+
+  margin-top: ${(props) => (props.secondary ? "20px" : "0")};
+
+  &:hover {
+    background-color: #000;
+  }
+`;
 
 export default Login;
