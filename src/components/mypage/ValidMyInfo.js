@@ -98,8 +98,6 @@ const ValidMyInfo = ({ form, handleChange }) => {
           />
           <Message>{messages.phoneMessage}</Message>
         </FormGroup>
-
-        <Address />
       </FormWrapper>
     </FormContainer>
   );
@@ -123,7 +121,6 @@ const FormWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 600px;
   border-radius: 10px;
   padding: 20px;
 `;
