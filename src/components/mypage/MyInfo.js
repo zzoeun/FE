@@ -94,7 +94,6 @@ const MyInfo = () => {
         />
       </ProfileImageWrapper>
 
-      {/* ValidMyInfo와 Address가 중복되지 않도록 관리 */}
       <ValidMyInfo
         form={form}
         handleChange={(e) =>
