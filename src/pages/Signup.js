@@ -531,7 +531,7 @@ const RadioLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 14px; /* 기존 스타일과 일관된 폰트 크기 */
+  font-size: 14px;
   cursor: pointer;
 `;
 
@@ -543,5 +543,5 @@ const RadioInput = styled.input`
 
 const SignupFlexContainer = styled.div`
   display: flex;
-  gap: 20px; /* 성별 간격 조정 */
+  gap: 20px;
 `;
