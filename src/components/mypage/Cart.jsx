@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import Order from "../../components/Cart/Order";
-import CartItemList from "../../components/Cart/CartItemList";
-import CartItemAmount from "../../components/Cart/CartItemAmount";
-import ShoppingCartIcon from "../../icons/shopping-cart.svg";
+import Order from "../components/Cart/Order";
+import CartItemList from "../components/Cart/CartItemList";
+import CartItemAmount from "../components/Cart/CartItemAmount";
+import ShoppingCartIcon from "../icons/shopping-cart.svg";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -318,7 +318,7 @@ const CartTitle = styled.div`
   align-items: center;
   font-size: 2rem;
   text-align: left;
-  border-bottom: 1px solid #BCCCDC;
+  border-bottom: 1px solid #bcccdc;
   margin-top: 0 auto;
   @media (max-width: 768px) {
     font-size: 2rem;
@@ -330,7 +330,7 @@ const CartCategory = styled.div`
   height: 60px;
   display: flex;
   padding-top: 20px;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 `;
 const SelectButton = styled.div`
   cursor: pointer;

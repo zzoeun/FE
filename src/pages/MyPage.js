@@ -9,6 +9,7 @@ import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
 import { useNavigate } from "react-router-dom"; // useNavigate 임포트
+import CartPage from "../components/mypage/CartPage";
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("myinfo");
@@ -52,7 +53,7 @@ const MyPage = () => {
       case "deleteaccount":
         return <DeleteAccount token={token} />;
       case "cart":
-        return <Cart />;
+        return <CartPage />;
       case "paymentslist":
         return <PaymentsList />;
       default:
@@ -64,7 +65,7 @@ const MyPage = () => {
     switch (selectedMenu) {
       case "paymentslist":
         return "주문결제조회";
-      case "cart":
+      case "cartpage":
         return "내 장바구니";
       case "modifyInfo":
         return "내 정보";
