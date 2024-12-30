@@ -7,15 +7,19 @@ const DeleteAccount = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState(localStorage.getItem("bearer_token"));
 
-  // 회원탈퇴 로직. 로그인 시 sotorage 활용 여부 확인 후 수정 필요
+  // 회원탈퇴 로직.
   const handleDeleteProfile = async () => {
     if (window.confirm("정말 회원 탈퇴를 진행하시겠습니까?")) {
       try {
-        const response = await axios.delete(`/auth/delete`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          // delete가 아니라 post가 맞는지?
+          `https://project-be.site/auth/delete`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         console.log("삭제 성공:", response.data);
         window.confirm("회원 탈퇴가 완료되었습니다.");
         navigate("/");

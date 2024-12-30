@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ModalContent from "./ModalContent";
 import ModalButton from "./ModalButton";
 import { useDispatch } from "react-redux";
+import { openModal, closeModal } from "../../features/modalSlice";
 
 const SignupModal = ({ isOpen, content, onConfirm, onCancel }) => {
   const dispatch = useDispatch(); // 항상 호출되도록 위치 변경

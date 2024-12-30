@@ -3,10 +3,10 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Payment from "./pages/Payment";
 import MyPage from "./pages/MyPage";
+import BookDetail from "./pages/BookDetail";
 import Login from "./pages/Login";
 import Layout from "./components/layout/Layout";
 import Cart from "./components/mypage/Cart";
-import DetailedPage from "./pages/DetailedPage";
 
 const App = () => {
   return (
@@ -18,7 +18,7 @@ const App = () => {
           <Route path="signup" element={<Signup />} />
           <Route path="payment" element={<Payment />} />
           <Route path="mypage" element={<MyPage />} />
-          <Route path="/DetailedPage/:id" element={<DetailedPage />} />
+          <Route path="detail/:bookId" element={<BookDetail />} />
           <Route path="login" element={<Login />} />
         </Route>
       </Routes>

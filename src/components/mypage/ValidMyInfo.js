@@ -53,28 +53,10 @@ const ValidMyInfo = ({ form, handleChange }) => {
     <FormContainer>
       <FormWrapper>
         <FormGroup>
-          <Label>아이디</Label>
-          <Input
-            name="userId"
-            value={form.userId || ""}
-            onChange={handleChange}
-          />
-        </FormGroup>
-
-        <FormGroup>
           <Label>이름</Label>
           <Input
             name="userName"
             value={form.userName || ""}
-            onChange={handleChange}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>성별</Label>
-          <Input
-            name="gender"
-            value={form.gender || ""}
             onChange={handleChange}
           />
         </FormGroup>
@@ -85,8 +67,35 @@ const ValidMyInfo = ({ form, handleChange }) => {
             name="email"
             value={form.email || ""}
             onChange={onChangeEmail}
+            readOnly
           />
-          <Message>{messages.emailMessage}</Message>
+          <Message>이메일은 수정할 수 없습니다.</Message>
+        </FormGroup>
+
+        <FormGroup>
+          <Label>성별</Label>
+          <RadioGroup>
+            <RadioLabel>
+              <RadioInput
+                type="radio"
+                name="gender"
+                value="M"
+                checked={form.gender === "M"}
+                onChange={handleChange}
+              />
+              남
+            </RadioLabel>
+            <RadioLabel>
+              <RadioInput
+                type="radio"
+                name="gender"
+                value="F"
+                checked={form.gender === "F"}
+                onChange={handleChange}
+              />
+              여
+            </RadioLabel>
+          </RadioGroup>
         </FormGroup>
 
         <FormGroup>
@@ -98,8 +107,6 @@ const ValidMyInfo = ({ form, handleChange }) => {
           />
           <Message>{messages.phoneMessage}</Message>
         </FormGroup>
-
-        <Address />
       </FormWrapper>
     </FormContainer>
   );
@@ -123,7 +130,6 @@ const FormWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 600px;
   border-radius: 10px;
   padding: 20px;
 `;
@@ -159,17 +165,20 @@ const Message = styled.p`
   margin-top: 5px;
 `;
 
-const ConfirmButton = styled.button`
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #cccccc;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
+const RadioGroup = styled.div`
+  display: flex;
+  gap: 20px;
+`;
 
-  &:hover {
-    background-color: #999999;
-  }
+const RadioLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+`;
+
+const RadioInput = styled.input`
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 `;

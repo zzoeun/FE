@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import ValidMyInfo from "./ValidMyInfo"; // ValidMyInfo를 import
+import ValidMyInfo from "./ValidMyInfo"; // ValidMyInfo import
+import Address from "./Address"; // Address import
 
 const MyInfo = () => {
   const [token, setToken] = useState(localStorage.getItem("bearer_token"));
@@ -11,7 +12,7 @@ const MyInfo = () => {
     email: "",
     phone: "",
     gender: "",
-    image: "",
+    profileImage: "",
     zipCode: "",
     mainAddress: "",
     detailsAddress: "",
@@ -33,48 +34,51 @@ const MyInfo = () => {
           email: user.email,
           phone: user.phone,
           gender: user.gender,
-          image: user.profileImage,
+          profileImage: user.profileImage,
           zipCode: user.zipCode,
           mainAddress: user.mainAddress,
           detailsAddress: user.detailsAddress,
         });
-
-        console.log(response.data);
       } catch (error) {
         console.error("데이터 불러오기 실패:", error);
-        alert("사용자 정보를 불러오는 데 실패했습니다.");
       }
     };
 
     fetchUserData();
   }, [token]);
 
-  // 입력 값 변경 핸들러
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
+  console.log("MyInfo component rendered with form:", form);
 
   // 프로필 이미지 변경 핸들러
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const previewUrl = URL.createObjectURL(file);
-      setForm({ ...form, profile_image: previewUrl });
+      setForm({ ...form, profileImage: previewUrl });
     }
   };
 
   // 수정 사항 저장 핸들러
   const handleSave = async () => {
     try {
-      const response = await axios.put(
+      const formData = new FormData();
+      // 이미지가 존재하면 추가
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        formData.append("image", file);
+      }
+      Object.keys(form).forEach((key) => {
+        formData.append(key, form[key]);
+      });
+
+      await axios.put(
         `https://project-be.site/api/mypage/putUserInfo/${form.userId}`,
-        form,
+        formData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("수정 성공:", response.data);
       alert("정보가 성공적으로 수정되었습니다.");
     } catch (error) {
       console.error("정보 수정 실패:", error);
@@ -86,8 +90,8 @@ const MyInfo = () => {
     <FormContainer>
       {/* 프로필 이미지 렌더링 */}
       <ProfileImageWrapper>
-        {form.image ? (
-          <ProfileImage src={form.image} alt="프로필 사진" />
+        {form.profileImage ? (
+          <ProfileImage src={form.profileImage} alt="프로필 사진" />
         ) : (
           <ProfileImagePlaceholder>프로필 사진</ProfileImagePlaceholder>
         )}
@@ -100,9 +104,15 @@ const MyInfo = () => {
         />
       </ProfileImageWrapper>
 
-      {/* ValidMyInfo 컴포넌트를 사용하여 입력 필드 렌더링 */}
-      <ValidMyInfo form={form} handleChange={handleChange} />
-      <SaveButton onClick={handleSave}>저장하기</SaveButton>
+      <ValidMyInfo
+        form={form}
+        handleChange={(e) =>
+          setForm({ ...form, [e.target.name]: e.target.value })
+        }
+      />
+      <Address form={form} setForm={setForm} />
+
+      <SaveButton onClick={handleSave}>수정하기</SaveButton>
     </FormContainer>
   );
 };
