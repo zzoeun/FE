@@ -9,10 +9,6 @@ const Sidebar = ({ setSelectedMenu }) => {
   const handleMenuClick = (menu) => {
     setActiveMenu(menu); // 선택된 메뉴 업데이트
     setSelectedMenu(menu); // 부모 컴포넌트에 선택된 메뉴 전달
-
-    if (menu === "cart") {
-      navigate("/cart");
-    }
   };
 
   return (
@@ -30,7 +26,6 @@ const Sidebar = ({ setSelectedMenu }) => {
         >
           장바구니
         </MenuItem>
-
         <MenuItem
           isActive={activeMenu === "paymentslist"}
           onClick={() => handleMenuClick("paymentslist")}
@@ -55,6 +50,11 @@ const SidebarContainer = styled.div`
   background-color: #f5f5f5;
   padding: 30px;
   border-right: 1px solid #ddd;
+  position: fixed; 
+  left: auto;
+  top: 302px;
+  bottom: 0;
+  z-index: 100; 
 `;
 
 const MenuGroup = styled.div`
