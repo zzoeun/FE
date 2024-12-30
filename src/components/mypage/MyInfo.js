@@ -12,7 +12,7 @@ const MyInfo = () => {
     email: "",
     phone: "",
     gender: "",
-    image: "",
+    profileImage: "",
     zipCode: "",
     mainAddress: "",
     detailsAddress: "",
@@ -34,7 +34,7 @@ const MyInfo = () => {
           email: user.email,
           phone: user.phone,
           gender: user.gender,
-          image: user.profileImage,
+          profileImage: user.profileImage,
           zipCode: user.zipCode,
           mainAddress: user.mainAddress,
           detailsAddress: user.detailsAddress,
@@ -61,9 +61,20 @@ const MyInfo = () => {
   // 수정 사항 저장 핸들러
   const handleSave = async () => {
     try {
+      const formData = new FormData();
+      // 이미지가 존재하면 추가
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        formData.append("image", file);
+      }
+      Object.keys(form).forEach((key) => {
+        formData.append(key, form[key]);
+      });
+
       await axios.put(
         `https://project-be.site/api/mypage/putUserInfo/${form.userId}`,
-        form,
+        formData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -79,8 +90,8 @@ const MyInfo = () => {
     <FormContainer>
       {/* 프로필 이미지 렌더링 */}
       <ProfileImageWrapper>
-        {form.image ? (
-          <ProfileImage src={form.image} alt="프로필 사진" />
+        {form.profileImage ? (
+          <ProfileImage src={form.profileImage} alt="프로필 사진" />
         ) : (
           <ProfileImagePlaceholder>프로필 사진</ProfileImagePlaceholder>
         )}
