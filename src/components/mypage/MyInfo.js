@@ -1,46 +1,87 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import ValidMyInfo from "./ValidMyInfo";
+import ValidMyInfo from "./ValidMyInfo"; // ValidMyInfo import
+import Address from "./Address"; // Address import
 
-const MyInfo = ({ userData, setUserData }) => {
-  // 초기값을 MyPage에서 받은 `userData`로 설정
-  const [form, setForm] = useState(userData || {});
-  const [token, setToken] = useState(null);
+const MyInfo = () => {
+  const [token, setToken] = useState(localStorage.getItem("bearer_token"));
+  const [form, setForm] = useState({
+    userId: "",
+    userName: "",
+    email: "",
+    phone: "",
+    gender: "",
+    profileImage: "",
+    zipCode: "",
+    mainAddress: "",
+    detailsAddress: "",
+  });
 
-  // 입력 값 변경 핸들러
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          "https://project-be.site/api/mypage/getUserInfo",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const user = response.data.data;
+        setForm({
+          userId: user.userId,
+          userName: user.userName,
+          email: user.email,
+          phone: user.phone,
+          gender: user.gender,
+          profileImage: user.profileImage,
+          zipCode: user.zipCode,
+          mainAddress: user.mainAddress,
+          detailsAddress: user.detailsAddress,
+        });
+      } catch (error) {
+        console.error("데이터 불러오기 실패:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
+
+  console.log("MyInfo component rendered with form:", form);
 
   // 프로필 이미지 변경 핸들러
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const previewUrl = URL.createObjectURL(file); // 이미지 미리보기 URL 생성
-      setForm({ ...form, profile_image: previewUrl });
+      const previewUrl = URL.createObjectURL(file);
+      setForm({ ...form, profileImage: previewUrl });
     }
   };
 
   // 수정 사항 저장 핸들러
   const handleSave = async () => {
     try {
-      // 수정된 데이터를 백엔드에 전송,
-      const response = await axios.put(
-        `https://project-be.site/api/mypage/putUserInfo/${form.id}`,
-        form,
+      const formData = new FormData();
+      // 이미지가 존재하면 추가
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        formData.append("image", file);
+      }
+      Object.keys(form).forEach((key) => {
+        formData.append(key, form[key]);
+      });
+
+      await axios.put(
+        `https://project-be.site/api/mypage/putUserInfo/${form.userId}`,
+        formData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log("수정 성공:", response.data);
-
-      // 부모 컴포넌트에 업데이트된 데이터 전달
-      setUserData(form);
       alert("정보가 성공적으로 수정되었습니다.");
     } catch (error) {
-      console.error("정보 수정 실패:", error.response || error.message);
+      console.error("정보 수정 실패:", error);
       alert("정보 수정 중 오류가 발생했습니다.");
     }
   };
@@ -49,10 +90,10 @@ const MyInfo = ({ userData, setUserData }) => {
     <FormContainer>
       {/* 프로필 이미지 렌더링 */}
       <ProfileImageWrapper>
-        {form.profile_image ? (
-          <ProfileImage src={form.profile_image} alt="프로필 사진" />
+        {form.profileImage ? (
+          <ProfileImage src={form.profileImage} alt="프로필 사진" />
         ) : (
-          <ProfileImagePlaceholder>프로필 사진</ProfileImagePlaceholder> // 프로필사진 없으면 placeholder로 대체
+          <ProfileImagePlaceholder>프로필 사진</ProfileImagePlaceholder>
         )}
         <UploadButton htmlFor="profile-image">이미지 변경</UploadButton>
         <FileInput
@@ -62,15 +103,16 @@ const MyInfo = ({ userData, setUserData }) => {
           onChange={handleImageChange}
         />
       </ProfileImageWrapper>
-      {/* 변경된 입력값 전달 */}
-      <ValidMyInfo form={form} handleChange={handleChange} />
-      <SaveButton
-        onClick={() => {
-          handleSave();
-        }}
-      >
-        수정하기
-      </SaveButton>
+
+      <ValidMyInfo
+        form={form}
+        handleChange={(e) =>
+          setForm({ ...form, [e.target.name]: e.target.value })
+        }
+      />
+      <Address form={form} setForm={setForm} />
+
+      <SaveButton onClick={handleSave}>수정하기</SaveButton>
     </FormContainer>
   );
 };
@@ -81,15 +123,14 @@ const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between; /* 버튼을 포함해 내용 간격 조정 */
+  justify-content: space-between;
   background: #fff;
   padding: 20px;
   width: 100%;
-  max-width: 600px; /* 중앙 정렬 및 크기 제한 */
+  max-width: 600px;
   margin: 0 auto;
 `;
 
-/* 프로필 이미지 스타일 */
 const ProfileImageWrapper = styled.div`
   position: relative;
   display: flex;
@@ -117,7 +158,6 @@ const ProfileImagePlaceholder = styled.div`
   color: #555;
 `;
 
-/* 파일 업로드 버튼 */
 const UploadButton = styled.label`
   margin-top: 10px;
   padding: 10px 20px;
@@ -127,13 +167,8 @@ const UploadButton = styled.label`
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-
-  &:hover {
-    background-color: #999999;
-  }
 `;
 
-/* 숨겨진 파일 입력 필드 */
 const FileInput = styled.input`
   display: none;
 `;

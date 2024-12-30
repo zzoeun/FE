@@ -13,23 +13,41 @@ const DefaultAddress = ({ userInfo }) => {
     <DefaultAddressContainer>
       <UserName>{userInfo.name}</UserName>
       <UserAddress>
-        <p>({userInfo.zip_code})</p>
-        <p>{userInfo.main_address}</p>
-        <p>{userInfo.details_address}</p>
+        <p>({userInfo.zipCode})</p>
+        <p>{userInfo.mainAddress}</p>
+        <p>{userInfo.detailsAddress}</p>
       </UserAddress>
       <UserPhone>{addHyphenPhone(userInfo.phone)}</UserPhone>
     </DefaultAddressContainer>
   );
 };
 
-const DefaultAddressContainer = styled.div``;
+const DefaultAddressContainer = styled.div`
+  margin-top: 20px;
+  padding: 5px 0 20px 20px;
 
-const UserName = styled.p``;
+  border-bottom: 2px solid #f4f4f4;
 
-const UserAddress = styled.div`
-  display: felx;
+  p {
+    margin-bottom: 8px;
+  }
 `;
 
-const UserPhone = styled.p``;
+const UserName = styled.p`
+  font-weight: bold;
+  font-size: 20px;
+`;
+
+const UserAddress = styled.div`
+  display: flex;
+
+  p {
+    margin-right: 7px;
+  }
+`;
+
+const UserPhone = styled.p`
+  color: #999999;
+`;
 
 export default DefaultAddress;

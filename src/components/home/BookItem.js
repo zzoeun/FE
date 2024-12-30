@@ -2,24 +2,22 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
-function BookItem({ book, setModal }) {
+function BookItem({ book, setModal, userData, token }) {
   const navigate = useNavigate();
 
   const handleAddCartAndOpenModal = () => {
     setModal(true);
 
-    // const token = localStorage.getItem('token');
-
-    // axios.post('https://project-be.site/cart/add', {
-    //   header: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    //   body: {
-    //     userId: ,
-    //     quantity: 1,
-    //     bookId: book.book_id,
-    //   },
-    // });
+    if (token) {
+      axios.post('https://project-be.site/cart/add', {
+        header: { Authorization: `Bearer ${token}` },
+        body: {
+          userId: userData.userId,
+          quantity: 1,
+          bookId: book.book.id,
+        },
+      });
+    }
   };
 
   return (

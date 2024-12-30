@@ -120,7 +120,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.error("이메일 확인 실패:", error);
-      setModalContent("중복 확인 중 오류가 발생했습니다.");
+      setModalContent("이미 사용 중인 이메일입니다.");
       dispatch(openModal());
     }
   };
@@ -220,44 +220,48 @@ const Signup = () => {
     }
 
     try {
-      // 회원가입 데이터 전송 json 형식
-      const jsonResponse = await axios.post(
+      // 회원가입 요청 데이터 객체 생성
+      const signUpRequestForm = {
+        userName: form.userName,
+        email: form.email,
+        password: form.password,
+        gender: form.gender,
+        phone: form.phone,
+        zipCode: form.zipCode,
+        mainAddress: form.mainAddress,
+        detailsAddress: form.detailsAddress,
+      };
+
+      // JSON 문자열로 변환
+      const signUpRequestJson = JSON.stringify(signUpRequestForm);
+
+      // FormData 객체 생성
+      const formData = new FormData();
+
+      // 이미지가 존재하면 추가
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        formData.append("profileImage", file);
+      }
+
+      // JSON 데이터를 FormData에 추가
+      formData.append("signUpRequest", signUpRequestJson);
+
+      // Axios 요청
+      const response = await axios.post(
         "https://project-be.site/auth/signup",
-        {
-          userName: form.userName,
-          email: form.email,
-          password: form.password,
-          gender: form.gender,
-          phone: form.phone,
-          zipCode: form.zipCode,
-          mainAddress: form.mainAddress,
-          detailsAddress: form.detailsAddress,
-        },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      console.log("JSON 데이터 전송 성공:", jsonResponse.data);
+      console.log("회원가입 데이터 전송 성공:", response.data);
 
-      // 이미지 파일 전송
-      if (form.profileImage) {
-        const imageData = new FormData();
-        imageData.append("profileImage", form.profileImage);
-
-        const imageResponse = await axios.post(
-          "https://project-be.site/auth/signup",
-          imageData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-
-        console.log("이미지 파일 전송 성공:", imageResponse.data);
-      }
-
+      // 모달 띄우기
       setModalContent("회원가입이 완료되었습니다!");
       dispatch(openModal());
     } catch (error) {
@@ -320,13 +324,31 @@ const Signup = () => {
           {messages.passwordConfirmMessage}
         </SignupFormErrorMessage>
 
-        <SignupFormLabel>성별</SignupFormLabel>
-        <SignupFormInput
-          type="text"
-          name="gender"
-          onChange={handleChange}
-          value={form.gender}
-        />
+        <FormGroup>
+          <SignupFormLabel>성별</SignupFormLabel>
+          <SignupFlexContainer>
+            <RadioLabel>
+              <RadioInput
+                type="radio"
+                name="gender"
+                value="M"
+                checked={form.gender === "M"}
+                onChange={handleChange}
+              />
+              남
+            </RadioLabel>
+            <RadioLabel>
+              <RadioInput
+                type="radio"
+                name="gender"
+                value="F"
+                checked={form.gender === "F"}
+                onChange={handleChange}
+              />
+              여
+            </RadioLabel>
+          </SignupFlexContainer>
+        </FormGroup>
 
         <SignupFormLabel>휴대폰 번호</SignupFormLabel>
         <SignupFormInput
@@ -398,6 +420,7 @@ const Signup = () => {
           content={modalContent}
           onClose={() => {
             dispatch(closeModal());
+            navigate("/login"); // 로그인 페이지로 이동
           }}
         />
       )}
@@ -500,8 +523,25 @@ const SignupConfirmButton = styled.button`
   }
 `;
 
+const FormGroup = styled.div`
+  margin-bottom: 30px;
+`;
+
+const RadioLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+const RadioInput = styled.input`
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+`;
+
 const SignupFlexContainer = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 20px;
 `;

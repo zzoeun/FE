@@ -5,59 +5,51 @@ import BookItem from './BookItem';
 import Pagination from './Pagination';
 import axios from 'axios';
 
-const BookList = ({ setModal }) => {
+const BookList = ({ setModal, userData, token }) => {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const dropdownOption = useSelector((state) => state.dropdown);
 
-  const fetchData = async (controller) => {
-    let booksUrl = 'https://project-be.site/books';
-
-    if (dropdownOption === '전체') {
-      booksUrl = 'https://project-be.site/books';
-    } else {
-      booksUrl = `https://project-be.site/books/category/${dropdownOption}`;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await axios.get(`${booksUrl}?page=${currentPage}`, {
-        signal: controller.signal,
-      });
-      const data = response.data;
-      setBooks(data.content);
-      setTotalPages(data.totalPages);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     const controller = new AbortController();
-    fetchData(controller);
+
+    const fetchData = async () => {
+      let booksUrl = 'https://project-be.site/books';
+
+      if (dropdownOption === '전체') {
+        booksUrl = 'https://project-be.site/books';
+      } else {
+        booksUrl = `https://project-be.site/books/category/${dropdownOption}`;
+      }
+
+      try {
+        const response = await axios.get(`${booksUrl}?page=${currentPage}`, {
+          signal: controller.signal,
+        });
+        const data = response.data;
+        setBooks(data.content);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchData();
 
     return () => {
       controller.abort();
     };
-  }, [dropdownOption, currentPage]);
-
-  if (loading) return <LoadingMessage>로딩 중...</LoadingMessage>;
-  if (error) return <ErrorMessage>{error}</ErrorMessage>;
+  }, [currentPage, dropdownOption]);
 
   return (
     <section>
       <BookListTitle>오늘의 책 [Today's Book]</BookListTitle>
       <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <CardList>
-        {books.map((book) => (
-          <BookItem key={book.id} book={book} setModal={setModal} />
+        {books?.map((book) => (
+          <BookItem key={book.id} book={book} setModal={setModal} userData={userData} token={token} />
         ))}
       </CardList>
     </section>
@@ -79,14 +71,5 @@ const CardList = styled.ul`
   flex-wrap: wrap;
   gap: 1px;
 `;
-
-const LoadingMessage = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
-const ErrorMessage = styled(LoadingMessage)``;
 
 export default BookList;
