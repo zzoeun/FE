@@ -11,7 +11,7 @@ const DeleteAccount = () => {
   const handleDeleteProfile = async () => {
     if (window.confirm("정말 회원 탈퇴를 진행하시겠습니까?")) {
       try {
-        const response = await axios.post(
+        const response = await axios.get(
           // delete가 아니라 post가 맞는지?
           `https://project-be.site/auth/delete`,
           {

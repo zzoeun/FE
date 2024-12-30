@@ -36,6 +36,7 @@ const MyPage = () => {
         console.error("데이터 불러오기 실패:", error);
         setModalContent("로그인한 회원이 아닙니다.");
         dispatch(openModal());
+        // navigate("/Login");
       }
     };
 
@@ -87,7 +88,7 @@ const MyPage = () => {
           content={modalContent}
           onClose={() => {
             dispatch(closeModal());
-            // navigate("/Login");
+            navigate("/Login");
           }}
         />
       )}

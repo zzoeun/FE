@@ -324,13 +324,31 @@ const Signup = () => {
           {messages.passwordConfirmMessage}
         </SignupFormErrorMessage>
 
-        <SignupFormLabel>성별</SignupFormLabel>
-        <SignupFormInput
-          type="text"
-          name="gender"
-          onChange={handleChange}
-          value={form.gender}
-        />
+        <FormGroup>
+          <SignupFormLabel>성별</SignupFormLabel>
+          <SignupFlexContainer>
+            <RadioLabel>
+              <RadioInput
+                type="radio"
+                name="gender"
+                value="M"
+                checked={form.gender === "M"}
+                onChange={handleChange}
+              />
+              남
+            </RadioLabel>
+            <RadioLabel>
+              <RadioInput
+                type="radio"
+                name="gender"
+                value="F"
+                checked={form.gender === "F"}
+                onChange={handleChange}
+              />
+              여
+            </RadioLabel>
+          </SignupFlexContainer>
+        </FormGroup>
 
         <SignupFormLabel>휴대폰 번호</SignupFormLabel>
         <SignupFormInput
@@ -505,8 +523,25 @@ const SignupConfirmButton = styled.button`
   }
 `;
 
+const FormGroup = styled.div`
+  margin-bottom: 30px;
+`;
+
+const RadioLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  cursor: pointer;
+`;
+
+const RadioInput = styled.input`
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+`;
+
 const SignupFlexContainer = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 20px;
 `;

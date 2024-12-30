@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Payment from "./pages/Payment";
 import MyPage from "./pages/MyPage";
-import Detail from "./pages/Detail";
+import BookDetail from "./pages/BookDetail";
 import Login from "./pages/Login";
 import Layout from "./components/layout/Layout";
 import Cart from "./pages/Cart";
@@ -18,7 +18,7 @@ const App = () => {
           <Route path="signup" element={<Signup />} />
           <Route path="payment" element={<Payment />} />
           <Route path="mypage" element={<MyPage />} />
-          <Route path="detail" element={<Detail />} />
+          <Route path="detail/:bookId" element={<BookDetail />} />
           <Route path="login" element={<Login />} />
         </Route>
       </Routes>
