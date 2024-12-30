@@ -1,42 +1,61 @@
 import { Link, useLocation } from 'react-router';
 import styled from 'styled-components';
 import Dropdown from '../home/Dropdown';
-import { useState } from 'react';
-import user from '../../icons/user.svg';
+import { useEffect, useState } from 'react';
+import dummyUserImg from '../../icons/user.svg';
+import axios from 'axios';
 
 const Navbar = () => {
-  const [userInfo, setUserInfo] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('bearer_token'));
 
   const location = useLocation();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('https://project-be.site/api/mypage/getUserInfo', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
+
+  let userOrLink = (
+    <>
+      <LocationItem>
+        <LocationLink to={'/login'}>로그인</LocationLink>
+      </LocationItem>
+      {location.pathname !== '/signup' && (
+        <LocationItem>
+          <LocationLink to={'/signup'}>회원가입</LocationLink>
+        </LocationItem>
+      )}
+    </>
+  );
+
+  if (userData) {
+    userOrLink = (
+      <LocationItem>
+        <User to={'/mypage'}>
+          <img src={userData.profileImage ? userData.profileImage : dummyUserImg} alt='profile' />
+          <p>{userData.userName}</p>
+        </User>
+      </LocationItem>
+    );
+  }
 
   return (
     <Nav>
       <Wrapper>
         {location.pathname === '/' && <Dropdown />}
 
-        {location.pathname !== '/login' && (
-          <LocationList>
-            {!userInfo ? (
-              <>
-                <LocationItem>
-                  <LocationLink to={'/login'}>로그인</LocationLink>
-                </LocationItem>
-                {location.pathname !== '/signup' && (
-                  <LocationItem>
-                    <LocationLink to={'/signup'}>회원가입</LocationLink>
-                  </LocationItem>
-                )}
-              </>
-            ) : (
-              <LocationItem>
-                <User to={'/mypage'}>
-                  <img src={userInfo.profileImage} alt='profile' />
-                  <p>USER NAME</p>
-                </User>
-              </LocationItem>
-            )}
-          </LocationList>
-        )}
+        {location.pathname !== '/login' && <LocationList>{userOrLink}</LocationList>}
       </Wrapper>
     </Nav>
   );

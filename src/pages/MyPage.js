@@ -5,7 +5,7 @@ import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
 import PaymentsList from "../components/mypage/PaymentsList";
-import ShoppingCartList from "../components/mypage/ShoppingCartList";
+import Cart from "./Cart";
 import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom"; // useNavigate 임포트
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("myinfo");
   const [userData, setUserData] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem("bearer_token"));
   const navigate = useNavigate(); // 페이지 이동
 
   const dispatch = useDispatch();
@@ -49,27 +49,29 @@ const MyPage = () => {
         return (
           <MyInfo userData={userData} setUserData={setUserData} token={token} />
         );
-        case "deleteaccount":
-          return <DeleteAccount token={token} />;
-        case "shoppingcartlist":
-          return <ShoppingCartList />;
-        case "paymentslist":
-          return <PaymentsList />;
-        default:
-          return <MyInfo userData={userData} token={token} />;
-      }
-    };
-  
-    const getPageTitle = () => {
-      switch (selectedMenu) {
-        case "paymentslist":
-          return "주문결제조회";
-        case "shoppingcartlist":
-          return "내 장바구니";
-        default:
-          return "마이페이지";
-      }
-    };
+      case "deleteaccount":
+        return <DeleteAccount token={token} />;
+      case "cart":
+        return <Cart />;
+      case "paymentslist":
+        return <PaymentsList />;
+      default:
+        return <MyInfo userData={userData} token={token} />;
+    }
+  };
+
+  const getPageTitle = () => {
+    switch (selectedMenu) {
+      case "paymentslist":
+        return "주문결제조회";
+      case "cart":
+        return "내 장바구니";
+      case "modifyInfo":
+        return "내 정보";
+      default:
+        return "마이페이지";
+    }
+  };
 
   return (
     <Container>
