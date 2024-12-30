@@ -72,11 +72,16 @@ const Payment = () => {
 
   const location = useLocation();
 
-  const paymentData = location.state || {};
-  const { cartItems, totalPrice, deliveryFee, totalAmount } = paymentData;
+  const paymentData = location.state || {
+    orderItemsData: [],
+    totalPrice: 0,
+    deliveryFee: 0,
+    totalAmount: 0
+  };
+  const { orderItemsData, totalPrice, deliveryFee, totalAmount } = paymentData;
 
   // cart or dummyItems
-  const selectCartItems = cartItems || dummyCartItems;
+  const selectCartItems = orderItemsData || [];
 
   // 더미 데이터를 사용하여 컴포넌트 상태 업데이트
   useEffect(() => {
@@ -118,7 +123,7 @@ const Payment = () => {
     }
 
     setLoading(false);
-  }, [cartItems]);
+  }, [orderItemsData]);
 
   // console.log("Payment-userInfo: ", userInfo);
   // console.log("Payment-receiverInfo: ", receiverInfo);
@@ -148,8 +153,8 @@ const Payment = () => {
         : { ...receiverInfo }; // 직접 입력
 
     const firstBookTitle =
-      orderItems.length > 0 ? orderItems[0].title : "데이터 없음";
-    const otherBookCount = orderItems.length > 1 ? orderItems.length - 1 : 0;
+      orderItemsData.length > 0 ? orderItemsData[0].title : "데이터 없음";
+    const otherBookCount = orderItemsData.length > 1 ? orderItemsData.length - 1 : 0;
 
     const totalAmount = paymentInfo.totalPrice + paymentInfo.shippingFee;
 
@@ -220,7 +225,7 @@ const Payment = () => {
           onShippingModeChange={onShippingModeChange}
           onInfoChange={handleInfoChange}
         />
-        <OrderItems items={orderItems} shippingFee={paymentInfo.shippingFee} />
+        <OrderItems items={orderItemsData} shippingFee={paymentInfo.shippingFee} />
         <PaymentMethod onCardNumbersChange={handleCardNumbersChange} />
       </PaymentContents>
       <PaymentAmount>

@@ -29,7 +29,7 @@ const OrderItems = ({ items, shippingFee }) => {
           <Items>
             {items.map((item, index) => (
               <Item key={index}>
-                <img src={item.imageUrl} alt={item.title} width="50" />
+                <img src={item.image} alt={item.title} width="50" />
 
                 <ItemAmount>
                   <p>{item.title}</p>

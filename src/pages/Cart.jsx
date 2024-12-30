@@ -135,7 +135,7 @@ const Cart = () => {
         author: item.author,
       }));
     const paymentData = {
-      orderItems: selectedProducts,
+      orderItemsData: selectedProducts,
       totalPrice: calculateTotalPrice(),
       deliveryFee: calculateTotalDelivery(),
       totalAmount: calculateTotalPrice() + calculateTotalDelivery(),
@@ -272,6 +272,7 @@ const Cart = () => {
   );
 };
 export default Cart;
+
 const Wrapper = styled.div`
   padding: 0 120px;
   width: 100%;
@@ -293,6 +294,13 @@ const CartContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px 0;
+  flex: 1;
+  position: relative;
+  min-height: calc(100vh - 402px);
+  
+  @media (max-width: 968px) {
+    flex-direction: column;
+  }
 `;
 const CartContents = styled.div`
   display: flex;

@@ -40,12 +40,14 @@ export default Order;
 
 const OrderContainer = styled.div`
   width: 300px;
-  heigth: 660px;
+  height: auto;
   border-left: 1px solid #BCCCDC;
   margin-left: 30px;
   position: sticky;
-  top: 20px; 
+  top: 302px;
   align-self: flex-start;
+  max-height: calc(100vh - 302px);
+  overflow-y: auto;
 `;
 
 const OrderTitle = styled.h2`
