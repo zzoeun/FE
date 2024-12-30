@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
 import PaymentsList from "../components/mypage/PaymentsList";
-import Cart from "./Cart";
+import Cart from "../components/mypage/Cart";
 import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
@@ -102,17 +101,20 @@ const Container = styled.div`
   display: flex;
   background-color: #f8f9fa;
   min-height: 100vh;
-  margin: 302px auto;
-  min-width: 1200px; // 추가: 전체 최소 너비 설정
+  margin-top: 302px;
+  min-width: 1200px;
+  max-width: 1500px;
+  position: relative;
 `;
 
 const Content = styled.div`
   flex: 1;
   padding: 30px;
+  padding-left: 280px;
   background-color: #fff;
   color: #333;
-  min-width: 800px; // 추가: 컨텐츠 영역 최소 너비 설정
-  overflow-x: auto; // 추가: 필요한 경우에만 가로 스크롤
+  min-width: 800px;
+  overflow-x: auto;
 `;
 
 const PageTitle = styled.h1`
@@ -123,5 +125,5 @@ const PageTitle = styled.h1`
   font-size: 2rem;
   text-align: left;
   border-bottom: 1px solid gray;
-  margin-top: 0 auto;
+  margin: 0 0 20px 0;
 `;

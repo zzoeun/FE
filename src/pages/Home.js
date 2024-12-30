@@ -38,7 +38,7 @@ const Home = () => {
   }, [token]);
 
   const handleMoveCartPage = () => {
-    navigate('/cart');
+    navigate('/mypage/cart');
     setModal(false);
   };
 

@@ -14,24 +14,32 @@ function BookItem({ book, setModal, userData, token }) {
         body: {
           userId: userData.userId,
           quantity: 1,
-          bookId: book.book.id,
+          bookId: book.bookId,
         },
       });
     }
+  };
+
+  const handleDetailView = () => {
+    console.log('Book ID for detail:', book.bookId);
+    navigate(`/DetailedPage/${book.bookId}`);
   };
 
   return (
     <Card>
       <Wrapper>
         <CardInfo>
-          <CardImageBox>
+          <CardImageBox onClick={handleDetailView}> 
             <img src={book.bookImageUrl} alt={book.bookTitle} draggable={false} />
           </CardImageBox>
           <Title>{book.bookTitle}</Title>
           <Price>{book.bookPrice}</Price>
         </CardInfo>
         <CardButtons>
-          <Button onClick={() => navigate(`/detail/${book.id}`)}>
+          <Button onClick={() => {
+              console.log('Navigating to:', `/DetailedPage/${book.bookId}`);
+              navigate(`/DetailedPage/${book.bookId}`);
+            }}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

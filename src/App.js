@@ -6,14 +6,14 @@ import MyPage from "./pages/MyPage";
 import BookDetail from "./pages/BookDetail";
 import Login from "./pages/Login";
 import Layout from "./components/layout/Layout";
-import Cart from "./pages/Cart";
+import Cart from "./components/mypage/Cart";
 
 const App = () => {
   return (
     <>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home/>} />
           <Route path="cart" element={<Cart />} />
           <Route path="signup" element={<Signup />} />
           <Route path="payment" element={<Payment />} />
