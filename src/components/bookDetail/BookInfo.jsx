@@ -99,7 +99,7 @@ const BookDetail = ({ bookId }) => {
   };
 
   // 결제 추가 api
-  const handlePurchase = () => {
+  const handlePayment = () => {
     if (quantity > bookData.amount) {
       alert("선택한 수량이 재고를 초과합니다. 수량을 조정해주세요.");
       return;
@@ -111,19 +111,28 @@ const BookDetail = ({ bookId }) => {
       return;
     }
 
-    // 헤더값만 보내면 되는 게 맞는지?
-    axios
-      .post("https://project-be.site/payments/process", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(() => {
-        alert(`"${bookData.bookTitle}" ${quantity}개 구매가 완료되었습니다!`);
-        navigate("/payment");
-      })
-      .catch((err) => {
-        console.error("결제 요청 실패:", err.message);
-        alert("결제 처리에 실패했습니다. 다시 시도해주세요.");
-      });
+    // 결제 데이터 준비
+    const paymentData = {
+      orderItemsData: [
+        {
+          bookId: bookData.bookId,
+          title: bookData.bookTitle,
+          price: bookData.bookPrice,
+          quantity,
+          totalPrice: bookData.bookPrice * quantity,
+          image: bookData.bookImageUrl,
+          publisher: bookData.publisher,
+          author: bookData.author,
+        },
+      ],
+      totalPrice: bookData.bookPrice * quantity,
+      deliveryFee: 0,
+      totalAmount: bookData.bookPrice * quantity,
+    };
+
+    console.log("Navigate 호출 준비 완료");
+    navigate("/payment", { state: paymentData });
+    console.log("Navigate 호출 완료");
   };
 
   if (loading) return <Loading>로딩 중...</Loading>;
@@ -160,7 +169,7 @@ const BookDetail = ({ bookId }) => {
           </TotalPrice>
           <ButtonWrapper>
             <Button onClick={handleAddToCart}>장바구니에 담기</Button>
-            <Button primary onClick={handlePurchase}>
+            <Button primary onClick={handlePayment}>
               구매하기
             </Button>
           </ButtonWrapper>
