@@ -31,6 +31,20 @@ const BookDetail = ({ bookId }) => {
     fetchBookData();
   }, [bookId]);
 
+  // 상품 수량 조절
+  const handleIncrease = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const handleDecrease = () => {
+    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  };
+
+  const handleQuantityChange = (e) => {
+    const value = Math.max(1, Number(e.target.value)); // 최소값 1
+    setQuantity(value);
+  };
+
   //userid 가져오기
   const fetchUserId = async () => {
     if (!token) {
@@ -49,24 +63,25 @@ const BookDetail = ({ bookId }) => {
           },
         }
       );
-      console.log("유저 정보:", response.data);
       const userId = response.data.data.userId; // userId 가져오기
       return userId; // userId 반환
     } catch (err) {
-      console.error(
-        "유저 정보 가져오기 실패:",
-        err.response?.data || err.message
-      );
+      if (err.response?.status === 401) {
+        alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+        navigate("/login"); // 로그인 페이지로 이동
+      } else {
+        console.error(
+          "유저 정보 가져오기 실패:",
+          err.response?.data || err.message
+        );
+      }
       throw err;
     }
   };
-  const handleQuantityChange = (e) => {
-    setQuantity(Number(e.target.value));
-  };
 
-  // 장바구니 추가 api
+  // 장바구니 추가 apia
   const handleAddToCart = async () => {
-    if (quantity > bookData.amount) {
+    if (quantity > bookData.stock) {
       alert("선택한 수량이 재고를 초과합니다. 수량을 조정해주세요.");
       return;
     }
@@ -100,7 +115,7 @@ const BookDetail = ({ bookId }) => {
 
   // 결제 추가 api
   const handlePayment = () => {
-    if (quantity > bookData.amount) {
+    if (quantity > bookData.stock) {
       alert("선택한 수량이 재고를 초과합니다. 수량을 조정해주세요.");
       return;
     }
@@ -149,20 +164,20 @@ const BookDetail = ({ bookId }) => {
           <Author>저자: {bookData.author}</Author>
           <Publisher>출판사: {bookData.publisher}</Publisher>
           <Price>가격: {bookData.bookPrice.toLocaleString()}원</Price>
-          <Amount>재고 수량: {bookData.amount}</Amount>
+          <Amount>재고 수량: {bookData.stock}</Amount>
           <QuantityWrapper>
-            <label htmlFor="quantity">수량: </label>
-            <QuantitySelect
-              id="quantity"
+            <button onClick={handleDecrease}>-</button>
+            <input
+              type="number"
               value={quantity}
               onChange={handleQuantityChange}
-            >
-              {[...Array(10).keys()].map((num) => (
-                <option key={num + 1} value={num + 1}>
-                  {num + 1}
-                </option>
-              ))}
-            </QuantitySelect>
+              style={{
+                width: "50px",
+                textAlign: "center",
+                margin: "0 10px",
+              }}
+            />
+            <button onClick={handleIncrease}>+</button>
           </QuantityWrapper>
           <TotalPrice>
             총 가격: {(bookData.bookPrice * quantity).toLocaleString()}원
@@ -249,20 +264,6 @@ const Amount = styled.p`
   color: rgb(0, 0, 0);
 `;
 
-const QuantityWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-`;
-
-const QuantitySelect = styled.select`
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-`;
-
 const TotalPrice = styled.p`
   font-size: 25px;
   font-weight: bold;
@@ -294,6 +295,7 @@ const Button = styled.button`
 `;
 
 const SummaryWrapper = styled.div`
+  white-space: pre-line; // 줄바꿈
   padding-top: 20px;
   margin-top: 30px;
   max-width: 1100px;
@@ -327,4 +329,56 @@ const ErrorMessage = styled.div`
   font-size: 18px;
   color: red;
   margin-top: 50px;
+`;
+
+const QuantityWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  width: 120px;
+  height: 40px;
+
+  button {
+    flex: 1;
+    border: none;
+    background-color: #f5f5f5;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      background-color: #f9f9f9;
+      color: #ccc;
+    }
+  }
+
+  input {
+    flex: 2;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    background-color: #fff;
+    outline: none;
+
+    /* 숫자만 입력 가능 */
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
 `;
