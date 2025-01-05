@@ -5,35 +5,33 @@ const CartItemAmount = ({ totalPrice = 0, deliveryFee = 0 }) => {
   const finalTotal = totalPrice + deliveryFee;
 
   return (
-    <div>
-      <Amount>
-        <AmountList>
-          <AmountRow>
-            <AmountText>상품 금액</AmountText>
-            <AmountPrice>
-              <Price>{totalPrice.toLocaleString()}</Price>
-              <Won>원</Won>
-            </AmountPrice>
-          </AmountRow>
-          <AmountPlusButton>+</AmountPlusButton>
-          <AmountRow>
-            <AmountDeliveryText>배송비</AmountDeliveryText>
-            <AmountPrice>
-              <Price>{deliveryFee.toLocaleString()}</Price>
-              <Won>원</Won>
-            </AmountPrice>
-          </AmountRow>
-          <AmountTotalButton>=</AmountTotalButton>
-        </AmountList>
-        <AmountToTalList>
-          <AmountTotal>주문합계</AmountTotal>
+    <Amount>
+      <AmountList>
+        <AmountRow>
+          <AmountText>상품 금액</AmountText>
           <AmountPrice>
-            <Price>{finalTotal.toLocaleString()}</Price>
+            <Price>{totalPrice.toLocaleString()}</Price>
             <Won>원</Won>
           </AmountPrice>
-        </AmountToTalList>
-      </Amount>
-    </div>
+        </AmountRow>
+        <AmountPlusButton>+</AmountPlusButton>
+        <AmountRow>
+          <AmountDeliveryText>배송비</AmountDeliveryText>
+          <AmountPrice>
+            <Price>{deliveryFee.toLocaleString()}</Price>
+            <Won>원</Won>
+          </AmountPrice>
+        </AmountRow>
+        <AmountTotalButton>=</AmountTotalButton>
+      </AmountList>
+      <AmountToTalList>
+        <AmountTotal>주문합계</AmountTotal>
+        <AmountPrice>
+          <Price>{finalTotal.toLocaleString()}</Price>
+          <Won>원</Won>
+        </AmountPrice>
+      </AmountToTalList>
+    </Amount>
   );
 };
 
@@ -41,7 +39,7 @@ export default CartItemAmount;
 
 const Amount = styled.div`
   padding: 30px 20px 20px 10px;
-  width: 100%;
+  width: 830px;
   display: flex;
   font-size: 1rem;
   border-bottom: 1px solid #BCCCDC;

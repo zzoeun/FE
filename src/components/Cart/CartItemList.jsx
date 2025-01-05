@@ -75,7 +75,7 @@ const ItemListContainer = styled.div`
 `;
 
 const Items = styled.div`
-  width: 100%;
+  width: 830px;
 `;
 
 const ItemList = styled.ul`

@@ -5,33 +5,31 @@ const Order = ({ selectedItems, totalPrice, deliveryFee, onPaymentClick  }) => {
   const finalTotal = totalPrice + deliveryFee;
 
   return (
-    <div>
-      <OrderContainer>
-        <OrderTitle>장바구니 합계</OrderTitle>
-        <OrderPrice>
-          <div>상품금액</div>
-          <div>{totalPrice.toLocaleString()} 원</div>
-        </OrderPrice>
-        <OrderDeliveryPrice>
-          <div>배송비</div>
-          <div>{deliveryFee.toLocaleString()} 원</div>
-        </OrderDeliveryPrice>
-        <OrderTotal>
-          <div>선택 합계</div>
-          <TotalPrice>
-            <Price>{finalTotal.toLocaleString()}</Price>
-            <Won>원</Won>
-          </TotalPrice>
-        </OrderTotal>
-        <OrderButton 
-          disabled={selectedItems.length === 0}
-          isEmpty={selectedItems.length === 0}
-          onClick={onPaymentClick}
-        >
-          주문하기
-        </OrderButton>
-      </OrderContainer>
-    </div>
+    <OrderContainer>
+      <OrderTitle>장바구니 합계</OrderTitle>
+      <OrderPrice>
+        <div>상품금액</div>
+        <div>{totalPrice.toLocaleString()} 원</div>
+      </OrderPrice>
+      <OrderDeliveryPrice>
+        <div>배송비</div>
+        <div>{deliveryFee.toLocaleString()} 원</div>
+      </OrderDeliveryPrice>
+      <OrderTotal>
+        <div>선택 합계</div>
+        <TotalPrice>
+          <Price>{finalTotal.toLocaleString()}</Price>
+          <Won>원</Won>
+        </TotalPrice>
+      </OrderTotal>
+      <OrderButton 
+        disabled={selectedItems.length === 0}
+        isEmpty={selectedItems.length === 0}
+        onClick={onPaymentClick}
+      >
+        주문하기
+      </OrderButton>
+    </OrderContainer>
   );
 };
 
