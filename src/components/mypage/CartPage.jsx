@@ -265,6 +265,7 @@ const CartContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 25px 0;
+  padding-left: 30px;
   flex: 1;
   position: relative;
 `;

@@ -30,13 +30,6 @@ const Sidebar = ({ setSelectedMenu }) => {
         >
           장바구니
         </MenuItem>
-
-        <MenuItem
-          isActive={activeMenu === "paymentslist"}
-          onClick={() => handleMenuClick("paymentslist")}
-        >
-          결제목록
-        </MenuItem>
         <MenuItem
           isActive={activeMenu === "deleteaccount"}
           onClick={() => handleMenuClick("deleteaccount")}
