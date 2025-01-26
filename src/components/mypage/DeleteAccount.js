@@ -7,12 +7,10 @@ const DeleteAccount = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState(localStorage.getItem("bearer_token"));
 
-  // 회원탈퇴 로직.
   const handleDeleteProfile = async () => {
     if (window.confirm("정말 회원 탈퇴를 진행하시겠습니까?")) {
       try {
         const response = await axios.get(
-          // delete가 아니라 post가 맞는지?
           `https://project-be.site/auth/delete`,
           {
             headers: {
@@ -21,6 +19,7 @@ const DeleteAccount = () => {
           }
         );
         console.log("삭제 성공:", response.data);
+        localStorage.removeItem("bearer_token");
         window.confirm("회원 탈퇴가 완료되었습니다.");
         navigate("/");
       } catch (error) {
@@ -43,7 +42,6 @@ const DeleteAccount = () => {
 
 export default DeleteAccount;
 
-// 스타일 정의
 const Container = styled.div`
   margin: 302px auto;
 
