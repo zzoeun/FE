@@ -4,7 +4,6 @@ import axios from "axios";
 import Sidebar from "../components/mypage/Sidebar";
 import MyInfo from "../components/mypage/MyInfo";
 import DeleteAccount from "../components/mypage/DeleteAccount";
-import PaymentsList from "../components/mypage/PaymentsList";
 import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
@@ -54,8 +53,6 @@ const MyPage = () => {
         return <DeleteAccount token={token} />;
       case "cartpage":
         return <CartPage />;
-      case "paymentslist":
-        return <PaymentsList />;
       default:
         return <MyInfo userData={userData} token={token} />;
     }
@@ -63,8 +60,6 @@ const MyPage = () => {
 
   const getPageTitle = () => {
     switch (selectedMenu) {
-      case "paymentslist":
-        return "주문결제조회";
       case "modifyInfo":
         return "내 정보";
       default:
