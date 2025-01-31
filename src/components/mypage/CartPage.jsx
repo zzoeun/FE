@@ -72,26 +72,57 @@ const CartPage = () => {
   const updateItemQuantity = async (itemId, newQuantity) => {
     const token = checkToken();
     if (!token) return;
+    
     try {
-      await axios.put(
+      // API 문서와 동일한 형식으로 요청
+      const response = await axios.put(
         "https://project-be.site/api/mypage/putCartOption",
-        { cartId: itemId, quantity: newQuantity },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          cartId: Number(itemId),    // 숫자로 변환
+          quantity: Number(newQuantity)  // 숫자로 변환
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
       );
-      setCartItems(
-        cartItems.map((item) =>
-          item.id === itemId ? { ...item, quantity: newQuantity } : item
-        )
-      );
+  
+      // 응답 로깅
+      console.log("Update quantity response:", {
+        status: response.status,
+        data: response.data
+      });
+  
+      if (response.data.success) {
+        setCartItems(
+          cartItems.map((item) =>
+            item.id === itemId ? { ...item, quantity: newQuantity } : item
+          )
+        );
+      } else {
+        throw new Error(response.data.message || "수량 변경에 실패했습니다.");
+      }
     } catch (err) {
-      if (err.response?.status === 401) {
+      console.error("Update quantity error:", {
+        request: {
+          cartId: itemId,
+          quantity: newQuantity
+        },
+        response: err.response?.data,
+        status: err.response?.status
+      });
+  
+      if (err.response?.status === 400) {
+        alert(err.response.data.message || "잘못된 요청입니다. 수량을 확인해주세요.");
+      } else if (err.response?.status === 401) {
         alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
         localStorage.removeItem("bearer_token");
         navigate("/login");
-        return;
+      } else {
+        alert("수량 변경에 실패했습니다.");
       }
-      console.error("수량 변경 실패:", err);
-      alert("수량 변경에 실패했습니다.");
     }
   };
 

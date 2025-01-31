@@ -44,7 +44,7 @@ const Sidebar = ({ setSelectedMenu }) => {
 export default Sidebar;
 
 const SidebarContainer = styled.div`
-  width: 250px;
+  width: 230px;
   background-color: #f5f5f5;
   padding: 30px;
   border-right: 1px solid #ddd;
