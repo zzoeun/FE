@@ -7,18 +7,34 @@ import DeleteAccount from "../components/mypage/DeleteAccount";
 import SignupConfirmModal from "../components/modal/SignupConfirmModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, closeModal } from "../features/modalSlice";
-import { useNavigate } from "react-router-dom"; // useNavigate 임포트
+import { useLocation, useNavigate } from "react-router-dom";
 import CartPage from "../components/mypage/CartPage";
 
 const MyPage = () => {
   const [selectedMenu, setSelectedMenu] = useState("myinfo");
   const [userData, setUserData] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("bearer_token"));
-  const navigate = useNavigate(); // 페이지 이동
+  const navigate = useNavigate();
+  const location = useLocation(); 
 
   const dispatch = useDispatch();
-  const modalOpen = useSelector((state) => state.modal); // 모달 상태 가져오기
-  const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
+  const modalOpen = useSelector((state) => state.modal);
+  const [modalContent, setModalContent] = useState(""); 
+
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === "/mypage/cartpage") {
+      setSelectedMenu("cartpage");
+    } else if (path === "/mypage") {
+      if (selectedMenu === "cartpage") {
+        setSelectedMenu("myinfo");
+      }
+      if (location.state?.menu === "deleteaccount") {
+        setSelectedMenu("deleteaccount");
+      }
+    }
+  }, [location.pathname, location.state]);
+
 
   // 백엔드에서 사용자 정보 불러오기
   useEffect(() => {

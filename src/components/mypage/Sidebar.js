@@ -1,17 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Sidebar = ({ setSelectedMenu }) => {
+const Sidebar = ({ setSelectedMenu = () => {} }) => {
   const [activeMenu, setActiveMenu] = useState("myinfo"); // 현재 선택된 메뉴 상태, 선택 메뉴 계속 색상 유지
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === "/mypage/cartpage") {
+      setActiveMenu("cartpage");
+      setSelectedMenu("cartpage");
+    } else if (path === "/mypage") {
+      if (activeMenu === "cartpage") {
+        setActiveMenu("myinfo");
+        setSelectedMenu("myinfo");
+      }
+    }
+  }, [location.pathname]);
 
   const handleMenuClick = (menu) => {
-    setActiveMenu(menu); // 선택된 메뉴 업데이트
-    setSelectedMenu(menu); // 부모 컴포넌트에 선택된 메뉴 전달
-
-    if (menu === "cartpage") {
-      navigate("/mypage/cartpage");
+    setActiveMenu(menu);
+    setSelectedMenu(menu);
+  
+    switch (menu) {
+      case "cartpage":
+        navigate("/mypage/cartpage");
+        break;
+      case "deleteaccount":
+        navigate("/mypage", { state: { menu: "deleteaccount" } });
+        break;
+      case "myinfo":
+        navigate("/mypage", { state: { menu: "myinfo" } });
+        break;
+      default:
+        navigate("/mypage");
     }
   };
 
