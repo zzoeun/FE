@@ -17,8 +17,12 @@ const Sidebar = ({ setSelectedMenu = () => {} }) => {
         setActiveMenu("myinfo");
         setSelectedMenu("myinfo");
       }
+      if (location.state?.menu === "deleteaccount") {
+        setActiveMenu("deleteaccount");
+        setSelectedMenu("deleteaccount");
+      }
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.state]);
 
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
